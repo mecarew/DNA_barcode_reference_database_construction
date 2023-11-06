@@ -13,6 +13,10 @@ Developing and maintaining a DNA reference database can be difficult. The refdb 
 
 #Installing and loading the refDB package (https://cran.r-project.org/web/packages/refdb/index.html)
 
+```{r}
+remotes::install_github("fkeck/refdb")
+```
+
 The refdb package is available on CRAN, which means that you can easily install the latest stable version using the RStudio IDE or with the function install.packages. The other packages below will also be required to run refdb.
 
 ```{r}
@@ -26,8 +30,8 @@ library(stringr)
 ```
 
 
-## Getting data from NCBI Genbank
 
+## Getting data from NCBI Genbank
 
 The refdb packages uses the rentrez package (Winter 2017) to interface with NCBI servers. For animal DNA barcodes this will be the COI gene.
 
