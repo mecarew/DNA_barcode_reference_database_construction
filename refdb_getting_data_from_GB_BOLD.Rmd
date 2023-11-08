@@ -1,9 +1,9 @@
 ---
-title: "refdb_getting_data_from_GB_BOLD"
+  title: "refdb_getting_data_from_GB_BOLD"
 output: html_document
 ---
-
-```{r setup, include=FALSE}
+  
+  ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -27,9 +27,8 @@ library(bold)
 library(tidyverse)
 library(dplyr)
 library(stringr)
+library(here)
 ```
-
-
 
 ## Getting data from NCBI Genbank
 
@@ -37,18 +36,325 @@ The refdb packages uses the rentrez package (Winter 2017) to interface with NCBI
 
 Please note: This section is not currently working in refdb. These scripts are problematic for the download of data from GenBank (the link gets lost). This step best done outside of refdb. 
 
-```{r}#
-set_entrez_key ("a5b57c6e84215cf8dc669171d91d877a2d08")
-COI_ncbi <- refdb_import_NCBI(
-  query = "COI",
-  full = FALSE,
-  max_seq_length = 800,
-  seq_bin = 200,
-  verbose = TRUE)
-```
-Jess - Can we integrate your scripts/instuctions/process for downloading data from NCBI and turining it into a rds file here?
+Downloading NCBI COI sequences needs to be done over a few days. Don't expect everything to run smoothly. Expect errors and timeouts.
 
-# Using data downloaded from NBCI outside of refDB.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=TRUE, message=TRUE, error=TRUE, echo=TRUE, results="hold")
+knitr::opts_knit$set(root.dir = "..")
+options(digits=4)
+options(width=120)
+```
+
+# Load
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(refdb)
+library(here)
+```
+
+The refdb function `modified_refdb_import_NCBI` was split up into parts so downloading could be done in batches. Also some edits for taxon IDs that cause errors and keeping tmp files. Need to manually delete tmp files afterwards.
+
+```{r}
+modified_refdb_import_NCBI_pt1 <- function (query, max_seq_length = 10000, start = 0L, verbose = TRUE) 
+{
+    # ff <- tempfile("refdb_NCBI_", fileext = ".csv")
+    # fx <- tempfile("refdb_NCBI_", fileext = ".xml")
+    query <- paste0(query, " AND ( \"0\"[SLEN] : \"", max_seq_length, 
+        "\"[SLEN] )")
+    req <- rentrez::entrez_search(db = "nuccore", term = query, 
+        use_history = TRUE)
+    if (req$count == 0) {
+        if (verbose) 
+            cat("No sequence found\n")
+        return(NULL)
+    }
+    if (verbose && start > 0L) 
+        cat("Found", req$count, "sequences. Starting at", start, 
+            ".\n")
+    if (verbose) 
+        # cat("Downloading", req$count - start, "sequences from NCBI...\n")
+        cat("Found", req$count - start, "sequences from NCBI...\n")
+    return(req)
+}
+    
+modified_refdb_import_NCBI_pt2 <- function (request, csv_output, tmp_dir=tempdir(), full = FALSE, seq_bin = 200, 
+    verbose = TRUE, start = 0L, end=NULL) 
+{
+    # Modified to write multiple csv files and keep them. Data frame is written twice for troubleshooting. Manually delete files after.
+    if (! dir.exists(tmp_dir)) {
+      dir.create(tmp_dir, recursive=TRUE)
+    }
+    if (is.null(end) || end > request$count) {
+      end <- request$count
+    }
+    # ff_all <- tempfile("refdb_NCBI_", fileext = ".csv", tmpdir=tmp_dir)
+    ff_all <- csv_output
+    fx <- tempfile("refdb_NCBI_", fileext = ".xml", tmpdir=tmp_dir)
+    for (seq_start in seq(start, end, seq_bin)) {
+        ff <- tempfile(paste0("refdb_NCBI_", seq_start, "_"), fileext = ".csv", tmpdir=tmp_dir)
+        recs <- refdb:::entrez_fetch_retry(db = "nuccore", web_history = request$web_history, 
+            rettype = "gb", retmode = "xml", retmax = seq_bin, 
+            retstart = seq_start, delay_retry = 60, n_retry = 50, 
+            verbose = verbose)
+        if (is.na(recs)) {
+            next
+        }
+        readr::write_lines(recs, file = fx, append = FALSE)
+        NCBI_xml <- xml2::read_xml(fx)
+        NCBI_xml <- xml2::xml_children(NCBI_xml)
+        NCBI_table <- refdb:::make_ncbi_table(NCBI_xml)
+        taxo_id <- lapply(NCBI_xml, function(x) {
+            res <- xml2::xml_find_all(x, ".//GBQualifier_name[text()=\"db_xref\"]/following-sibling::GBQualifier_value")
+            res <- xml2::xml_text(res)
+            res <- res[stringr::str_detect(res, "taxon:[0-9]+")]
+            res <- unique(res)
+            res <- stringr::str_extract(res, "(?<=taxon:)[0-9]+")
+            # Sometimes a record doesn't have a taxon ID which causes an error downstream (e.g. MT491941)
+  if (length(res) == 0) {
+    message("Warning: Empty taxon id observed")
+    res <- NA
+  }
+  return(res)
+  })
+taxo_id <- unlist(taxo_id)
+taxo_id <- tibble::tibble(taxonomy = NCBI_table$taxonomy, 
+                          id = taxo_id)
+
+# Remove NA taxon IDs
+taxo_id <- taxo_id[! is.na(taxo_id$id), ]
+
+taxo_id <- taxo_id[!duplicated(taxo_id$taxonomy), ]
+gtax <- get_ncbi_taxonomy_retry(taxo_id$id, delay_retry = 60, 
+                                n_retry = 50, verbose = verbose)
+taxo_id <- dplyr::left_join(taxo_id, gtax[, -ncol(gtax)], 
+                            by = "id")
+NCBI_table <- dplyr::left_join(NCBI_table, taxo_id, by = "taxonomy", 
+                               suffix = c("", "_taxonomy"))
+NCBI_table <- tibble::tibble(source = "NCBI", NCBI_table)
+NCBI_table <- dplyr::mutate(NCBI_table, species = .data$organism)
+if (full == FALSE) {
+  NCBI_table <- dplyr::select(NCBI_table, .data$source, 
+                              .data$id, .data$gene, .data$sequence, .data$superkingdom, 
+                              .data$kingdom, .data$phylum, .data$subphylum, 
+                              .data$class, .data$subclass, .data$infraclass, 
+                              .data$order, .data$suborder, .data$infraorder, 
+                              .data$superfamily, .data$family, .data$genus, 
+                              .data$species, .data$country_location, .data$lat_lon)
+}
+if (seq_start == 0 | ! file.exists(ff_all)) {
+  readr::write_csv(NCBI_table[0, ], file = ff_all)
+}
+readr::write_csv(NCBI_table, file = ff_all, append = TRUE, col_names = FALSE)
+readr::write_csv(NCBI_table, file = ff, col_names = TRUE)
+if (verbose) {
+  cat("\r > ", seq_start + nrow(NCBI_table), " (", 
+      round((seq_start + nrow(NCBI_table))/request$count * 
+              100, digits = 1), "%) ", "sequences downloaded.", 
+      sep = "")
+}
+}
+}
+
+
+modified_refdb_import_NCBI_pt3 <- function (csv_file) 
+{
+  ff <- csv_file
+  out <- readr::read_csv(ff, col_types = readr::cols())
+  out <- refdb:::process_geo_ncbi(out)
+  out <- refdb_set_fields_NCBI(out)
+  out <- refdb_set_fields(out, latitude = "latitude", longitude = "longitude")
+  # file.remove(ff, fx)
+  return(out)
+}
+
+# This is unedited from refdb:::get_ncbi_taxonomy_retry but needs to be here so I can edit get_ncbi_taxonomy
+get_ncbi_taxonomy_retry <- function (id, delay_retry = 60, n_retry = 20, verbose = TRUE) 
+{
+  res <- "error"
+  while (identical(res, "error") & n_retry > 0) {
+    res <- tryCatch({
+      Sys.sleep(0.1)
+      get_ncbi_taxonomy(id, verbose = verbose)
+    }, error = function(cond) {
+      if (verbose) {
+        message("\nSomething went wrong:")
+        message(cond)
+        message("\n")
+        for (i in delay_retry:0) {
+          cat("\rRetrying in", i, "s.  ")
+          Sys.sleep(1)
+        }
+        cat("\n")
+      }
+      return("error")
+    })
+    n_retry <- n_retry - 1
+  }
+  if (identical(res, "error")) {
+    stop("All attempts failed.")
+  }
+  else {
+    return(res)
+  }
+}
+
+
+xml_extract <- refdb:::xml_extract
+
+get_ncbi_taxonomy <- function (id, verbose = TRUE) 
+{
+  ids <- split(id, ceiling(seq_along(id)/100))
+  taxo_table <- lapply(ids, function(x) {
+    taxo <- refdb:::entrez_fetch_retry("taxonomy", id = x, rettype = "xml", 
+                                       verbose = verbose)
+    taxo_xml <- xml2::read_xml(taxo)
+    taxo_xml <- xml2::xml_children(taxo_xml)
+    
+    # This is super hacky...
+    if (length(taxo_xml) != length(x)) {
+      entrez_taxo_ids <- sapply(taxo_xml, function(y) {
+        str_extract(xml2::xml_text(y), "^\\d+")
+      })
+      missing_ids <- x[! x %in% entrez_taxo_ids]
+      message("Warning: taxon information from entrez has fewer records than the provided IDs. Removing ", missing_ids)
+      x <- x[x %in% entrez_taxo_ids]
+    }
+    
+    taxo_table <- tibble::tibble(id = x, superkingdom = xml_extract(taxo_xml, 
+                                                                    ".//Rank[text()=\"superkingdom\"]/preceding-sibling::ScientificName"), 
+                                 kingdom = xml_extract(taxo_xml, ".//Rank[text()=\"kingdom\"]/preceding-sibling::ScientificName"), 
+                                 phylum = xml_extract(taxo_xml, ".//Rank[text()=\"phylum\"]/preceding-sibling::ScientificName"), 
+                                 subphylum = xml_extract(taxo_xml, ".//Rank[text()=\"subphylum\"]/preceding-sibling::ScientificName"), 
+                                 class = xml_extract(taxo_xml, ".//Rank[text()=\"class\"]/preceding-sibling::ScientificName"), 
+                                 subclass = xml_extract(taxo_xml, ".//Rank[text()=\"subclass\"]/preceding-sibling::ScientificName"), 
+                                 infraclass = xml_extract(taxo_xml, ".//Rank[text()=\"infraclass\"]/preceding-sibling::ScientificName"), 
+                                 order = xml_extract(taxo_xml, ".//Rank[text()=\"order\"]/preceding-sibling::ScientificName"), 
+                                 suborder = xml_extract(taxo_xml, ".//Rank[text()=\"suborder\"]/preceding-sibling::ScientificName"), 
+                                 infraorder = xml_extract(taxo_xml, ".//Rank[text()=\"infraorder\"]/preceding-sibling::ScientificName"), 
+                                 superfamily = xml_extract(taxo_xml, ".//Rank[text()=\"superfamily\"]/preceding-sibling::ScientificName"), 
+                                 family = xml_extract(taxo_xml, ".//Rank[text()=\"family\"]/preceding-sibling::ScientificName"), 
+                                 genus = xml_extract(taxo_xml, ".//Rank[text()=\"genus\"]/preceding-sibling::ScientificName"), 
+                                 species = xml_extract(taxo_xml, ".//Rank[text()=\"species\"]/preceding-sibling::ScientificName"))
+    return(taxo_table)
+  })
+  taxo_table <- dplyr::bind_rows(taxo_table)
+  return(taxo_table)
+}
+```
+
+
+# Download sequences
+
+```{r}
+ncbi_request <- modified_refdb_import_NCBI_pt1("(((((((((COX1) OR cytochrome c oxidase I) OR COI) OR MT-CO1) OR MTCO1) OR CO I) OR mitochondrially encoded cytochrome c oxidase I) OR main subunit of cytochrome c oxidase) OR cytochrome c oxidase subunit I) AND Mitochondrion[Filter]")
+Sys.time()
+```
+
+Note: The number of sequences change over time. e.g.  
+4370766 sequences as of 2023-06-28.  
+4371338 sequences as of 2023-06-29 and 30.  
+4378270 sequences as of 2023-07-01.  
+
+```{r}
+seq(0, ncbi_request$count, by=3e5)
+```
+
+
+```{r}
+csv_file <- here("ncbi_2023-06-29.csv")
+tmp_dir <- here("tmp_2023-06-29")
+
+# e.g. Run commands in batches like so:
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=0, end=300000)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=300000, end=600000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=600000, end=900000-1)
+
+# If things break, can manually specify start and end indices. Duplicate sequences will be removed at a later step, so don't worry about downloading sequences twice.
+```
+
+
+```{r}
+csv_file <- here("ncbi_2023-06-30.csv")
+tmp_dir <- here("tmp_2023-06-30")
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=900000, end=1200000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=1200000, end=1500000-1)
+```
+
+
+```{r}
+csv_file <- here("ncbi_2023-07-01.csv")
+tmp_dir <- here("tmp_2023-07-01")
+
+# If the database updates overnight, you can offset the start index by some amount (e.g.)
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=1500000-7000, end=1800000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=1800000, end=2100000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=2100000, end=2400000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=2400000, end=3000000-1)
+
+```
+
+
+
+```{r}
+csv_file <- here("ncbi_2023-07-02.csv")
+tmp_dir <- here("tmp_2023-07-02")
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=3000000, end=3300000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=3300000, end=3900000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=3900000)
+```
+
+
+
+## Load in files
+
+```{r}
+# Overlap between june 28 and 29, and june 30 and july 01
+f1 <- modified_refdb_import_NCBI_pt3(here("ncbi_2023-06-28.csv"))
+f2 <- modified_refdb_import_NCBI_pt3(here("ncbi_2023-06-29.csv"))
+f3 <- modified_refdb_import_NCBI_pt3(here("ncbi_2023-06-30.csv"))
+f4 <- modified_refdb_import_NCBI_pt3(here("ncbi_2023-07-01.csv"))
+f5 <- modified_refdb_import_NCBI_pt3(here("ncbi_2023-07-02.csv"))
+```
+
+```{r}
+# Combine everything
+combined_with_dups <- rbind(f1, f2, f3, f4, f5)
+nrow(combined_with_dups)
+table(duplicated(combined_with_dups$id))
+
+# Remove duplicates
+dups <- rev(duplicated(rev(combined_with_dups$id)))
+combined <- combined_with_dups[! dups,]
+table(duplicated(combined$id))
+
+saveRDS(combined, file=here("ref_db/combined_tbl_df.rds"))
+rm(combined_with_dups)
+```
+
+
+-----
+  
+  # Session Info
+  
+  ```{r}
+if (nzchar(system.file(package="devtools"))) {
+  devtools::session_info()
+} else {
+  sessionInfo()
+}
+```
 
 # read in rds file from Jess's data dump from NCBI
 ```{r}
@@ -58,17 +364,17 @@ NCBI_data <- readRDS("/mnt/galaxy/home/jess/projects/metabarcoding_pipeline/ref_
 # set fields
 ```{r}
 NCBI_data <- refdb_set_fields(NCBI_data,
-                        taxonomy = c(
-                        phylum = "phylum",
-                        class = "class",
-                        order = "order",
-                        family = "family",
-                        genus = "genus",
-                        species = "species"),
-                        sequence = "sequence",
-                        marker = "gene",
-                        source = "source",
-                        id = "id")
+                              taxonomy = c(
+                                phylum = "phylum",
+                                class = "class",
+                                order = "order",
+                                family = "family",
+                                genus = "genus",
+                                species = "species"),
+                              sequence = "sequence",
+                              marker = "gene",
+                              source = "source",
+                              id = "id")
 
 refdb_get_fields(NCBI_data)
 ```
@@ -91,17 +397,17 @@ write_rds(NCBI_data_dup,"~/Documents/DNA_reference_db_construction/refdb/Output_
 # Set fields
 ```{r}
 NCBI_data_dup <- refdb_set_fields(NCBI_data_dup,
-                        taxonomy = c(
-                        phylum = "phylum",
-                        class = "class",
-                        order = "order",
-                        family = "family",
-                        genus = "genus",
-                        species = "species"),
-                        sequence = "sequence",
-                        marker = "gene",
-                        source = "source",
-                        id = "id")
+                                  taxonomy = c(
+                                    phylum = "phylum",
+                                    class = "class",
+                                    order = "order",
+                                    family = "family",
+                                    genus = "genus",
+                                    species = "species"),
+                                  sequence = "sequence",
+                                  marker = "gene",
+                                  source = "source",
+                                  id = "id")
 
 refdb_get_fields(NCBI_data_dup)
 ```
@@ -128,8 +434,8 @@ refdb_plot_seqlen_hist(NCBI_data_clean)
 #Visualizing the reference library (Optional)
 
 Now let’s take a tour of the functions you can use to produce graphical representation of your reference database. Because refdb stores reference database as dataframes it is straightforward to produce plots (e.g. with the tidyverse and ggplot2). For example, we can make a barplot showing the distribution of the phyla like this:
-
-```{r}
+  
+  ```{r}
 NCBI_data_clean %>% 
   group_by(phylum) %>% 
   count() %>% 
@@ -142,8 +448,8 @@ NCBI_data_clean %>%
 
 
 Additionally, refdb provides ready-to-use functions to produce more sophisticated plots. For example, to represent the taxonomic coverage of your reference library across multiple levels with a tree map:
-
-```{r}
+  
+  ```{r}
 refdb_plot_tax_treemap(NCBI_data_clean, cols = 1)
 ```
 
@@ -151,8 +457,8 @@ Alternatively you can represent this information with a taxonomic tree. These fu
 
 # Creating a report (useful)
 A report is a simple and rapid way to get an overview of the current state of your reference library and to identify some possible issues. You can compile a report using the function refdb_report: 
-
-```{r}
+  
+  ```{r}
 refdb_report(NCBI_data_clean, view=TRUE)
 ```                       
 
@@ -681,16 +987,16 @@ save interim files as .rda
 #setting fields for bold data and save combined file with all unmanipulated data
 ```{r}
 all_bold <- refdb_set_fields(all_bold,
-                        source = "source",
-                        id = "sequenceID",
-                        taxonomy = c(phylum = "phylum_name",
-                        class = "class_name",
-                        order = "order_name",
-                        family = "family_name",
-                        genus = "genus_name",
-                        species = "species_name"),
-                        sequence = "nucleotides",
-                        marker = "markercode")
+                             source = "source",
+                             id = "sequenceID",
+                             taxonomy = c(phylum = "phylum_name",
+                                          class = "class_name",
+                                          order = "order_name",
+                                          family = "family_name",
+                                          genus = "genus_name",
+                                          species = "species_name"),
+                             sequence = "nucleotides",
+                             marker = "markercode")
 
 ```
 
@@ -756,7 +1062,7 @@ refdb_plot_seqlen_hist(all_bold_clean)
 
 #Visualizing the reference library (Optional)
 Some of the functions you can use to produce graphical representation of your reference database. Because refdb stores reference database as dataframes it is straightforward to produce plots (e.g. with the tidyverse and ggplot2). For example, we can make a barplot showing the distribution of the families like this:
-```{r}
+  ```{r}
 all_bold_clean %>% 
   group_by(phylum_name) %>% 
   count() %>% 
@@ -797,8 +1103,8 @@ write_rds(all_bold_clean,"~/Documents/DNA_reference_db_construction/refdb/Output
 
 # Creating a report (worth doing)
 A report is a simple and rapid way to get an overview of the current state of your reference library and to identify some possible issues. You can compile a report using the function refdb_report: 
-
-```{r}
+  
+  ```{r}
 refdb_report(all_bold_final, view=TRUE)
 ```                       
 
@@ -815,15 +1121,15 @@ priv_lib <- read_csv ("~/Documents/DNA_reference_db_construction/refdb/Input_dat
 #corrections to private library
 ```{r}
 priv_lib$species <- gsub("Craspedacusta sowerbyi", "Craspedacusta sowerbii",
-           gsub("Polypedilum griseguttataum", "Polypedilum griseoguttatum",
-           gsub("Culicoides bundyensi", "Culicoides bundyensis",
-           gsub("Austrophlebiodies pusillus", "Austrophlebioides pusillus",
-           gsub("AustroLimnophila", "Austrolimnophila",
-           gsub("\\'", "", priv_lib$species))))))
+                         gsub("Polypedilum griseguttataum", "Polypedilum griseoguttatum",
+                              gsub("Culicoides bundyensi", "Culicoides bundyensis",
+                                   gsub("Austrophlebiodies pusillus", "Austrophlebioides pusillus",
+                                        gsub("AustroLimnophila", "Austrolimnophila",
+                                             gsub("\\'", "", priv_lib$species))))))
 priv_lib$family <- gsub("Chironominae",
-           "Chironomidae", priv_lib$family)
+                        "Chironomidae", priv_lib$family)
 priv_lib$order <- gsub("Unionoida",
-           "Unionida", priv_lib$order)
+                       "Unionida", priv_lib$order)
 priv_lib$genus <- gsub("AustroLimnophila", "Austrolimnophila", priv_lib$genus)
 
 #check corrections have been made
@@ -841,17 +1147,17 @@ print (sum(str_detect(priv_lib$order, 'Unionoida')) > 0)
 #Set fields
 ```{r}
 priv_lib <- refdb_set_fields(priv_lib,
-                        taxonomy = c(
-                        phylum = "phylum",
-                        class = "class",
-                        order = "order",
-                        family = "family",
-                        genus = "genus",
-                        species = "species"),
-                        sequence = "DNA_seq",
-                        marker = "marker",
-                        source = "source",
-                        id = "id")
+                             taxonomy = c(
+                               phylum = "phylum",
+                               class = "class",
+                               order = "order",
+                               family = "family",
+                               genus = "genus",
+                               species = "species"),
+                             sequence = "DNA_seq",
+                             marker = "marker",
+                             source = "source",
+                             id = "id")
 
 refdb_get_fields(priv_lib)
 ```
@@ -871,8 +1177,8 @@ Note: Primer cropping in refdb does not work! I could not get refdb to properly 
 #Visualizing the reference library (Optional)
 
 Now let’s take a tour of the functions you can use to produce graphical representation of your reference database. Because refdb stores reference database as dataframes it is straightforward to produce plots (e.g. with the tidyverse and ggplot2). For example, we can make a barplot showing the distribution of the families like this:
-
-```{r}
+  
+  ```{r}
 priv_lib_dup %>% 
   group_by(phylum) %>% 
   count() %>% 
@@ -895,8 +1201,8 @@ priv_lib_dup %>%
 ```
 
 Additionally, refdb provides ready-to-use functions to produce more sophisticated plots. For example, to represent the taxonomic coverage of your reference library across multiple levels with a tree map:
-
-Jess - This does not work but not important as there is simply too much data to get anything meaningful out.
+  
+  Jess - This does not work but not important as there is simply too much data to get anything meaningful out.
 
 ```{r}
 refdb_plot_tax_treemap(priv_lib_dup, cols = 4)
@@ -911,13 +1217,13 @@ refdb_plot_tax_tree(priv_lib_dup)
 
 # Creating a report
 A report is a simple and rapid way to get an overview of the current state of your reference library and to identify some possible issues. You can compile a report using the function refdb_report: 
-
-```{r}
+  
+  ```{r}
 refdb_report(priv_lib_dup, view=TRUE)
 ```                    
 #Exporting data
 Once satisfied with the results, they can be exported for further use. Since the reference database is a dataframe, it is possible to use any export functions (from R or from other packages) that support dataframes. Here we show how to export to CSV using the function write_csv from the readr package:
-```{r}
+  ```{r}
 write_csv(priv_lib_dup, "~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_Oct23_dup.csv")
 ```
 
@@ -933,23 +1239,23 @@ all_bold_priv_NCBI <- refdb_merge(priv_lib_dup, NCBI_data_clean, all_bold_clean,
 
 #Adjust taxonomy across datasets
 Ensures that the consist taxonomic classification is use in specified columns (Phyla to genus, leave out species as it removes interim names (specify columns). This should be used on the final dataset (with GB data included) for the taxonomic field of phylum, class, order, family, genus. Species need to be left out as this function will remove interim species names from the private database.
-
-```{r}
-all_bold_priv_NCBI_final <- refdb_clean_tax_harmonize_nomenclature(all_bold_priv_NCBI, cols = 1:7)
-
-head(all_bold_priv_NCBI_final)
-```
-
-```{r}
-all_bold_priv_NCBI_final <-refdb_filter_seq_duplicates(all_bold_priv_NCBI_final)
-
-write_rds(all_bold_priv_NCBI_final,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_priv_NCBI_final_Oct23.rds")
-
-all_bold_priv_NCBI_final <- read_rds("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_priv_NCBI_final_Oct23.rds")
-```
-
-##Issue from refdb in the final library
-The final library will still have NA in some empty taxonomic columns as the refdb function removes 'na' within taxonomic names. The final 'csv will need the NA's filtered out using code that only removes 'NA from entire cells.
+                                                                               
+                                                                               ```{r}
+                                                                               all_bold_priv_NCBI_final <- refdb_clean_tax_harmonize_nomenclature(all_bold_priv_NCBI, cols = 1:7)
+                                                                               
+                                                                               head(all_bold_priv_NCBI_final)
+                                                                               ```
+                                                                               
+                                                                               ```{r}
+                                                                               all_bold_priv_NCBI_final <-refdb_filter_seq_duplicates(all_bold_priv_NCBI_final)
+                                                                               
+                                                                               write_rds(all_bold_priv_NCBI_final,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_priv_NCBI_final_Oct23.rds")
+                                                                               
+                                                                               all_bold_priv_NCBI_final <- read_rds("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_priv_NCBI_final_Oct23.rds")
+                                                                               ```
+                                                                               
+                                                                               ##Issue from refdb in the final library
+                                                                               The final library will still have NA in some empty taxonomic columns as the refdb function removes 'na' within taxonomic names. The final 'csv will need the NA's filtered out using code that only removes 'NA from entire cells.
 Also, there are some strange additions to the end for species names from the 'remove extra' bits on names that should be removed these include:
 
 #Step 1: remove 'NA' from empty cells, weird additions on species names and trim whitespaces remaining at the end of species names
@@ -1074,107 +1380,580 @@ Unfortunately, the primer cropping in refdb does not work! I could not get refdb
 Therefore for this step we can use cutadapt.....
 
 ##still needs editing
-```{bash}
- conda create -n cutadapt
-# conda activate cutadapt
+
+
+
+```{r include=FALSE}
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=TRUE, message=TRUE, error=TRUE, echo=TRUE, results="hold")
+knitr::opts_knit$set(root.dir = "..")
+options(digits=4)
+options(width=120)
+```
+
+# Load
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(refdb)
+library(here)
+library(bioseq)
+```
+
+```{r}
+# Data was previously downloaded with refdb
+
+# Load in the data
+all_db <- readRDS(here("ref_db/combined_tbl_df.rds"))
+nrow(all_db)
+```
+
+
+```{r}
+dedup_db <- refdb::refdb_filter_seq_duplicates(all_db)
+nrow(dedup_db)
+```
+
+```{r}
+saveRDS(dedup_db, here("ref_db/dedup_db_tbl_df.rds"))
+```
+
+```{r}
+dedup_db %>% object.size()
+```
+
+```{r}
+dedup_db <- readRDS(here("ref_db/dedup_db_tbl_df.rds"))
+```
+
+
+```{r}
+dedup_db %>% object.size()
+```
+
+```{r}
+rm(all_db)
+```
+
+
+```{r}
+seqs <- dedup_db[, "sequence",drop=TRUE]
+names(seqs) <- 1:nrow(dedup_db)
+bioseq::write_fasta(seqs, file = here("ref_db/dedup_ref_db.fasta"),
+                    line_length = 80, block_length=Inf)
+```
+
+```
+# # TESTING
+# module load cutadapt/4.2
+# cd /data/gpfs/projects/punim2065/jess/metabarcoding_ref_db/untrimmed_seq
+# head -1001 dedup_ref_db.fasta > subset_test.fasta
+# 
+# sinteractive --partition=cascade --account=punim2065 --ntasks=1 --cpus-per-task=2 --mem=16384 --time=1:0:0
+# # module load cutadapt/4.2
+# 
+# conda create -n metabarcoding
+# conda activate metabarcoding
 # conda install -c bioconda cutadapt
+# 
+# cd /data/gpfs/projects/punim2065/jess/metabarcoding_ref_db/
+# 
+# cutadapt \
+#     --cores 2 \
+#     -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT \
+#     -e 0.2 \
+#     --revcomp \
+#     -m 100 \
+#     -M 450 \
+#     --max-n 0.05 \
+#     --too-short-output trimming/short_amplicon_too_short.fasta \
+#     --too-long-output trimming/short_amplicon_too_long.fasta \
+#     --untrimmed-output trimming/short_amplicon_untrimmed.fasta \
+#     -o trimming/short_amplicon_trimmed.fasta \
+#     untrimmed_seq/subset_test.fasta \
+#     > trimming/short_amplicon_cutadapt.log
+```
 
-# sinteractive --ntasks=1 --cpus-per-task=4
-conda activate cutadapt
-cd ~/projects/metabarcoding_pipeline/ref_db/bold_2023-06
 
-ampliconGroup=short
+```
+sinteractive --partition=cascade --account=punim2065 --ntasks=1 --cpus-per-task=4 --mem=32768 --time=8:0:0
+conda activate metabarcoding
+cd /data/gpfs/projects/punim2065/jess/metabarcoding_ref_db
 cutadapt \
     --cores 4 \
-    -a ACWGGWTGRACWGTNTAYCC \
-    -a TAGGWACWGGWTGAACWGTWTAYCCYCC \
-    -g GCHGGDGCHATYACHATRYT \
-    -g CCNGTNYTNGCNGGNGCNATYACGG \
-    -e 0.1 \
+    -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT \
+    -e 0.2 \
     --revcomp \
     -m 100 \
     -M 450 \
     --max-n 0.05 \
-    --too-short-output bold_${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output bold_${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output bold_${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o bold_${ampliconGroup}_amplicon_trimmed.fasta \
-    untrimmed.fasta \
-    > bold_${ampliconGroup}_amplicon_cutadapt.log
+    --too-short-output trimming/short_amplicon_too_short.fasta \
+    --too-long-output trimming/short_amplicon_too_long.fasta \
+    --untrimmed-output trimming/short_amplicon_untrimmed.fasta \
+    -o trimming/short_amplicon_trimmed.fasta \
+    untrimmed_seq/dedup_ref_db.fasta \
+    > trimming/short_amplicon_cutadapt.log
+    
 
 ampliconGroup=long
 cutadapt \
     --cores 4 \
-    -a CCNGAYATRGCNTTYCCNCG \
-    -a GCHCCHGAYATRGCHTTYCC \
-    -g TGRTTYTTYGGNCAYCCHGA \
-    -g TGRTTYTTTGGWCAYCCWGAAGTTTA \
-    -e 0.15 \
-    --revcomp \
-    -m 200 \
-    -M 550 \
-    --max-n 0.05 \
-    --too-short-output bold_${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output bold_${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output bold_${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o bold_${ampliconGroup}_amplicon_trimmed.fasta \
-    untrimmed.fasta \
-    > bold_${ampliconGroup}_amplicon_cutadapt.log
-    
-ampliconGroup=right
-cutadapt \
-    --cores 4 \
-    -a TAGGWACWGGWTGAACWGTWTAYCCYCC \
-    -a ACWGGWTGRACWGTNTAYCC \
-    -g TGRTTYTTYGGNCAYCCHGA \
-    -g TGRTTYTTTGGWCAYCCWGAAGTTTA \
+    -g GCHCCHGAYATRGCHTTYCC...TGRTTYTTYGGNCAYCCHGA \
     -e 0.2 \
     --revcomp \
     -m 200 \
     -M 550 \
     --max-n 0.05 \
-    --too-short-output bold_${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output bold_${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output bold_${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o bold_${ampliconGroup}_amplicon_trimmed.fasta \
-    untrimmed.fasta \
-    > bold_${ampliconGroup}_amplicon_cutadapt.log
-
-ampliconGroup=left
-cutadapt \
-    --cores 4 \
-    -a CCNGAYATRGCNTTYCCNCG \
-    -a GCHCCHGAYATRGCHTTYCC \
-    -g GCHGGDGCHATYACHATRYT \
-    `# -g CCNGTNYTNGCNGGNGCNATYACGG  # Using this primer makes trimmed sequences too short` \
-    -e 0.15 \
-    --revcomp \
-    -m 200 \
-    -M 450 \
-    --max-n 0.05 \
-    --too-short-output bold_${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output bold_${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output bold_${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o bold_${ampliconGroup}_amplicon_trimmed.fasta \
-    untrimmed.fasta \
-    > bold_${ampliconGroup}_amplicon_cutadapt.log
+    --too-short-output trimming/${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output trimming/${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o trimming/${ampliconGroup}_amplicon_trimmed.fasta \
+    untrimmed_seq/dedup_ref_db.fasta \
+    > trimming/${ampliconGroup}_amplicon_cutadapt.log
     
-ampliconGroup=lco
+ampliconGroup=right
 cutadapt \
     --cores 4 \
-    -g ATCATAAAGAYATYGG...GCHGGDGCHATYACHATRYT \
-    -e 0.3 \
+    -g ACWGGWTGRACWGTNTAYCC...TGRTTYTTYGGNCAYCCHGA \
+    -e 0.25 \
     --revcomp \
     -m 200 \
     -M 550 \
     --max-n 0.05 \
-    --too-short-output bold_${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output bold_${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output bold_${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o bold_${ampliconGroup}_amplicon_trimmed.fasta \
-    untrimmed.fasta \
-    > bold_${ampliconGroup}_amplicon_cutadapt.log
+    --too-short-output trimming/${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output trimming/${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o trimming/${ampliconGroup}_amplicon_trimmed.fasta \
+    untrimmed_seq/dedup_ref_db.fasta \
+    > trimming/${ampliconGroup}_amplicon_cutadapt.log
     
-# Get number of sequences in each file
-grep -c ">" *fasta > n_seq.txt
+ampliconGroup=left
+cutadapt \
+    --cores 4 \
+    -g CCNGAYATRGCNTTYCC...CCNGTNYTNGCNGGNGCNATYACH \
+    -e 0.2 \
+    --revcomp \
+    -m 200 \
+    -M 450 \
+    --max-n 0.05 \
+    --too-short-output trimming/${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output trimming/${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o trimming/${ampliconGroup}_amplicon_trimmed.fasta \
+    untrimmed_seq/dedup_ref_db.fasta \
+    > trimming/${ampliconGroup}_amplicon_cutadapt.log
 ```
+
+# Merge sequences back
+
+
+```{r}
+short_fasta <- bioseq::read_fasta(file=here("ref_db/short_amplicon_trimmed.fasta"))
+```
+
+```{r}
+short_fasta %>% tail
+```
+
+```{r}
+length(short_fasta)
+```
+
+```{r}
+# Some sequences are now the reverse complement
+rc_ids <- names(short_fasta)[! names(short_fasta) %in% rownames(dedup_db)]
+length(rc_ids)
+head(rc_ids)
+```
+
+```{r}
+# Check
+short_fasta["4329 rc"] %>% as.character
+short_fasta["4329 rc"] %>% seq_reverse %>% seq_complement %>% as.character
+dedup_db["4329", "sequence", drop=TRUE] %>% as.character
+```
+
+```{r}
+short_db <- dedup_db[str_remove(names(short_fasta), " rc$"),]
+short_db$sequence <- short_fasta
+```
+
+
+```{r}
+table(is.na(short_db$id))
+```
+
+
+```{r}
+# Write files
+# Change from default behaviour (refdb::refdb_export_mothur and bioseq::write_fasta)
+# - include taxonomy labels, e.g. k__Eukaryota;p__Arthropoda;c__Insecta
+# - only use taxonmy levels: k, p, c, o, f, g, s
+# - single line break between sequences and no block size
+
+write_db_files <- function (x, path_prefix) {
+    # Which taxonomy levels to include in output and the label names:
+    tax_levels <- c("k"="superkingdom", "p"="phylum", "c"="class", "o"="order", "f"="family",
+                    "g"="genus", "s"="species")
+    refdb:::check_fields(x, what = c("sequence", "taxonomy", "id"))
+    # col_tax <- attributes(x)$refdb_fields$taxonomy
+    col_tax <- tax_levels
+    col_id <- attributes(x)$refdb_fields$id
+    col_seq <- attributes(x)$refdb_fields$sequence
+    labs <- x[[col_id]]
+    labs <- stringr::str_replace_all(labs, "[:blank:]", "_")
+    seqs <- x[[col_seq]]
+    names(seqs) <- labs
+    # Change NA values to ""
+    x[, col_tax][is.na(x[, col_tax])] <- ""
+    # Add labels names
+    tax <- apply(x[, col_tax], 1, function(x) paste0(names(tax_levels), "__", x, collapse = ";"))
+    tax <- paste0(labs, "\t", tax, ";")
+    file_fas <- paste0(path_prefix, ".fasta")
+    file_txt <- paste0(path_prefix, ".txt")
+    write_fasta(seqs, file = file_fas)
+    readr::write_lines(tax, file = file_txt)
+}
+
+write_fasta <- function (x, file, append = FALSE, line_length = 80, block_length = Inf) 
+{
+    x_nchar <- stringr::str_length(x)
+    x_is_na <- is.na(x)
+    if (line_length == Inf) {
+        line_length <- max(x_nchar, na.rm = TRUE)
+    }
+    if (block_length == Inf) {
+        block_length <- line_length
+    }
+    blocks_by_line <- line_length/block_length
+    if (block_length > line_length) {
+        stop("The length of blocks cannot be higher than the length of lines")
+    }
+    if (line_length%%block_length > 0L) {
+        stop("The length of lines must be a multiple of the length of blocks")
+    }
+    if (any(x_is_na | x_nchar == 0L)) {
+        input_len <- length(x)
+        x <- x[!is.na(x)]
+        output_len <- length(x)
+        warning("Found ", input_len - output_len, " NA and/or empty sequences. They were not exported since ", 
+            "the FASTA format does not support missing values.")
+    }
+    x <- as.character(x)
+    x <- vapply(x, function(x) {
+        x_len <- stringr::str_length(x)
+        blocks <- seq(1, x_len, by = block_length)
+        res <- stringr::str_sub(x, blocks, blocks - 1 + block_length)
+        separator <- rep(" ", length(res))
+        if (x_len > line_length) {
+            separator[seq(blocks_by_line, blocks_by_line * (x_len%/%line_length), 
+                blocks_by_line)] <- "\n"
+        }
+        separator[length(separator)] <- ""
+        res <- stringr::str_c(res, separator, collapse = "")
+        res
+    }, vector("character", 1))
+    fas <- stringr::str_c(">", names(x), sep = "")
+    fas <- stringr::str_c(fas, x, sep = "\n", collapse = "\n") # Changed collapse to one line break
+    readr::write_file(fas, file, append = append)
+    readr::write_file("\n", file, append = TRUE) # Add one additional line break at the end
+}
+```
+
+```{r}
+# write_db_files(short_db, path_prefix=here("ref_db/short_db"))
+```
+
+
+# Write all
+
+
+```{r}
+# Output prefix name and input file path
+db_files <- c(
+  "short_db_2023-07" = here("ref_db/short_amplicon_trimmed.fasta"),
+  "long_db_2023-07" = here("ref_db/long_amplicon_trimmed.fasta"),
+  "left_db_2023-07" = here("ref_db/left_amplicon_trimmed.fasta"),
+  "right_db_2023-07" = here("ref_db/right_amplicon_trimmed.fasta")
+)
+```
+
+```{r}
+output_dir <- here("ref_db")
+for (i in seq_along(db_files)) {
+  message("Processing ", names(db_files[i]))
+  fasta <- bioseq::read_fasta(file=db_files[i])
+  db <- dedup_db[str_remove(names(fasta), " rc$"),]
+  db$sequence <- fasta
+  stopifnot(! is.na(db$id))
+  message("Writing files for ", names(db_files[i]))
+  write_db_files(db, path_prefix=file.path(output_dir, names(db_files[i])))
+}
+```
+
+
+# BOLD sequences
+
+
+```{r}
+# load("/mnt/galaxy/home/mecarew/Documents/DNA_reference_db_construction/refdb/DNA_bold_data.RData")
+# saveRDS(all_bold_priv2_nogap_noN_NA_H_len2, here("ref_db/bold_tbl_df.rds"))
+```
+
+```{r}
+bold_db <- readRDS(here("ref_db/bold_tbl_df.rds"))
+```
+
+```{r}
+table(bold_db$phylum_name)
+```
+
+```{r}
+bold_db %>% head
+```
+
+
+```{r}
+seqs <- bold_db[, "nucleotides",drop=TRUE]
+names(seqs) <- 1:nrow(bold_db)
+parts <- as.numeric(cut(seq_along(seqs), 4))
+bioseq::write_fasta(seqs[parts == 1], file = here("ref_db/bold_ref_db.fasta"),
+                    line_length = 80, block_length=Inf, append=FALSE)
+bioseq::write_fasta(seqs[parts == 2], file = here("ref_db/bold_ref_db.fasta"),
+                    line_length = 80, block_length=Inf, append=TRUE)
+bioseq::write_fasta(seqs[parts == 3], file = here("ref_db/bold_ref_db.fasta"),
+                    line_length = 80, block_length=Inf, append=TRUE)
+bioseq::write_fasta(seqs[parts == 4], file = here("ref_db/bold_ref_db.fasta"),
+                    line_length = 80, block_length=Inf, append=TRUE)
+```
+
+
+
+```{r}
+dedup_bold <- refdb::refdb_filter_seq_duplicates(bold_db)
+dim(dedup_bold)
+```
+
+```{r}
+refdb::refdb_filter_seq_duplicates
+```
+
+```{r}
+seqs <- dedup_bold[, "nucleotides",drop=TRUE]
+names(seqs) <- 1:nrow(dedup_bold)
+parts <- as.numeric(cut(seq_along(seqs), 4))
+bioseq::write_fasta(seqs[parts == 1], file = here("ref_db/dedup_bold_ref_db.fasta"),
+                    line_length = 80, block_length=Inf, append=FALSE)
+bioseq::write_fasta(seqs[parts == 2], file = here("ref_db/dedup_bold_ref_db.fasta"),
+                    line_length = 80, block_length=Inf, append=TRUE)
+bioseq::write_fasta(seqs[parts == 3], file = here("ref_db/dedup_bold_ref_db.fasta"),
+                    line_length = 80, block_length=Inf, append=TRUE)
+bioseq::write_fasta(seqs[parts == 4], file = here("ref_db/dedup_bold_ref_db.fasta"),
+                    line_length = 80, block_length=Inf, append=TRUE)
+```
+
+
+### BOLD trimming
+
+```
+conda create -n cutadapt
+conda activate cutadapt
+conda install -c bioconda cutadapt
+
+sinteractive --ntasks=1 --cpus-per-task=4
+conda activate cutadapt
+cd ~/projects/metabarcoding_pipeline/ref_db/
+
+mkdir bold
+cutadapt \
+    --cores 4 \
+    -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT \
+    -e 0.2 \
+    --revcomp \
+    -m 100 \
+    -M 450 \
+    --max-n 0.05 \
+    --too-short-output bold/bold_${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output bold/bold_${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output bold/bold_${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o bold/bold_${ampliconGroup}_amplicon_trimmed.fasta \
+    dedup_bold_ref_db.fasta \
+    > bold/bold_${ampliconGroup}_amplicon_cutadapt.log
+    
+
+ampliconGroup=long
+cutadapt \
+    --cores 4 \
+    -g GCHCCHGAYATRGCHTTYCC...TGRTTYTTYGGNCAYCCHGA \
+    -e 0.2 \
+    --revcomp \
+    -m 200 \
+    -M 550 \
+    --max-n 0.05 \
+    --too-short-output bold/bold_${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output bold/bold_${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output bold/bold_${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o bold/bold_${ampliconGroup}_amplicon_trimmed.fasta \
+    dedup_bold_ref_db.fasta \
+    > bold/bold_${ampliconGroup}_amplicon_cutadapt.log
+    
+ampliconGroup=right
+cutadapt \
+    --cores 4 \
+    -g ACWGGWTGRACWGTNTAYCC...TGRTTYTTYGGNCAYCCHGA \
+    -e 0.25 \
+    --revcomp \
+    -m 200 \
+    -M 550 \
+    --max-n 0.05 \
+    --too-short-output bold/bold_${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output bold/bold_${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output bold/bold_${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o bold/bold_${ampliconGroup}_amplicon_trimmed.fasta \
+    dedup_bold_ref_db.fasta \
+    > bold/bold_${ampliconGroup}_amplicon_cutadapt.log
+    
+ampliconGroup=left
+cutadapt \
+    --cores 4 \
+    -g CCNGAYATRGCNTTYCC...CCNGTNYTNGCNGGNGCNATYACH \
+    -e 0.2 \
+    --revcomp \
+    -m 200 \
+    -M 450 \
+    --max-n 0.05 \
+    --too-short-output bold/bold_${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output bold/bold_${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output bold/bold_${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o bold/bold_${ampliconGroup}_amplicon_trimmed.fasta \
+    dedup_bold_ref_db.fasta \
+    > bold/bold_${ampliconGroup}_amplicon_cutadapt.log
+
+```
+
+### Create db files
+
+
+```{r}
+# Write files
+# Change from default behaviour (refdb::refdb_export_mothur and bioseq::write_fasta)
+# - include taxonomy labels, e.g. k__Eukaryota;p__Arthropoda;c__Insecta
+# - only use taxonmy levels: k, p, c, o, f, g, s
+# - single line break between sequences and no block size
+
+write_db_files <- function (x, path_prefix) {
+    # Which taxonomy levels to include in output and the label names:
+    tax_levels <- c("k"="kingdom_name", 
+                    "p"="phylum_name", "c"="class_name", "o"="order_name",
+                    "f"="family_name", "g"="genus_name", "s"="species_name")
+    refdb:::check_fields(x, what = c("sequence", "taxonomy", "id"))
+    # col_tax <- attributes(x)$refdb_fields$taxonomy
+    col_tax <- tax_levels
+    col_id <- attributes(x)$refdb_fields$id
+    col_seq <- attributes(x)$refdb_fields$sequence
+    labs <- x[[col_id]]
+    labs <- stringr::str_replace_all(labs, "[:blank:]", "_")
+    seqs <- x[[col_seq]]
+    names(seqs) <- labs
+    # Change NA values to ""
+    x[, col_tax][is.na(x[, col_tax])] <- ""
+    # Add labels names
+    tax <- apply(x[, col_tax], 1, function(x) paste0(names(tax_levels), "__", x, collapse = ";"))
+    tax <- paste0(labs, "\t", tax, ";")
+    file_fas <- paste0(path_prefix, ".fasta")
+    file_txt <- paste0(path_prefix, ".txt")
+    write_fasta(seqs, file = file_fas)
+    readr::write_lines(tax, file = file_txt)
+}
+
+write_fasta <- function (x, file, append = FALSE, line_length = 80, block_length = Inf) 
+{
+    x_nchar <- stringr::str_length(x)
+    x_is_na <- is.na(x)
+    if (line_length == Inf) {
+        line_length <- max(x_nchar, na.rm = TRUE)
+    }
+    if (block_length == Inf) {
+        block_length <- line_length
+    }
+    blocks_by_line <- line_length/block_length
+    if (block_length > line_length) {
+        stop("The length of blocks cannot be higher than the length of lines")
+    }
+    if (line_length%%block_length > 0L) {
+        stop("The length of lines must be a multiple of the length of blocks")
+    }
+    if (any(x_is_na | x_nchar == 0L)) {
+        input_len <- length(x)
+        x <- x[!is.na(x)]
+        output_len <- length(x)
+        warning("Found ", input_len - output_len, " NA and/or empty sequences. They were not exported since ", 
+            "the FASTA format does not support missing values.")
+    }
+    x <- as.character(x)
+    x <- vapply(x, function(x) {
+        x_len <- stringr::str_length(x)
+        blocks <- seq(1, x_len, by = block_length)
+        res <- stringr::str_sub(x, blocks, blocks - 1 + block_length)
+        separator <- rep(" ", length(res))
+        if (x_len > line_length) {
+            separator[seq(blocks_by_line, blocks_by_line * (x_len%/%line_length), 
+                blocks_by_line)] <- "\n"
+        }
+        separator[length(separator)] <- ""
+        res <- stringr::str_c(res, separator, collapse = "")
+        res
+    }, vector("character", 1))
+    fas <- stringr::str_c(">", names(x), sep = "")
+    fas <- stringr::str_c(fas, x, sep = "\n", collapse = "\n") # Changed collapse to one line break
+    readr::write_file(fas, file, append = append)
+    readr::write_file("\n", file, append = TRUE) # Add one additional line break at the end
+}
+```
+
+```{r}
+# # BOLD dataframe doesn't have a kingdom column, so get it from ncbi data
+# ncbi_dedup_db <- readRDS(here("ref_db/dedup_db_tbl_df.rds"))
+# kingdom_df <- ncbi_dedup_db %>% select(superkingdom, phylum) %>% .[! duplicated(.),]
+# kingdom_df
+# 
+# table(kingdom_df$superkingdom, useNA = "ifany")
+# 
+# # Check all BOLD phyla are in ncbi data
+# bold_phyla <- dedup_bold %>% pull(phylum_name) %>% .[! duplicated(.)]
+# stopifnot(bold_phyla %in% kingdom_df$phylum)
+
+# They're all eukaryota, so just add an extra column
+dedup_bold$kingdom_name <- "Eukaryota"
+dedup_bold$kingdom_name[is.na(dedup_bold$phylum_name)] <- NA
+```
+
+
+
+```{r}
+# Output prefix name and input file path
+db_files <- c(
+  "bold_short_db_2023-06" = here("ref_db/bold/bold_short_amplicon_trimmed.fasta"),
+  "bold_long_db_2023-06" = here("ref_db/bold/bold_long_amplicon_trimmed.fasta"),
+  "bold_left_db_2023-06" = here("ref_db/bold/bold_left_amplicon_trimmed.fasta"),
+  "bold_right_db_2023-06" = here("ref_db/bold/bold_right_amplicon_trimmed.fasta")
+)
+```
+
+```{r}
+output_dir <- here("ref_db")
+for (i in seq_along(db_files)) {
+  message("Processing ", names(db_files[i]))
+  fasta <- bioseq::read_fasta(file=db_files[i])
+  db <- dedup_bold[str_remove(names(fasta), " rc$"),]
+  db$sequence <- fasta
+  db <- db %>% filter(! is.na(sequenceID))
+  message("Writing files for ", names(db_files[i]))
+  write_db_files(db, path_prefix=file.path(output_dir, names(db_files[i])))
+}
+```
+
+
