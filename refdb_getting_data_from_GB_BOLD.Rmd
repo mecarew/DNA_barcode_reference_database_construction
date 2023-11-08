@@ -54,6 +54,8 @@ library(refdb)
 library(here)
 ```
 
+
+##Jess's code still need to work through##
 The refdb function `modified_refdb_import_NCBI` was split up into parts so downloading could be done in batches. Also some edits for taxon IDs that cause errors and keeping tmp files. Need to manually delete tmp files afterwards.
 
 ```{r}
@@ -348,13 +350,15 @@ rm(combined_with_dups)
   
   # Session Info
   
-  ```{r}
+```{r}
 if (nzchar(system.file(package="devtools"))) {
   devtools::session_info()
 } else {
   sessionInfo()
 }
 ```
+###END OF Jess's#### for editing
+
 
 # read in rds file from Jess's data dump from NCBI
 ```{r}
@@ -1379,9 +1383,7 @@ Unfortunately, the primer cropping in refdb does not work! I could not get refdb
 
 Therefore for this step we can use cutadapt.....
 
-##still needs editing
-
-
+##still needs editing from here to end Jess's code for trimming to amplicon specific libraries....
 
 ```{r include=FALSE}
 ```
