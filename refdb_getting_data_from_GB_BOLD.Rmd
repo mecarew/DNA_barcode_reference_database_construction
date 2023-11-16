@@ -9,14 +9,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #Creating reference DNA barcode databases
 
-Developing and maintaining a DNA reference database can be difficult. The refdb package has been developed to assist with the different steps of the process of developing, maintaining and using DNA reference databases efficiently and reproducibly. This document contains the scripts for downloading and combining of DNA barcode data from the NCBI GenBank and BOLD databases and the enables this data to be combined with private unpublished data (i.e., your own sequence data). It primarily relies on the refdb package except for downloading data from NCBI GenBank and for primer trimming (which is done using cutadapt). There are also a few bugs in the refdb package that required custom scripts. 
+Developing and maintaining a DNA reference database can be difficult. The refdb package has been developed to assist with the different steps of the process of developing, maintaining and using DNA reference databases efficiently and reproducibly. This document contains the scripts for downloading and combining of DNA barcode data from the NCBI GenBank and BOLD databases and the enables this data to be combined with private unpublished data (i.e., your own sequence data). It primarily relies on the refdb package except for downloading data from NCBI GenBank and for primer trimming to create amplicon specific libraries which can be pair to metabarcoding amplicons which is  completed using cutadapt (in python)). There are also a few bugs in the refdb package that required custom scripts. These can be found below. This document is intended for downlaoding data for the COI gene widely used for amnimal DNA barcoding.
 
 #Installing and loading the refDB package (https://cran.r-project.org/web/packages/refdb/index.html)
 
-The refdb package is available on CRAN, which means that you can easily install the latest stable version using the RStudio IDE or with the function install.packages. The other packages below will also be required to run refdb.
+The refdb package is available on CRAN, which means that you can easily install the latest stable version using the RStudio IDE or with the function install.packages. The other packages below will also be required to run refdb. If you are using a server to complete this step please check if the required softwore is already loaded. 
 
 ```{r}
-remotes::install_github("fkeck/refdb")
+#remotes::install_github("fkeck/refdb")
 ```
 
 # load reqiured libraries
@@ -29,14 +29,14 @@ library(bold)
 library(tidyverse)
 library(dplyr)
 library(stringr)
-library(here)
+#library(here)
 ```
 
-# Section 1: Getting data from NCBI GenBank
+# SECTION 1: Getting data from NCBI GenBank
 
 The refdb packages uses the rentrez package (Winter 2017) to interface with NCBI servers. For animal DNA barcodes we will need to download data from the COI gene.
 
-NOTE: This section is not currently working in refdb. These scripts are problematic for the download of data from GenBank (the link gets lost). Jess has modified the code make this step work but it is still problematic. Downloading NCBI COI sequences needs to be done over a few days. Don't expect everything to run smoothly. Expect errors and timeouts.
+NOTE: This section is not currently working in refdb. These scripts are problematic for the download of data from NCBI GenBank (the link gets interupted). Jess has modified the code make this step work but it is still problematic. Downloading NCBI COI sequences needs to be done over a few days. Don't expect everything to run smoothly. Expect errors and timeouts.
 
 If a downloading from the NCBI GenBank data is not require please skip to 'Step 8' import the last version of the cleaned NCBI GenBank data using the import script.
 
@@ -352,18 +352,22 @@ if (nzchar(system.file(package="devtools"))) {
 
 The section above for downloading sequences from NCBI GenBank has been configured by Jess. Mel has not run through this yet.
 
-# Step 3: Retriving the last saved version of NCBI GenBank raw data file (if starting from this point)
+# Step 3: Retriving the last saved version of NCBI GenBank raw COI data file (if starting from this point)
 
 ```{r}
 NCBI_data <- readRDS("/mnt/galaxy/home/jess/projects/metabarcoding_pipeline/ref_db/combined_tbl_df.rds")
 ```
 
-# BOLD data on NCBI is named 'sp. BOLD:' should be converted to 'sp. B-'
+# Change BOLD naming in GenBank data
+BOLD data on NCBI is named 'sp. BOLD:' should be converted to 'sp. B-' to be consistent with the naming in the MW bug database and our private DNA barcode library (from our own DNA barcoding)
 
 ```{r}
+#Adjust names
 NCBI_data$species <- gsub("sp. BOLD:", "sp. B-", NCBI_data$species)
-
 print (sum(str_detect(NCBI_data$species, 'sp. BOLD:')) > 0)
+
+# remove files with no sequence data
+NCBI_data <- NCBI_data[!is.na(NCBI_data$sequence),]
 ```
 
 
@@ -390,19 +394,11 @@ refdb_get_fields(NCBI_data)
 # Step 4: Remove duplicates. It is good to write this file prior to preforming other clean_up steps
 
 ```{r}
-NCBI_data_dup <-refdb_filter_seq_duplicates(NCBI_data)
-```
-
-# Step 5: Harmonize taxonomic name nomenclature
-Ensures that the same taxonomic classification is use (can be set to specified columns)
-
-```{r}
-NCBI_data_clean <- refdb_clean_tax_harmonize_nomenclature(NCBI_data_dup)
+NCBI_data_clean <-refdb_filter_seq_duplicates(NCBI_data)
 ```
 
 # remove files not needed for next steps
 ```{r}
-rm(NCBI_data_dup)
 rm(NCBI_data)
 ```
 
@@ -453,17 +449,16 @@ write_rds(NCBI_data_clean,"~/Documents/DNA_reference_db_construction/refdb/Outpu
 ```
 
 # importing cleaned NCBI data (if required)
-
 ```{r}
-#NCBI_data_clean <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/NCBI_data_clean_Oct23.rds")
+NCBI_data_clean <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/NCBI_data_clean_Oct23.rds")
 ```
 
 ____________________________________________________________________
-# Section 2: Getting data from BOLD
+# SECTION 2: Getting data from BOLD
 
 Now let’s download data from the BOLD database. Data needs downloaded for animals groups at different taxonomic levels depending on the number of sequences in that group. For small groups, it can be downloaded at phlyum level for larger groups with more sequences, we'll need to follow the BOLD "Large data" instructions which limits the size of data download requests (see ?refdb_import_BOLD). I have done this below hence by trial and error to enable data from all animal groups to be download.
 
-NOTE: if a download of the data is not require please skip to step 9 import the last version of BOLD data downlaoaded and cleaned.
+NOTE: if a download of the data is not require please skip to step 6 import the last version of BOLD data downlaoaded and cleaned.
 
 # Step 1: Download data
 
@@ -962,19 +957,20 @@ x$latitude <- as.numeric(x$latitude)
 all_bold <- refdb_merge(Annelida_bold, Cnidaria_bold, Bryozoa_bold, Platyhelminthes_bold, Porifera_bold, Nematoda_bold, Bryozoa_bold, Rotifera_bold, Nemertea_bold, Onychophora_bold, Priapulida_bold, Tardigrada_bold, Mollusca_bold, Merostomata_bold, Pauropoda_bold, Symphyla_bold, Diplopoda_bold, Chilopoda_bold, Copepoda_bold, Collembola_bold, Protura_bold, Cephalocarida_bold, Remipedia_bold, Branchiopoda_bold, Thecostraca_bold, Malacostraca_bold, Ichthyostraca_bold, Diplura_bold, Pycnogonida_bold, Ostracoda_bold, Arachnida_bold, Archaeognatha_bold, Blattodea_bold, Coleoptera_bold, Dermaptera_bold, Embioptera_bold, Ephemeroptera_bold, Hemiptera_bold, Hymenoptera_bold, Lepidoptera_bold, Mantodea_bold, Mecoptera_bold, Megaloptera_bold, Neuroptera_bold, Notoptera_bold, Odonata_bold, Orthoptera_bold, Phasmatodea_bold, Plecoptera_bold, Psocodea_bold, Raphidioptera_bold, Siphonaptera_bold, Strepsiptera_bold, Thysanoptera_bold, Trichoptera_bold, Zoraptera_bold, Zygentoma_bold, Acartophthalmidae_bold, Acroceridae_bold, Agromyzidae_bold, Anisopodidae_bold, Anthomyiidae_bold, Anthomyzidae_bold, Apioceridae_bold, Apsilocephalidae_bold, Apystomyiidae_bold, Asilidae_bold, Asteiidae_bold, Atelestidae_bold, Athericidae_bold, Aulacigastridae_bold, Australimyzidae_bold, Austroleptidae_bold, Bibionidae_bold, Blephariceridae_bold, Bolbomyiidae_bold, Bolitophilidae_bold, Bombyliidae_bold, Calliphoridae_bold, Camillidae_bold, Canacidae_bold, Canthyloscelidae_bold, Carnidae_bold, Cecidomyiidae_bold, Celyphidae_bold, Ceratopogonidae_bold, Chamaemyiidae_bold, Chaoboridae_bold, Chironomidae_bold, Chloropidae_bold, Chyromyidae_bold, Clusiidae_bold, Coelopidae_bold, Conopidae_bold, Corethrellidae_bold, Cryptochetidae_bold, Ctenostylidae_bold, Culicidae_bold, Curtonotidae_bold, Cylindrotomidae_bold, Cypselosomatidae_bold, Deuterophlebiidae_bold, Diadocidiidae_bold, Diastatidae_bold, Diopsidae_bold, Diptera_family_incertae_sedis_bold, Ditomyiidae_bold, Dixidae_bold, Dolichopodidae_bold, Drosophilidae_bold, Dryomyzidae_bold, Empididae_bold, Ephydridae_bold, Evocoidae_bold, Fanniidae_bold, Fergusoninidae_bold, Glossinidae_bold, Gobryidae_bold, Helcomyzidae_bold, Heleomyzidae_bold, Helosciomyzidae_bold, Hesperinidae_bold, Hilarimorphidae_bold, Hippoboscidae_bold, Homalocnemidae_bold, Huttoninidae_bold, Hybotidae_bold, Inbiomyiidae_bold, Ironomyiidae_bold, Iteaphilidae_bold, Keroplatidae_bold, Lauxaniidae_bold, Limoniidae_bold, Lonchaeidae_bold, Lonchopteridae_bold, Marginidae_bold, Megamerinidae_bold, Mesembrinellidae_bold, Micropezidae_bold, Milichiidae_bold, Muscidae_bold, Mycetophilidae_bold, Mydidae_bold, Mystacinobiidae_bold, Nannodastiidae_bold, Natalimyzidae_bold, Nemestrinidae_bold, Neriidae_bold, Nothybidae_bold, Nymphomyiidae_bold, Odiniidae_bold, Oestridae_bold, Opetiidae_bold, Opomyzidae_bold, Oreogetonidae_bold, Pachyneuridae_bold, Pallopteridae_bold, Pantophthalmidae_bold, Paraleucopidae_bold, Pediciidae_bold, Pelecorhynchidae_bold, Periscelididae_bold, Phoridae_bold, Piophilidae_bold, Pipunculidae_bold, Platypezidae_bold, Platystomatidae_bold, Polleniidae_bold, Pseudopomyzidae_bold, Psilidae_bold, Psychodidae_bold, Ptychopteridae_bold, Pyrgotidae_bold, Rhagionidae_bold, Richardiidae_bold, Ropalomeridae_bold, Sarcophagidae_bold, Scathophagidae_bold, Scatopsidae_bold, Scenopinidae_bold, Sciaridae_bold, Sciaroidea_incertae_sedis_bold, Sciomyzidae_bold, Sepsidae_bold, Simuliidae_bold, Somatiidae_bold, Sphaeroceridae_bold, Stratiomyidae_bold, Strongylophthalmyiidae_bold, Syringogastridae_bold, Syrphidae_bold, Tabanidae_bold, Tachinidae_bold, Tanyderidae_bold, Tanypezidae_bold, Tephritidae_bold, Thaumaleidae_bold, Therevidae_bold, Tipulidae_bold, Trichoceridae_bold, Ulidiidae_bold, Vermileonidae_bold, Xylomyidae_bold, Xylophagidae_bold, Amphibia_bold, Leptocardii_bold, Mammalia_bold, Aves_bold, Reptilia_bold, Actinopterygii_bold, Sarcopterygii_bold, control, keep = "fields_shared")
 ```
 
-# save merged raw data from BOLD library (note change date for new downloads)
+# save merged raw data from BOLD library (note change date for new downloads when saving)
 ```{r}
-write_rds(all_bold,"~/Documents/DNA_reference_db_construction/refdb/_data_Oct23/all_bold_oct23.rds")
+write_csv(bold_data,"~/Documents/DNA_reference_db_construction/refdb/bold_data_Oct23/bold_data_oct23.rds")
 ```
 
-# reload all BOLD document for cleaning (if needed) 
+# reload all BOLD document for cleaning (if needed)
 ```{r}
-all_bold <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Input_data_Oct23/all_bold_oct23.rds")
+bold_data <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Input_data_Oct23/all_bold_oct23.rds")
 ```
 
-# setting fields for bold data and save combined file with all unmanipulated data
+# setting fields for bold data
+
 ```{r}
-all_bold <- refdb_set_fields(all_bold,
+bold_data <- refdb_set_fields(bold_data,
                              source = "source",
                              id = "sequenceID",
                              taxonomy = c(phylum = "phylum_name",
@@ -988,77 +984,71 @@ all_bold <- refdb_set_fields(all_bold,
 
 ```
 
+#filter for CO1 only. BOLD contains sequences mostly COI but also from other gene regions
+
+The scripts below can be used to group sequences on BOLD for difference gene regions
+```{r}
+bold_data_COI <- subset(bold_data, markercode=="COI-5P")
+#bold_data_18S <- subset(bold_data, markercode=="18S")
+#bold_data_ITS <- subset(bold_data, markercode=="ITS")
+#bold_data_12S <- subset(bold_data, markercode=="12S")
+#bold_data_ND2 <- subset(bold_data, markercode=="ND2")
+#bold_data_16S <- subset(bold_data, markercode=="16S")
+```
+
 ## Cleaning DNA sequences and taxonomic data
 
-#Step 2: Remove duplicates. It is good to write this file prior to preforming other clean_up steps
-This step removes a large amount of data it looks for with idenitical sequences and taxonomic information and removes all duplications.
-
+#Step 1: Remove sequence alignment gaps from BOLD library:
 ```{r}
-all_bold_dup <-refdb_filter_seq_duplicates(all_bold)
+bold_data_clean <- refdb_clean_seq_remove_gaps(bold_data_COI)
 
-#write_rds(all_bold_dup,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_dup_Oct23.rds")
+head(bold_data_clean)
 ```
 
-#Step 3: Remove sequence alignment gaps from BOLD library:
-```{r}
-all_bold_clean <- refdb_clean_seq_remove_gaps(all_bold_dup)
-
-head(all_bold_clean)
-```
-
-#Step 4: Remove side N's (removes N's at start or end of sequence)
+#Step 2: Remove side N's (removes N's at start or end of sequence)
 
 ```{r}
-all_bold_clean <- refdb_clean_seq_remove_sideN(all_bold_clean)
+bold_data_clean <- refdb_clean_seq_remove_sideN(bold_data_clean)
 
-head(all_bold_clean)
+head(bold_data_clean)
 ```
 
-#Step 5: Ensures that the same taxonomic classification are used (in specified columns if needed)
-
-```{r}
-all_bold_clean <- refdb_clean_tax_harmonize_nomenclature(all_bold_clean)
-
-head(all_bold_clean)
-```
-
-#Step 6: Remove extra bits on the end of species names (CONSIDERED REMOVING THIS STEP)
+#Step 3: Remove extra bits on the end of species names
 This command can not be used on my private database as it removes my interim species names. I think this is best not used as it can remove all interim spacies names which can be useful.
 
 ```{r}
-# all_bold_clean <- refdb_clean_tax_remove_extra(all_bold_clean)
+all_bold_clean <- refdb_clean_tax_remove_extra(bold_data_clean)
 
-#head(all_bold_clean)
+head(bold_data_clean)
 ```
 
-Note: DO NOT remove refdb_clean_tax_NA. There is a bug as it removes interm names and any the letter 'na'  within an taxonomic names 
+Note: DO NOT use remove refdb_clean_tax_NA. There is a bug as it removes interm names and any the letter 'na'  within an taxonomic names. A customised script is provided further down to to remove NA from the library so that they don't appear in taxonomic names.
 
-#Step 7:Plot sequence length
+#Step 4: Remove duplicates. It is good to write this file prior to preforming other clean_up steps
+This step removes a large amount of data it looks for with idenitical sequences and taxonomic information and removes all duplications.
+
 ```{r}
-refdb_plot_seqlen_hist(all_bold_clean)
+bold_data_clean <-refdb_filter_seq_duplicates(bold_data_clean)
 ```
 
-#Step 8: Filter for CO1 only. BOLD contains sequences from multiple gene regions
-The scripts below can be used to group sequences on BOLD for difference gene regions
+#Step 5:Plot sequence length
 ```{r}
-all_bold_clean_COI <- subset(all_bold_clean, markercode=="COI-5P")
-#all_bold_clean_18S <- subset(all_bold_clean, markercode=="18S")
-#all_bold_clean_ITS <- subset(all_bold_clean, markercode=="ITS")
-#all_bold_clean_12S <- subset(all_bold_clean, markercode=="12S")
-#all_bold_clean_ND2 <- subset(all_bold_clean, markercode=="ND2")
-#all_bold_clean_16S <- subset(all_bold_clean, markercode=="16S")
+refdb_plot_seqlen_hist(bold_data_clean)
 ```
 
-# plot
+#remove files not needed
 ```{r}
-refdb_plot_seqlen_hist(all_bold_clean_COI)
+rm(bold_data)
+rm(bold_data_COI)
+rm(bold_data_dup)
 ```
+
 
 #Visualizing the reference library (Optional)
 Some of the functions you can use to produce graphical representation of your reference database. Because refdb stores reference database as dataframes it is straightforward to produce plots (e.g. with the tidyverse and ggplot2). For example, we can make a barplot showing the distribution of the families like this:
 
 ```{r}
-all_bold_clean_COI %>% 
+bold_data_clean %>% 
   group_by(phylum_name) %>% 
   count() %>% 
   ggplot(aes(fct_reorder(phylum_name, n, .desc = TRUE), n)) +
@@ -1069,7 +1059,7 @@ all_bold_clean_COI %>%
 ```
 
 ```{r}
-all_bold_clean_COI %>% 
+bold_data_clean %>% 
   group_by(class_name) %>% 
   count() %>% 
   ggplot(aes(fct_reorder(class_name, n, .desc = TRUE), n)) +
@@ -1081,28 +1071,28 @@ all_bold_clean_COI %>%
 
 
 ```{r}
-refdb_plot_tax_treemap(all_bold_clean_COI, cols = 1)
+refdb_plot_tax_treemap(bold_data_clean, cols = 1)
 ```
 
 Alternatively you can represent this information with a taxonomic tree. These functions have several parameters to control what is represented in the plot (taxonomic ranks, colors, etc.).
 
 ```{r}
-refdb_plot_tax_tree(all_bold_clean_COI)
+refdb_plot_tax_tree(bold_data_clean)
 ```
 
-# Step 9: Export cleaned data
+# Step 6: Export cleaned data (add database, datatype and date)
 This data will be used to create the DNA barcode reference library and will be combined with the data  below which includes downloads from NCBI GenBank and data from our own DNA sequencing (private DNA barcodes)
 
 ```{r}
-write_rds(all_bold_clean_COI,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_clean_Oct23.rds")
+write_rds(bold_data_clean,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_clean_Oct23.rds")
 ```
 
 # import cleaned BOLD data (if required)
 ```{r}
-all_bold_clean_COI <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_clean_Oct23.rds")
+bold_data_clean <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_clean_Oct23.rds")
 ```
 
-# Creating a report (worth doing)
+# creating a report (worth doing)
 A report is a simple and rapid way to get an overview of the current state of your reference library and to identify some possible issues. You can compile a report using the function refdb_report: 
   
 ```{r}
@@ -1117,7 +1107,7 @@ _____________________________
 
 This step imports DNA barcodes which I have produced from invertebrates. It is a mixture of unpublished and published data. The private reference library is managed in Geneious prime.
 
-#read in DNA barcodes in .csv 
+# read in DNA barcode datafile in .csv 
 
 ```{r}
 priv_lib <- read_csv ("~/Documents/DNA_reference_db_construction/refdb/Input_data_Oct23/priv_lib_Oct23.csv")
@@ -1175,7 +1165,7 @@ priv_lib[1141,6] <- "Cryptochironomus sp. B-ACS5094"
 priv_lib[1214,6] <- "Larsia sp. B-AEH6175"
 
 #1215 A03A7 Larsia sp. B-AAV5971 Larsia sp. B-AEN3053
-priv_lib[1141,6] <- "Larsia sp. B-AEN3053"
+priv_lib[1215,6] <- "Larsia sp. B-AEN3053"
 
 #1216 BOL97Tany1 Larsia sp. B-AAV5971 Larsia sp. B-AEH6175
 priv_lib[1216,6] <- "Larsia sp. B-AEH6175"
@@ -1202,7 +1192,7 @@ priv_lib[1358,6] <- "Polypedilum sp. B-ACQ1511"
 priv_lib[1360,6] <- "Polypedilum sp. B-ACQ1511"
 
 #1361 Polypedilum sp. B-ACQ1510 Polypedilum sp. B-ACQ1511
-priv_lib[1361,6] <- "Cryptochironomus sp. B-ACS5094"
+priv_lib[1361,6] <- "Polypedilum sp. B-ACQ1511"
 
 #2426 Co18Cono6 Lingora sp. B-AAY5550 Lingora sp. B-ADF2103
 priv_lib[1141,6] <- "Lingora sp. B-ADF2103"
@@ -1227,12 +1217,12 @@ refdb_get_fields(priv_lib)
 ```
 #Step 1: Remove duplicates.
 ```{r}
-priv_lib_dup <- refdb_filter_seq_duplicates(priv_lib)
+priv_lib_clean <- refdb_filter_seq_duplicates(priv_lib)
 ```
 
 # plot sequence length
 ```{r}
-refdb_plot_seqlen_hist(priv_lib_dup)
+refdb_plot_seqlen_hist(priv_lib_clean)
 ```
 
 Note: Primer cropping in refdb does not work! I could not get refdb to properly trim primers it needed really high error setting to do any trimming, but with these settings over trimmed most of the data. for the short amplicon the forward primer trims ok but the reverse trims in the wrong spot.
@@ -1242,7 +1232,7 @@ Note: Primer cropping in refdb does not work! I could not get refdb to properly 
 Now let’s take a tour of the functions you can use to produce graphical representation of your reference database. Because refdb stores reference database as dataframes it is straightforward to produce plots (e.g. with the tidyverse and ggplot2). For example, we can make a barplot showing the distribution of the families like this:
   
 ```{r}
-priv_lib_dup %>% 
+priv_lib_clean %>% 
   group_by(phylum) %>% 
   count() %>% 
   ggplot(aes(fct_reorder(phylum, n, .desc = TRUE), n)) +
@@ -1253,7 +1243,7 @@ priv_lib_dup %>%
 ```
 
 ```{r}
-priv_lib_dup %>% 
+priv_lib_clean %>% 
   group_by(class) %>% 
   count() %>% 
   ggplot(aes(fct_reorder(class, n, .desc = TRUE), n)) +
@@ -1268,38 +1258,38 @@ Additionally, refdb provides ready-to-use functions to produce more sophisticate
 Jess - This does not work but not important as there is simply too much data to get anything meaningful out.
 
 ```{r}
-refdb_plot_tax_treemap(priv_lib_dup, cols = 4)
+refdb_plot_tax_treemap(priv_lib_clean, cols = 4)
 ```
 
 Alternatively you can represent this information with a taxonomic tree. These functions have several parameters to control what is represented in the plot (taxonomic ranks, colors, etc.).
 
 ```{r}
-refdb_plot_tax_tree(priv_lib_dup)
+refdb_plot_tax_tree(priv_lib_clean)
 ```
 
 # Creating a report
 A report is a simple and rapid way to get an overview of the current state of your reference library and to identify some possible issues. You can compile a report using the function refdb_report: 
   
 ```{r}
-refdb_report(priv_lib_dup, view=TRUE)
+refdb_report(priv_lib_clean, view=TRUE)
 ```                    
 
 # Exporting cleaned private data
 Once satisfied with the results, they can be exported for further use. Since the reference database is a dataframe, it is possible to use any export functions (from R or from other packages) that support dataframes. Here we show how to export to CSV using the function write_csv from the readr package:
 
 ```{r}
-write_rds(priv_lib_dup, "~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_Oct23_dup.rds")
+write_rds(priv_lib_clean, "~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_Oct23_clean.rds")
 ```
 
 # importing (if required)
 
 ```{r}
-priv_lib_dup <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_Oct23_dup.rds")
+priv_lib_clean <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_Oct23_clean.rds")
 ```
 
-# set fields for priv_lib_dup
+# set fields for priv_lib_clean
 ```{r}
-priv_lib_dup <- refdb_set_fields(priv_lib_dup,
+priv_lib_clean <- refdb_set_fields(priv_lib_clean,
                              taxonomy = c(
                                phylum = "phylum",
                                class = "class",
@@ -1312,13 +1302,15 @@ priv_lib_dup <- refdb_set_fields(priv_lib_dup,
                              source = "source",
                              id = "id")
 
-refdb_get_fields(priv_lib_dup)
+refdb_get_fields(priv_lib_clean)
 ```
 
+
 ```{r}
-refdb_export_mothur(priv_lib_dup, "~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_dup.txt")
-refdb_export_mothur(priv_lib_dup, "~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_dup.fasta")
+refdb_export_mothur(priv_lib_clean, "~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_clean")
+refdb_export_dada2(priv_lib_clean, "~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_clean.fasta", mode = "taxonomy")
 ```
+
 
 ```{r}
 rm(priv_lib)
@@ -1333,54 +1325,43 @@ We can now use refdb_merge to merge all data into a single database. Note that y
 # mergeing all libraries into a single document
 
 ```{r}
-all_bold_priv_NCBI <- refdb_merge(priv_lib_dup, NCBI_data_clean, all_bold_clean_COI, keep = "fields_shared")
+all_bold_priv_NCBI <- refdb_merge(priv_lib_clean, NCBI_data_clean, bold_data_clean, keep = "fields_shared")
 ```
 
 ```{r}
-rm(all_bold_clean_COI)
+rm(bold_data_clean)
 rm(NCBI_data_clean)
-rm(priv_lib_dup)
+rm(priv_lib_clean)
 ```
 
 # adjust taxonomy across datasets
 
 Ensures that the consist taxonomic classification is use in specified columns (Phyla to genus, leave out species as it removes interim names (specify columns). This should be used on the final dataset (with GB data included) for the taxonomic field of phylum, class, order, family, genus. Species need to be left out as this function will remove interim species names from the private database.
-                                                                               
+
+# adjust taxonomy across datasets                                                                               
 ```{r}
-all_bold_priv_NCBI_final <- refdb_clean_tax_harmonize_nomenclature(all_bold_priv_NCBI, cols = 1:7)
-head(all_bold_priv_NCBI_final)
+all_bold_priv_NCBI <- refdb_clean_tax_harmonize_nomenclature(all_bold_priv_NCBI, cols = 1:7)
+head(all_bold_priv_NCBI)
 ```
 
+# remove duplicates between private, BOLD and NCBI GenBank datasets
 ```{r}
-all_bold_priv_NCBI_final <-refdb_filter_seq_duplicates(all_bold_priv_NCBI_final)
-
-#Export library final clean library 
-write_rds(all_bold_priv_NCBI_final,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_priv_NCBI_final_Oct23.rds")
-
-#import in library final clean library (if required)    
-
-#all_bold_priv_NCBI_final <- read_rds("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_priv_NCBI_final_Oct23.rds")
+all_bold_priv_NCBI <-refdb_filter_seq_duplicates(all_bold_priv_NCBI)
 ```
 
-```{r}
-rm(all_bold_priv_NCBI)
-```
-
-                                                                               
-## issues from refdb in the final library
+## resolving issues from refdb in the final library
 The final library will still have NA in some empty taxonomic columns as the refdb function removes 'na' within taxonomic names. The final 'csv will need the NA's filtered out using code that only removes 'NA from entire cells.
 Also, there are some strange additions to the end for species names from the 'remove extra' bits on names that should be removed these include:
 
 # Step 1: remove 'NA' from empty cells, weird additions on species names and trim whitespaces remaining at the end of species names
-
 ```{r}
 #remove "NA" in taxonomic information and replace with blank (this needs to be done so NA do not occur in the final reference library taxonomic assignments)
 
-all_bold_priv_NCBI_final[is.na(all_bold_priv_NCBI_final)] <- ""
+all_bold_priv_NCBI[is.na(all_bold_priv_NCBI)] <- ""
 
 #replacing odd additions to the end of species names from refdb
 
-all_bold_priv_NCBI_final$species <- gsub("\\'", "",
+all_bold_priv_NCBI$species <- gsub("\\'", "",
            gsub("\\.\\.", "",
            gsub("\\+", "",
            gsub("./Se/", "",
@@ -1392,44 +1373,42 @@ all_bold_priv_NCBI_final$species <- gsub("\\'", "",
            gsub("/Amp", "",
            gsub("<>", "",
            gsub("\\  ", "",     
-           gsub("/", "", all_bold_priv_NCBI_final$species)))))))))))))
+           gsub("/", "", all_bold_priv_NCBI$species)))))))))))))
 
-head(all_bold_priv_NCBI_final)
-
-print (sum(str_detect(all_bold_priv_NCBI_final$species, ':')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$species, '\\+')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$species, '\\.\\.')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$species, './Se/')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$species, '.cf.')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$species, 'sp.-')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$species, '//Amp')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$species, '<>')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$species, '\\  ')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$species, '<>')) > 0)
+# Mel playing with functions
+# print (sum(str_detect(all_bold_priv_NCBI$species, ':')) > 0)
+# print (sum(str_detect(all_bold_priv_NCBI$species, '\\+')) > 0)
+# print (sum(str_detect(all_bold_priv_NCBI$species, '\\.\\.')) > 0)
+# print (sum(str_detect(all_bold_priv_NCBI$species, './Se/')) > 0)
+# print (sum(str_detect(all_bold_priv_NCBI$species, '.cf.')) > 0)
+# print (sum(str_detect(all_bold_priv_NCBI$species, 'sp.-')) > 0)
+# print (sum(str_detect(all_bold_priv_NCBI$species, '//Amp')) > 0)
+# print (sum(str_detect(all_bold_priv_NCBI$species, '<>')) > 0)
+# print (sum(str_detect(all_bold_priv_NCBI$species, '\\  ')) > 0)
+# print (sum(str_detect(all_bold_priv_NCBI$species, '<>')) > 0)
 
 #remove trailing spaces in species names
-trimws(all_bold_priv_NCBI_final$species, "right")
+trimws(all_bold_priv_NCBI$species, "right")
 ```
 
 #Step 2: Fix outdated taxonomic names 
-
 ```{r}
 #Fix outdated taxonomic names (Changing Ancylidae to Planorbidae, Sphaeriidae to Pisidiidae, Corbiculidae to Cyrenidae, Brentidae to Nanophyidae) that remian in the database
 
-all_bold_priv_NCBI_final$family <- gsub("Ancylidae",
+all_bold_priv_NCBI$family <- gsub("Ancylidae",
            "Planorbidae",
            gsub("Sphaeriidae",
            "Pisidiidae",
            gsub("Corbiculidae",
            "Cyrenidae",
            gsub("Brentidae",
-           "Nanophyidae", all_bold_priv_NCBI_final$family))))
+           "Nanophyidae", all_bold_priv_NCBI$family))))
 
 # check changes should all be FALSE
-print (sum(str_detect(all_bold_priv_NCBI_final$family, 'Ancylidae')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$family, 'Sphaeriidae')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$family, 'Corbiculidae')) > 0)
-print (sum(str_detect(all_bold_priv_NCBI_final$family, 'Brentidae')) > 0)
+#print (sum(str_detect(all_bold_priv_NCBI$family, 'Ancylidae')) > 0)
+#print (sum(str_detect(all_bold_priv_NCBI$family, 'Sphaeriidae')) > 0)
+#print (sum(str_detect(all_bold_priv_NCBI$family, 'Corbiculidae')) > 0)
+#print (sum(str_detect(all_bold_priv_NCBI$family, 'Brentidae')) > 0)
 ```  
 
 #exporting as a fasta file using refdb
@@ -1437,61 +1416,24 @@ Annoyingly, this does not work. I suspect that this uses too much memory at once
 
 ```{r}
 #Export library final clean library 
-write_rds(all_bold_priv_NCBI_final,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_priv_NCBI_final_Oct23.rds")
+write_rds(all_bold_priv_NCBI,"~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final_clean_Oct23.rds")
+```
+
+# remove files no longer needed
+```{r}
+rm(all_bold_priv_NCBI_fima)
+```
+# exporting to other formats (files are too large)
+
+```{r}
 #not working
-refdb_export_mothur(all_bold_priv_NCBI_final, "~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final.fasta")
-```
-
-##Export final library in sections
-Breaking into smaller file sizes for export into Geneious
-
-```{r}
-#Select all columns and only the rows you want:
-export <- all_bold_priv_NCBI_final[1:1000000,3:9]
-
-write_csv(export,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/final_database1.csv")
-
-```
-
-```{r}
-#Select all columns and only the rows you want:
-export <-  all_bold_priv_NCBI_final[1000001:2000000,3:9]
-
-write_csv(export,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/final_database2.csv")
-```
-
-```{r}
-#Select all columns and only the rows you want:
-export <-  all_bold_priv_NCBI_final[2000001:3000000,3:9]
-
-write_csv(export,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/final_database3.csv")
-```
-
-```{r}
-#Select all columns and only the rows you want:
-export <-  all_bold_priv_NCBI_final[3000001:4000000,3:9]
-
-write_csv(export,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/final_database4.csv")
-```
-
-```{r}
-#Select all columns and only the rows you want:
-export <- all_bold_priv_NCBI_final[4000001:5000000,3:9]
-
-write_csv(export,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/final_database5.csv")
-
-final5 <- read_csv("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/final_database5.csv")
-```
-
-```{r}
-#Select all columns and only the rows you want:
-export <-  all_bold_priv_NCBI_final[5000001:5511930,3:9]
-
-write_csv(export,"~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/final_database6.csv")
+refdb_export_mothur(all_bold_priv_NCBI_final, "~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final")
+#not working
+refdb_export_dada2(all_bold_priv_NCBI_final, "~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final.fasta", mode = "taxonomy")
 ```
 
 
-## Exporting library into amplicon specific libraries for bioinformatic pipelines
+#SECTION 5: Creating amplicon specific libraries for bioinformatic pipelines
 Unfortunately, the primer cropping in refdb does not work! I could not get refdb to properly trim primers it needed really high error setting to do any trimming, but with these settings over trimmed most of the data. for the short amplicon the forward primer trims ok but the reverse trims in the wrong spot.
 
 Therefore for this step we can use cutadapt.....
@@ -1519,51 +1461,70 @@ library(refdb)
 ```{r}
 # Data was previously downloaded with refdb
 # Load in the data
-all_db <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/all_bold_priv_NCBI_final_Oct23.rds")
+all_db <- readRDS("~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final_clean_Oct23.rds")
 nrow(all_db)
 ```
 
 ```{r}
 all_db %>% object.size()
 ```
+
 # check file column names (DNA_seq = sequence data)
 ```{r}
 head (all_db)
 ```
 
 # convert to fasta file
+
 ```{r}
 seqs <- all_db[, "DNA_seq",drop=TRUE]
 names(seqs) <- 1:nrow(all_db)
-bioseq::write_fasta(seqs, file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
-                    line_length = 80, block_length=Inf)
+parts <- as.numeric(cut(seq_along(seqs), 4))
+bioseq::write_fasta(seqs[parts == 1], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
+                    line_length = 80, block_length=Inf, append=FALSE)
+bioseq::write_fasta(seqs[parts == 2], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
+                    line_length = 80, block_length=Inf, append=TRUE)
+bioseq::write_fasta(seqs[parts == 3], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
+                    line_length = 80, block_length=Inf, append=TRUE)
+bioseq::write_fasta(seqs[parts == 4], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
+                    line_length = 80, block_length=Inf, append=TRUE)
+```
+
+##Mel trialing data file incomplete this script has memory error
+```{r}
+#seqs <- all_db[, "DNA_seq",drop=TRUE]
+#names(seqs) <- 1:nrow(all_db)
+#bioseq::write_fasta(seqs, file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
+#                    line_length = 80, block_length=Inf)
 ```
 
 ##testing converting to fasta if file is split in two:
 ```{r}
 #select all columns and only the rows you want spliting file into two dataframes
-export1 <- all_db[1:2859080, 1:10]
-export2 <- all_db[2859081:5718160, 1:10]
+#export1 <- all_db[1:2475190, 1:10]
+
+#export2 <- all_db[2859081:5724421, 1:10]
 ```
 
 ```{r}
 #convert first half of sequence files to fasta
-seqs <- export1[, "DNA_seq",drop=TRUE]
-names(seqs) <- 1:nrow(export1)
-bioseq::write_fasta(seqs, file = "~/Documents/DNA_reference_db_construction/refdb/final_library/NBP1.fasta",
-                    line_length = 80, block_length=Inf)
+#seqs <- export1[, "DNA_seq",drop=TRUE]
+#names(seqs) <- 1:nrow(export1)
+#bioseq::write_fasta(seqs, file = "~/Documents/DNA_reference_db_construction/refdb/final_library/NBP1.fasta",
+#                   line_length = 80, block_length=Inf)
 ```
+
 ```{r}
 #convert second half of sequences files to fasta
-seqs <- export2[, "DNA_seq",drop=TRUE]
-names(seqs) <- 1:nrow(export2)
-bioseq::write_fasta(seqs, file = "~/Documents/DNA_reference_db_construction/refdb/final_library/NBP2.fasta",
-                    line_length = 80, block_length=Inf)
+#seqs <- export2[, "DNA_seq",drop=TRUE]
+#names(seqs) <- 1:nrow(export2)
+#bioseq::write_fasta(seqs, file = "~/Documents/DNA_reference_db_construction/refdb/final_library/NBP2.fasta",
+#                    line_length = 80, block_length=Inf)
 ```
 # bind file back into a single document
 ```{r}
-NBP1 <- read_fasta("~/Documents/DNA_reference_db_construction/refdb/final_library/NBP1.fasta")
-NBP2 <- read_fasta("~/Documents/DNA_reference_db_construction/refdb/final_library/NBP2.fasta")
+#NBP1 <- read_fasta("~/Documents/DNA_reference_db_construction/refdb/final_library/NBP1.fasta")
+#NBP2 <- read_fasta("~/Documents/DNA_reference_db_construction/refdb/final_library/NBP2.fasta")
 ```
 
 
@@ -1597,26 +1558,26 @@ cutadapt \
     --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_long.fasta \
     --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
     -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
-    ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/NBP1.fasta \
+    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta \
     > ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_cutadapt.log
 
 #long amplicon
-
 ampliconGroup=long
 cutadapt \
-    ---cores 4 \
-    --g GCHCCHGAYATRGCHTTYCC...TGRTTYTTYGGNCAYCCHGA \
-    --e 0.2 \
+    --cores 4 \
+    -g GCHCCHGAYATRGCHTTYCC...TGRTTYTTYGGNCAYCCHGA \
+    -e 0.2 \
     --revcomp \
-    --m 200 \
-    --M 550 \
+    -m 200 \
+    -M 550 \
     --max-n 0.05 \
     --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_short.fasta \
     --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_long.fasta \
     --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
     -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
-    ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/NBP1.fasta \
+    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta \
     > ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_cutadapt.log
+    
 
 #right amplicon
 ampliconGroup=right
@@ -1632,7 +1593,7 @@ cutadapt \
     --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_long.fasta \
     --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
     -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
-    ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/NBP1.fasta \
+    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta \
     > ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_cutadapt.log
  
 #left amplicon   
@@ -1649,42 +1610,27 @@ cutadapt \
     --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_long.fasta \
     --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
     -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
-    ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/NBP1.fasta \
+    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta \
      > ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_cutadapt.log
-``` 
-
-
-
-```
-# # TESTING
-#module load cutadapt/4.2
-cd ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq
-
-# 
-#sinteractive --partition=cascade --account=punim2065 --ntasks=1 --cpus-per-task=2 --mem=16384 --time=1:0:0
-# # module load cutadapt/4.2
-
-conda create -n metabarcoding
-conda activate metabarcoding
-conda install -c bioconda cutadapt
-
-cd ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq
-cd ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming
+     
+#long amplicon
+ampliconGroup=LCO
 cutadapt \
     --cores 4 \
-    -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT \
+    -g GGTCAACAAATCATAAAGAYATYGG...GGRTANACWGTYCAWCCWG \
     -e 0.2 \
     --revcomp \
-    -m 100 \
-    -M 450 \
+    -m 200 \
+    -M 550 \
     --max-n 0.05 \
-    --too-short-output trimming/short_amplicon_too_short.fasta \
-    --too-long-output trimming/short_amplicon_too_long.fasta \
-    --untrimmed-output trimming/short_amplicon_untrimmed.fasta \
-    -o trimming/short_amplicon_trimmed.fasta \
-    untrimmed_seq/dedup_ref_db.fasta \
-    > trimming/short_amplicon_cutadapt.log
-```
+    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
+    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta \
+    > ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_cutadapt.log     
+     
+``` 
 
 # Merge sequences back
 
@@ -1702,7 +1648,7 @@ length(short_fasta)
 
 ```{r}
 # Some sequences are now the reverse complement
-rc_ids <- names(short_fasta)[! names(short_fasta) %in% rownames(all_db)]
+rc_ids <- names(short_fasta)[! names(short_fasta) %in% rownames(all_NBP)]
 length(rc_ids)
 head(rc_ids)
 ```
@@ -1711,11 +1657,11 @@ head(rc_ids)
 # Check
 short_fasta["620 rc"] %>% as.character
 short_fasta["620 rc"] %>% seq_reverse %>% seq_complement %>% as.character
-all_db["620", "sequence", drop=TRUE] %>% as.character
+all_NBP["620", "sequence", drop=TRUE] %>% as.character
 ```
 
 ```{r}
-short_db <- all_db[str_remove(names(short_fasta), " rc$"),]
+short_db <- all_NBP[str_remove(names(short_fasta), " rc$"),]
 short_db$sequence <- short_fasta
 ```
 
