@@ -20,7 +20,6 @@ The refdb package is available on CRAN, which means that you can easily install 
 ```
 
 # load reqiured libraries
-
 ```{r}
 library(refdb)
 library(rentrez)
@@ -353,23 +352,31 @@ if (nzchar(system.file(package="devtools"))) {
 The section above for downloading sequences from NCBI GenBank has been configured by Jess. Mel has not run through this yet.
 
 # Step 3: Retriving the last saved version of NCBI GenBank raw COI data file (if starting from this point)
-
 ```{r}
 NCBI_data <- readRDS("/mnt/galaxy/home/jess/projects/metabarcoding_pipeline/ref_db/combined_tbl_df.rds")
 ```
 
-# Change BOLD naming in GenBank data
-BOLD data on NCBI is named 'sp. BOLD:' should be converted to 'sp. B-' to be consistent with the naming in the MW bug database and our private DNA barcode library (from our own DNA barcoding)
+# Step 4: Preparing NCBI GenBank file
+Some records may have no sequence data, so need to be removed. BOLD data on NCBI is named 'sp. BOLD:' should be converted to 'sp. B-' to be consistent with the naming in the MW bug database and our private DNA barcode library (from our own DNA barcoding). This data needs to be split from other records 
 
 ```{r}
-#Adjust names
-NCBI_data$species <- gsub("sp. BOLD:", "sp. B-", NCBI_data$species)
-print (sum(str_detect(NCBI_data$species, 'sp. BOLD:')) > 0)
-
-# remove files with no sequence data
+#remove files with no sequence data
 NCBI_data <- NCBI_data[!is.na(NCBI_data$sequence),]
-```
 
+# group records with BOLD BIN's
+NCBI_bold <- NCBI_data[grep("sp. BOLD:", NCBI_data$species),] 
+# adjust names to be inline with mw_bugs
+NCBI_bold$species <- gsub("sp. BOLD:", "sp. B-", NCBI_bold$species)
+head(NCBI_bold)
+
+# group records without BOLD BIN's
+NCBI_nonbold <- NCBI_data[-grep("sp. BOLD:", NCBI_data$species),]
+# remove extra bits on names which are added by NCBI
+NCBI_nonbold <- refdb_clean_tax_remove_extra(NCBI_nonbold)
+
+NCBI_data_clean <- refdb_merge(NCBI_bold, NCBI_nonbold)
+
+```
 
 # set fields
 ```{r}
@@ -400,6 +407,8 @@ NCBI_data_clean <-refdb_filter_seq_duplicates(NCBI_data)
 # remove files not needed for next steps
 ```{r}
 rm(NCBI_data)
+rm(NCBI_bold)
+rm(NCBI_nonbold)
 ```
 
 # Step 6: Plot sequence length of NCBI data
@@ -1323,7 +1332,6 @@ _____________________________
 We can now use refdb_merge to merge all data into a single database. Note that you can merge more than two database with refdb_merge.
 
 # mergeing all libraries into a single document
-
 ```{r}
 all_bold_priv_NCBI <- refdb_merge(priv_lib_clean, NCBI_data_clean, bold_data_clean, keep = "fields_shared")
 ```
@@ -1350,8 +1358,8 @@ all_bold_priv_NCBI <-refdb_filter_seq_duplicates(all_bold_priv_NCBI)
 ```
 
 ## resolving issues from refdb in the final library
-The final library will still have NA in some empty taxonomic columns as the refdb function removes 'na' within taxonomic names. The final 'csv will need the NA's filtered out using code that only removes 'NA from entire cells.
-Also, there are some strange additions to the end for species names from the 'remove extra' bits on names that should be removed these include:
+The final library will still have NA in some empty taxonomic columns as the refdb function removes 'na' within taxonomic names. The final .rds will need the NA's filtered out using code that only removes 'NA from entire cells.
+Also, there are some strange additions to the end for species names from the 'remove extra' that should be removed these include:
 
 # Step 1: remove 'NA' from empty cells, weird additions on species names and trim whitespaces remaining at the end of species names
 ```{r}
@@ -1419,19 +1427,20 @@ Annoyingly, this does not work. I suspect that this uses too much memory at once
 write_rds(all_bold_priv_NCBI,"~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final_clean_Oct23.rds")
 ```
 
-# remove files no longer needed
-```{r}
-rm(all_bold_priv_NCBI_fima)
-```
+
 # exporting to other formats (files are too large)
 
 ```{r}
 #not working
-refdb_export_mothur(all_bold_priv_NCBI_final, "~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final")
+refdb_export_mothur(all_bold_priv_NCBI, "~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final")
 #not working
-refdb_export_dada2(all_bold_priv_NCBI_final, "~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final.fasta", mode = "taxonomy")
+refdb_export_dada2(all_bold_priv_NCBI, "~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final.fasta", mode = "taxonomy")
 ```
 
+# remove files no longer needed
+```{r}
+rm(all_bold_priv_NCBI)
+```
 
 #SECTION 5: Creating amplicon specific libraries for bioinformatic pipelines
 Unfortunately, the primer cropping in refdb does not work! I could not get refdb to properly trim primers it needed really high error setting to do any trimming, but with these settings over trimmed most of the data. for the short amplicon the forward primer trims ok but the reverse trims in the wrong spot.
@@ -1439,9 +1448,6 @@ Unfortunately, the primer cropping in refdb does not work! I could not get refdb
 Therefore for this step we can use cutadapt.....
 
 ##still needs editing from here to end Jess's code for trimming to amplicon specific libraries....
-
-```{r include=FALSE}
-```
 #set options
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning=TRUE, message=TRUE, error=TRUE, echo=TRUE, results="hold")
@@ -1475,18 +1481,17 @@ head (all_db)
 ```
 
 # convert to fasta file
-
 ```{r}
 seqs <- all_db[, "DNA_seq",drop=TRUE]
 names(seqs) <- 1:nrow(all_db)
 parts <- as.numeric(cut(seq_along(seqs), 4))
-bioseq::write_fasta(seqs[parts == 1], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
+bioseq::write_fasta(seqs[parts == 1], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_db.fasta",
                     line_length = 80, block_length=Inf, append=FALSE)
-bioseq::write_fasta(seqs[parts == 2], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
+bioseq::write_fasta(seqs[parts == 2], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_db.fasta",
                     line_length = 80, block_length=Inf, append=TRUE)
-bioseq::write_fasta(seqs[parts == 3], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
+bioseq::write_fasta(seqs[parts == 3], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_db.fasta",
                     line_length = 80, block_length=Inf, append=TRUE)
-bioseq::write_fasta(seqs[parts == 4], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
+bioseq::write_fasta(seqs[parts == 4], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_db.fasta",
                     line_length = 80, block_length=Inf, append=TRUE)
 ```
 
@@ -1545,98 +1550,117 @@ bioseq::write_fasta(seqs[parts == 4], file = "~/Documents/DNA_reference_db_const
 ## scripts for trimming for each amplicon (short, right, long and left)
 
 #short amplicon
-ampliconGroup=short
-cutadapt \
+
+ampliconGroup=short    
+    cutadapt \
     --cores 4 \
-    -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT \
-    -e 0.2 \
+    -a ACWGGWTGRACWGTNTAYCC \
+    -a TAGGWACWGGWTGAACWGTWTAYCCYCC \
+    -g GCHGGDGCHATYACHATRYT \
+    -g CCNGTNYTNGCNGGNGCNATYACGG \
+    -e 0.1 \
     --revcomp \
     -m 100 \
     -M 450 \
     --max-n 0.05 \
-    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
-    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta \
-    > ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_cutadapt.log
-
+    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
+    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_db.fasta \
+    > ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_cutadapt.log
+```
 #long amplicon
+```{bash}
 ampliconGroup=long
 cutadapt \
     --cores 4 \
-    -g GCHCCHGAYATRGCHTTYCC...TGRTTYTTYGGNCAYCCHGA \
-    -e 0.2 \
+    -a CCNGAYATRGCNTTYCCNCG \
+    -a GCHCCHGAYATRGCHTTYCC \
+    -g TGRTTYTTYGGNCAYCCHGA \
+    -g TGRTTYTTTGGWCAYCCWGAAGTTTA \
+    -e 0.15 \
     --revcomp \
     -m 200 \
     -M 550 \
     --max-n 0.05 \
-    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
-    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta \
-    > ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_cutadapt.log
-    
+    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
+    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_db.fasta \
+    > ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_cutadapt.log
+```    
 
+```{bash}
 #right amplicon
 ampliconGroup=right
 cutadapt \
     --cores 4 \
-    -g ACWGGWTGRACWGTNTAYCC...TGRTTYTTYGGNCAYCCHGA \
-    -e 0.25 \
+    -a TAGGWACWGGWTGAACWGTWTAYCCYCC \
+    -a ACWGGWTGRACWGTNTAYCC \
+    -g TGRTTYTTYGGNCAYCCHGA \
+    -g TGRTTYTTTGGWCAYCCWGAAGTTTA \
+    -e 0.2 \
     --revcomp \
     -m 200 \
     -M 550 \
     --max-n 0.05 \
-    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
-    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta \
-    > ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_cutadapt.log
- 
-#left amplicon   
+    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
+    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_db.fasta \
+    > ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_cutadapt.log
+```
+#left amplicon 
+```{bash}
 ampliconGroup=left
 cutadapt \
     --cores 4 \
-    -g CCNGAYATRGCNTTYCC...CCNGTNYTNGCNGGNGCNATYACH \
-    -e 0.2 \
+    -a CCNGAYATRGCNTTYCCNCG \
+    -a GCHCCHGAYATRGCHTTYCC \
+    -g GCHGGDGCHATYACHATRYT \
+    `# -g CCNGTNYTNGCNGGNGCNATYACGG  # Using this primer makes trimmed sequences too short` \
+    -e 0.15 \
     --revcomp \
     -m 200 \
     -M 450 \
     --max-n 0.05 \
-    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
-    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta \
-     > ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_cutadapt.log
-     
-#long amplicon
+    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
+    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_db.fasta \
+     > ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_cutadapt.log
+```      
+
+##Need more work
+#LCO amplicon
 ampliconGroup=LCO
 cutadapt \
     --cores 4 \
-    -g GGTCAACAAATCATAAAGAYATYGG...GGRTANACWGTYCAWCCWG \
-    -e 0.2 \
+    -g CAYAARGAYATTGG...GGNGGRTANACNGTTCANCC \
+    -e 0.35 \
     --revcomp \
     -m 200 \
     -M 550 \
     --max-n 0.05 \
-    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
-    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta \
-    > ~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/${ampliconGroup}_amplicon_cutadapt.log     
-     
-``` 
+    --too-short-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_too_short.fasta \
+    --too-long-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_too_long.fasta \
+    --untrimmed-output ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_untrimmed.fasta \
+    -o ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_trimmed.fasta \
+    ~/Documents/DNA_reference_db_construction/refdb/final_library/all_db.fasta \
+    > ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_cutadapt.log
+
+
 
 # Merge sequences back
 
 ```{r}
-short_fasta <- bioseq::read_fasta(file="~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/short_amplicon_trimmed.fasta")
+short_fasta <- bioseq::read_fasta(file="~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/short_amplicon_trimmed.fasta")
 ```
+
 
 ```{r}
 short_fasta %>% tail
@@ -1648,20 +1672,20 @@ length(short_fasta)
 
 ```{r}
 # Some sequences are now the reverse complement
-rc_ids <- names(short_fasta)[! names(short_fasta) %in% rownames(all_NBP)]
+rc_ids <- names(short_fasta)[! names(short_fasta) %in% rownames(all_db)]
 length(rc_ids)
 head(rc_ids)
 ```
 
 ```{r}
 # Check
-short_fasta["620 rc"] %>% as.character
-short_fasta["620 rc"] %>% seq_reverse %>% seq_complement %>% as.character
-all_NBP["620", "sequence", drop=TRUE] %>% as.character
+short_fasta["1976 rc"] %>% as.character
+short_fasta["1976 rc"] %>% seq_reverse %>% seq_complement %>% as.character
+all_db["1976", "sequence", drop=TRUE] %>% as.character
 ```
 
 ```{r}
-short_db <- all_NBP[str_remove(names(short_fasta), " rc$"),]
+short_db <- all_db[str_remove(names(short_fasta), " rc$"),]
 short_db$sequence <- short_fasta
 ```
 
