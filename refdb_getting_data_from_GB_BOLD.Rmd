@@ -33,11 +33,11 @@ library(stringr)
 
 # SECTION 1: Getting data from NCBI GenBank
 
-The refdb packages uses the rentrez package (Winter 2017) to interface with NCBI servers. For animal DNA barcodes we will need to download data from the COI gene.
+The refdb packages uses the rentrez package (Winter 2017) to interface with NCBI servers. For animal DNA barcodes we will need to download data from the mitochondrial COI gene.
 
 NOTE: This section is not currently working in refdb. These scripts are problematic for the download of data from NCBI GenBank (the link gets interupted). Jess has modified the code make this step work but it is still problematic. Downloading NCBI COI sequences needs to be done over a few days. Don't expect everything to run smoothly. Expect errors and timeouts.
 
-If a downloading from the NCBI GenBank data is not require please skip to 'Step 8' import the last version of the cleaned NCBI GenBank data using the import script.
+If a downloading from the NCBI GenBank data is not require please skip to 'Step 7' import the last version of the cleaned NCBI GenBank data using the import script.
 
 # set up
 ```{r setup, include=FALSE}
@@ -47,16 +47,7 @@ options(digits=4)
 options(width=120)
 ```
 
-# load libraries
-These libraries are loaded above (this could be removed).
-
-```{r message=FALSE, warning=FALSE}
-#library(tidyverse)
-#library(refdb)
-#library(here)
-```
-
-# Step 1: Set parameters/instructions for downloading data 
+#Step 1: Set parameters/instructions for downloading data 
 
 The refdb function `modified_refdb_import_NCBI` was split up into parts so downloading could be done in batches. Also some edits for taxon IDs that cause errors and keeping tmp files. Need to manually delete tmp files afterwards.
 
@@ -250,8 +241,8 @@ get_ncbi_taxonomy <- function (id, verbose = TRUE)
 
 # Step 2: Download sequence data for COI (the DNA barcode gene)
 ```{r}
-ncbi_request <- modified_refdb_import_NCBI_pt1("(((((((((COX1) OR cytochrome c oxidase I) OR COI) OR MT-CO1) OR MTCO1) OR CO I) OR mitochondrially encoded cytochrome c oxidase I) OR main subunit of cytochrome c oxidase) OR cytochrome c oxidase subunit I) AND Mitochondrion[Filter]")
-Sys.time()
+Sys.time({
+ncbi_request <- modified_refdb_import_NCBI_pt1("(((((((((COX1) OR cytochrome c oxidase I) OR COI) OR MT-CO1) OR MTCO1) OR CO I) OR mitochondrially encoded cytochrome c oxidase I) OR main subunit of cytochrome c oxidase) OR cytochrome c oxidase subunit I) AND Mitochondrion[Filter]")})
 ```
 
 Note: The number of sequences change over time. e.g.  
@@ -263,9 +254,9 @@ Note: The number of sequences change over time. e.g.
 seq(0, ncbi_request$count, by=3e5)
 ```
 
-```{r}
-csv_file <- here("ncbi_2023-06-29.csv")
-tmp_dir <- here("tmp_2023-06-29")
+```{r eval=FALSE}
+csv_file <- here::here("ncbi_2023-06-29.csv")
+tmp_dir <- here::here("tmp_2023-06-29")
 
 # e.g. Run commands in batches like so:
 modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=0, end=300000)
@@ -277,7 +268,7 @@ modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tm
 # If things break, can manually specify start and end indices. Duplicate sequences will be removed at a later step, so don't worry about downloading sequences twice.
 ```
 
-```{r}
+```{r eval=FALSE}
 csv_file <- here("ncbi_2023-06-30.csv")
 tmp_dir <- here("tmp_2023-06-30")
 
@@ -286,7 +277,7 @@ modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tm
 modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=1200000, end=1500000-1)
 ```
 
-```{r}
+```{r eval=FALSE}
 csv_file <- here("ncbi_2023-07-01.csv")
 tmp_dir <- here("tmp_2023-07-01")
 
@@ -301,7 +292,7 @@ modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tm
 
 ```
 
-```{r}
+```{r eval=FALSE}
 csv_file <- here("ncbi_2023-07-02.csv")
 tmp_dir <- here("tmp_2023-07-02")
 
@@ -357,31 +348,28 @@ NCBI_data <- readRDS("/mnt/galaxy/home/jess/projects/metabarcoding_pipeline/ref_
 ```
 
 # Step 4: Preparing NCBI GenBank file
-Some records may have no sequence data, so need to be removed. BOLD data on NCBI is named 'sp. BOLD:' should be converted to 'sp. B-' to be consistent with the naming in the MW bug database and our private DNA barcode library (from our own DNA barcoding). This data needs to be split from other records 
+Some records may have no sequence data, so need to be removed. Also, BOLD data on NCBI is named 'sp. BOLD:' should be converted to 'sp. B-' to be consistent with the naming in the mwbug database and our private DNA barcode library (from our own DNA barcoding). This data needs to be split from other records and the 'extra bits on names' filter used on the dataset without BOLD id's. The fields need to be set for refdb.
 
 ```{r}
 #remove files with no sequence data
-NCBI_data <- NCBI_data[!is.na(NCBI_data$sequence),]
+ncbi_data <- NCBI_data[!is.na(NCBI_data$sequence),]
 
 # group records with BOLD BIN's
-NCBI_bold <- NCBI_data[grep("sp. BOLD:", NCBI_data$species),] 
+ncbi_bold <- ncbi_data[grep("sp. BOLD:", ncbi_data$species),] 
 # adjust names to be inline with mw_bugs
-NCBI_bold$species <- gsub("sp. BOLD:", "sp. B-", NCBI_bold$species)
-head(NCBI_bold)
+ncbi_bold$species <- gsub("sp. BOLD:", "sp. B-", ncbi_bold$species)
 
 # group records without BOLD BIN's
-NCBI_nonbold <- NCBI_data[-grep("sp. BOLD:", NCBI_data$species),]
+ncbi_nonbold <- ncbi_data[-grep("sp. BOLD:", ncbi_data$species),]
 # remove extra bits on names which are added by NCBI
-NCBI_nonbold <- refdb_clean_tax_remove_extra(NCBI_nonbold)
+ncbi_nonbold <- refdb::refdb_clean_tax_remove_extra(ncbi_nonbold)
 
-NCBI_data_clean <- refdb_merge(NCBI_bold, NCBI_nonbold)
+#merge back together
+ncbi_data_clean <- refdb::refdb_merge(ncbi_bold, ncbi_nonbold)
 
-```
-
-# set fields
-```{r}
-NCBI_data <- refdb_set_fields(NCBI_data,
-                              taxonomy = c(
+# set fields for refdb
+ncbi_data_clean <- refdb::refdb_set_fields(ncbi_data_clean,
+                              taxonomy = c(kingdom = "superkingdom",
                                 phylum = "phylum",
                                 class = "class",
                                 order = "order",
@@ -393,50 +381,46 @@ NCBI_data <- refdb_set_fields(NCBI_data,
                               source = "source",
                               id = "id")
 
-refdb_get_fields(NCBI_data)
-```
+refdb::refdb_get_fields(ncbi_data_clean)
 
+#remove files no longer needed
+rm(ncbi_bold)
+rm(ncbi_nonbold)
+rm(ncbi_data)
+```
 ## Cleaning DNA sequences and taxonomic data
 
-# Step 4: Remove duplicates. It is good to write this file prior to preforming other clean_up steps
-
+# Step 4: Remove duplicates
+This will remove records with identical sequence and taxonomic information. Expect the number of sequence records to reduce by 30-50%.
 ```{r}
-NCBI_data_clean <-refdb_filter_seq_duplicates(NCBI_data)
-```
-
-# remove files not needed for next steps
-```{r}
-rm(NCBI_data)
-rm(NCBI_bold)
-rm(NCBI_nonbold)
+ncbi_data_clean <- refdb::refdb_filter_seq_duplicates(ncbi_data_clean)
 ```
 
 # Step 6: Plot sequence length of NCBI data
 This will give an idea of the sequence length of the data retrieved from NCBI. The full COI gene is ~1500 bp long in animals. DNA barcodes are ~658bp but can vary.
 
 ```{r}
-refdb_plot_seqlen_hist(NCBI_data_clean)
+refdb::refdb_plot_seqlen_hist(NCBI_data_clean)
 ```
 
 # Visualizing the reference library (Optional)
-
 Now let’s take a tour of the functions you can use to produce graphical representation of your reference database. Because refdb stores reference database as dataframes it is straightforward to produce plots (e.g. with the tidyverse and ggplot2). For example, we can make a barplot showing the distribution of the phyla like this:
   
 ```{r}
-NCBI_data_clean %>% 
+ncbi_data_clean %>% 
   group_by(phylum) %>% 
   count() %>% 
   ggplot(aes(fct_reorder(phylum, n, .desc = TRUE), n)) +
   geom_col() +
   xlab("Phylum") +
   ylab("Number of records") +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=0.5))
 ```
 
 Additionally, refdb provides ready-to-use functions to produce more sophisticated plots. For example, to represent the taxonomic coverage of your reference library across multiple levels with a tree map:
   
 ```{r}
-refdb_plot_tax_treemap(NCBI_data_clean, cols = 1)
+refdb::refdb_plot_tax_treemap(ncbi_data_clean, cols = 2)
 ```
 
 Alternatively you can represent this information with a taxonomic tree. These functions have several parameters to control what is represented in the plot (taxonomic ranks, colors, etc.).
@@ -445,7 +429,7 @@ Alternatively you can represent this information with a taxonomic tree. These fu
 A report is a simple and rapid way to get an overview of the current state of your reference library and to identify some possible issues. You can compile a report using the function refdb_report: 
 
 ```{r}
-refdb_report(NCBI_data_clean, view=TRUE)
+refdb::refdb_report(ncbi_data_clean, view=TRUE)
 ```                       
 
 The result (not shown here) is an interactive HTML report that can be opened in any recent web browser. It contains some statistics and plots, and the results of functions refdb_check_tax_typo, refdb_check_tax_conflict and refdb_check_seq_conflict. These functions can be used to identify possible spelling errors in taxonomic names, conflicts in the taxonomic tree and lack of genetic resolution in sequences, respectively.
@@ -465,479 +449,473 @@ NCBI_data_clean <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Outp
 ____________________________________________________________________
 # SECTION 2: Getting data from BOLD
 
-Now let’s download data from the BOLD database. Data needs downloaded for animals groups at different taxonomic levels depending on the number of sequences in that group. For small groups, it can be downloaded at phlyum level for larger groups with more sequences, we'll need to follow the BOLD "Large data" instructions which limits the size of data download requests (see ?refdb_import_BOLD). I have done this below hence by trial and error to enable data from all animal groups to be download.
+You may have notice that the search interface is a bit different. This is because here we rely on another package (bold, Chamberlain 2020) to download the data. You can check the manual of refdb::refdb_import_BOLD to see the different arguments available.
+Now let’s download data from the BOLD database. Data needs downloaded for animals groups at different taxonomic levels depending on the number of sequences in that group. For small groups, it can be downloaded at phlyum level for larger groups with more sequence records, we'll need to follow the BOLD "large data" instructions which limits the size of data download requests (see ?refdb::refdb_import_BOLD). I have configured this below useing trial and error to enable data from all animal groups to be download.
 
-NOTE: if a download of the data is not require please skip to step 6 import the last version of BOLD data downlaoaded and cleaned.
+NOTE: if a download of the data is not require please skip to 'Step 6' import the last version of BOLD data downlaoaded and cleaned.
 
-# Step 1: Download data
-
-# Invertebrate that can be downloaded at Phylum level
+#Step 1: Download data from the BOLD database
 ```{r}
-Annelida_bold <- refdb_import_BOLD(taxon = "Annelida", ncbi_taxo = FALSE)
-Cnidaria_bold <- refdb_import_BOLD(taxon = "Cnidaria", ncbi_taxo = FALSE)
-Bryozoa_bold <- refdb_import_BOLD(taxon = "Bryozoa", ncbi_taxo = FALSE)
-Platyhelminthes_bold <- refdb_import_BOLD(taxon = "Platyhelminthes", ncbi_taxo = FALSE)
-Porifera_bold <- refdb_import_BOLD(taxon = "Porifera", ncbi_taxo = FALSE)
-Nematoda_bold <- refdb_import_BOLD(taxon = "Nematoda", ncbi_taxo = FALSE)
-Bryozoa_bold <- refdb_import_BOLD(taxon = "Bryozoa", ncbi_taxo = FALSE)
-Rotifera_bold <- refdb_import_BOLD(taxon = "Rotifera", ncbi_taxo = FALSE)
-Nemertea_bold <- refdb_import_BOLD(taxon = "Nemertea", ncbi_taxo = FALSE)
-Onychophora_bold <- refdb_import_BOLD(taxon = "Onychophora", ncbi_taxo = FALSE)
-Priapulida_bold <- refdb_import_BOLD(taxon = "Priapulida", ncbi_taxo = FALSE)
-Tardigrada_bold <- refdb_import_BOLD(taxon = "Tardigrada", ncbi_taxo = FALSE)
-Mollusca_bold <- refdb_import_BOLD(taxon = "Mollusca", ncbi_taxo = FALSE)
-```
+# Invertebrate that can be downloaded at phylum level
+Annelida_bold <- refdb::refdb_import_BOLD(taxon = "Annelida", ncbi_taxo = FALSE)
+Cnidaria_bold <- refdb::refdb_import_BOLD(taxon = "Cnidaria", ncbi_taxo = FALSE)
+Bryozoa_bold <- refdb::refdb_import_BOLD(taxon = "Bryozoa", ncbi_taxo = FALSE)
+Platyhelminthes_bold <- refdb::refdb_import_BOLD(taxon = "Platyhelminthes", ncbi_taxo = FALSE)
+Porifera_bold <- refdb::refdb_import_BOLD(taxon = "Porifera", ncbi_taxo = FALSE)
+Nematoda_bold <- refdb::refdb_import_BOLD(taxon = "Nematoda", ncbi_taxo = FALSE)
+Rotifera_bold <- refdb::refdb_import_BOLD(taxon = "Rotifera", ncbi_taxo = FALSE)
+Nemertea_bold <- refdb::refdb_import_BOLD(taxon = "Nemertea", ncbi_taxo = FALSE)
+Onychophora_bold <- refdb::refdb_import_BOLD(taxon = "Onychophora", ncbi_taxo = FALSE)
+Priapulida_bold <- refdb::refdb_import_BOLD(taxon = "Priapulida", ncbi_taxo = FALSE)
+Tardigrada_bold <- refdb::refdb_import_BOLD(taxon = "Tardigrada", ncbi_taxo = FALSE)
+Mollusca_bold <- refdb::refdb_import_BOLD(taxon = "Mollusca", ncbi_taxo = FALSE)
 
-All remaining groups are considered 'large datasets' and will not download from BOLD unless they are broken down into smaller data sets. This can be done by using low taxonomic levels i.e. class, order or family
+#All remaining groups are considered 'large datasets' and will not download from BOLD unless they are broken down into smaller data sets. This can be done by using low taxonomic levels i.e. class, order or family.
 
-# Invertebrates that can be downloaded at class level
-I have left out marine only classes and Insecta (which is too large - see below)
-```{r}
-Merostomata_bold <- refdb_import_BOLD(taxon = "Merostomata", ncbi_taxo = FALSE)
-Pauropoda_bold <- refdb_import_BOLD(taxon = "Pauropoda", ncbi_taxo = FALSE)
-Symphyla_bold <- refdb_import_BOLD(taxon = "Symphyla", ncbi_taxo = FALSE)
-Diplopoda_bold <- refdb_import_BOLD(taxon = "Diplopoda", ncbi_taxo = FALSE)
-Chilopoda_bold <- refdb_import_BOLD(taxon = "Chilopoda", ncbi_taxo = FALSE)
-Copepoda_bold <- refdb_import_BOLD(taxon = "Copepoda", ncbi_taxo = FALSE)
-Collembola_bold <- refdb_import_BOLD(taxon = "Collembola", ncbi_taxo = FALSE)
-Protura_bold <- refdb_import_BOLD(taxon = "Protura", ncbi_taxo = FALSE)
-Cephalocarida_bold <- refdb_import_BOLD(taxon = "Cephalocarida", ncbi_taxo = FALSE)
-Remipedia_bold <- refdb_import_BOLD(taxon = "Remipedia", ncbi_taxo = FALSE)
-Branchiopoda_bold <- refdb_import_BOLD(taxon = "Branchiopoda", ncbi_taxo = FALSE)
-Thecostraca_bold <- refdb_import_BOLD(taxon = "Thecostraca", ncbi_taxo = FALSE)
-Malacostraca_bold <- refdb_import_BOLD(taxon = "Malacostraca", ncbi_taxo = FALSE)
-Ichthyostraca_bold <- refdb_import_BOLD(taxon = "Ichthyostraca", ncbi_taxo = FALSE)
-Diplura_bold <- refdb_import_BOLD(taxon = "Diplura", ncbi_taxo = FALSE)
-Pycnogonida_bold <- refdb_import_BOLD(taxon = "Pycnogonida", ncbi_taxo = FALSE)
-Ostracoda_bold <- refdb_import_BOLD(taxon = "Ostracoda", ncbi_taxo = FALSE)
-Arachnida_bold <- refdb_import_BOLD(taxon = "Arachnida", ncbi_taxo = FALSE)
-```
+# Invertebrates that can be downloaded at class level - I have left out marine only classes and Insecta (which is too large - see below)
+Merostomata_bold <- refdb::refdb_import_BOLD(taxon = "Merostomata", ncbi_taxo = FALSE)
+Pauropoda_bold <- refdb::refdb_import_BOLD(taxon = "Pauropoda", ncbi_taxo = FALSE)
+Symphyla_bold <- refdb::refdb_import_BOLD(taxon = "Symphyla", ncbi_taxo = FALSE)
+Diplopoda_bold <- refdb::refdb_import_BOLD(taxon = "Diplopoda", ncbi_taxo = FALSE)
+Chilopoda_bold <- refdb::refdb_import_BOLD(taxon = "Chilopoda", ncbi_taxo = FALSE)
+Copepoda_bold <- refdb::refdb_import_BOLD(taxon = "Copepoda", ncbi_taxo = FALSE)
+Collembola_bold <- refdb::refdb_import_BOLD(taxon = "Collembola", ncbi_taxo = FALSE)
+Protura_bold <- refdb::refdb_import_BOLD(taxon = "Protura", ncbi_taxo = FALSE)
+Cephalocarida_bold <- refdb::refdb_import_BOLD(taxon = "Cephalocarida", ncbi_taxo = FALSE)
+Remipedia_bold <- refdb::refdb_import_BOLD(taxon = "Remipedia", ncbi_taxo = FALSE)
+Branchiopoda_bold <- refdb::refdb_import_BOLD(taxon = "Branchiopoda", ncbi_taxo = FALSE)
+Thecostraca_bold <- refdb::refdb_import_BOLD(taxon = "Thecostraca", ncbi_taxo = FALSE)
+Malacostraca_bold <- refdb::refdb_import_BOLD(taxon = "Malacostraca", ncbi_taxo = FALSE)
+Ichthyostraca_bold <- refdb::refdb_import_BOLD(taxon = "Ichthyostraca", ncbi_taxo = FALSE)
+Diplura_bold <- refdb::refdb_import_BOLD(taxon = "Diplura", ncbi_taxo = FALSE)
+Pycnogonida_bold <- refdb::refdb_import_BOLD(taxon = "Pycnogonida", ncbi_taxo = FALSE)
+Ostracoda_bold <- refdb::refdb_import_BOLD(taxon = "Ostracoda", ncbi_taxo = FALSE)
+Arachnida_bold <- refdb::refdb_import_BOLD(taxon = "Arachnida", ncbi_taxo = FALSE)
 
 # Invertebrate that can be downloaded at order level - includes Insecta (except Diptera (which is too large -see below))
-```{r}
-Archaeognatha_bold <- refdb_import_BOLD(taxon = "Archaeognatha", ncbi_taxo = FALSE)
-Blattodea_bold <- refdb_import_BOLD(taxon = "Blattodea", ncbi_taxo = FALSE)
-Coleoptera_bold <- refdb_import_BOLD(taxon = "Coleoptera", ncbi_taxo = FALSE)
-Dermaptera_bold <- refdb_import_BOLD(taxon = "Dermaptera", ncbi_taxo = FALSE)
-Embioptera_bold <- refdb_import_BOLD(taxon = " Embioptera", ncbi_taxo = FALSE)
-Ephemeroptera_bold <- refdb_import_BOLD(taxon = " Ephemeroptera", ncbi_taxo = FALSE)
-Hemiptera_bold <- refdb_import_BOLD(taxon = "Hemiptera", ncbi_taxo = FALSE)
-Hymenoptera_bold <- refdb_import_BOLD(taxon = "Hymenoptera", ncbi_taxo = FALSE)
-Lepidoptera_bold <- refdb_import_BOLD(taxon = "Lepidoptera", ncbi_taxo = FALSE)
-Mantodea_bold <- refdb_import_BOLD(taxon = "Mantodea", ncbi_taxo = FALSE)
-Mecoptera_bold <- refdb_import_BOLD(taxon = "Mecoptera", ncbi_taxo = FALSE)
-Megaloptera_bold <- refdb_import_BOLD(taxon = "Megaloptera", ncbi_taxo = FALSE)
-Neuroptera_bold <- refdb_import_BOLD(taxon = "Neuroptera", ncbi_taxo = FALSE)
-Notoptera_bold <- refdb_import_BOLD(taxon = "Notoptera", ncbi_taxo = FALSE)
-Odonata_bold <- refdb_import_BOLD(taxon = "Odonata", ncbi_taxo = FALSE)
-Orthoptera_bold <- refdb_import_BOLD(taxon = "Orthoptera", ncbi_taxo = FALSE)
-Phasmatodea_bold <- refdb_import_BOLD(taxon = "Phasmatodea", ncbi_taxo = FALSE)
-Plecoptera_bold <- refdb_import_BOLD(taxon = "Plecoptera", ncbi_taxo = FALSE)
-Psocodea_bold <- refdb_import_BOLD(taxon = "Psocodea", ncbi_taxo = FALSE)
-Raphidioptera_bold <- refdb_import_BOLD(taxon = "Raphidioptera", ncbi_taxo = FALSE)
-Siphonaptera_bold <- refdb_import_BOLD(taxon = "Siphonaptera", ncbi_taxo = FALSE)
-Strepsiptera_bold <- refdb_import_BOLD(taxon = "Strepsiptera", ncbi_taxo = FALSE)
-Thysanoptera_bold <- refdb_import_BOLD(taxon = "Thysanoptera", ncbi_taxo = FALSE)
-Trichoptera_bold <- refdb_import_BOLD(taxon = "Trichoptera", ncbi_taxo = FALSE)
-Zoraptera_bold <- refdb_import_BOLD(taxon = "Zoraptera", ncbi_taxo = FALSE)
-Zygentoma_bold <- refdb_import_BOLD(taxon = "Zygentoma", ncbi_taxo = FALSE)
-```
+Archaeognatha_bold <- refdb::refdb_import_BOLD(taxon = "Archaeognatha", ncbi_taxo = FALSE)
+Blattodea_bold <- refdb::refdb_import_BOLD(taxon = "Blattodea", ncbi_taxo = FALSE)
+Coleoptera_bold <- refdb::refdb_import_BOLD(taxon = "Coleoptera", ncbi_taxo = FALSE)
+Dermaptera_bold <- refdb::refdb_import_BOLD(taxon = "Dermaptera", ncbi_taxo = FALSE)
+Embioptera_bold <- refdb::refdb_import_BOLD(taxon = " Embioptera", ncbi_taxo = FALSE)
+Ephemeroptera_bold <- refdb::refdb_import_BOLD(taxon = " Ephemeroptera", ncbi_taxo = FALSE)
+Hemiptera_bold <- refdb::refdb_import_BOLD(taxon = "Hemiptera", ncbi_taxo = FALSE)
+Hymenoptera_bold <- refdb::refdb_import_BOLD(taxon = "Hymenoptera", ncbi_taxo = FALSE)
+Lepidoptera_bold <- refdb::refdb_import_BOLD(taxon = "Lepidoptera", ncbi_taxo = FALSE)
+Mantodea_bold <- refdb::refdb_import_BOLD(taxon = "Mantodea", ncbi_taxo = FALSE)
+Mecoptera_bold <- refdb::refdb_import_BOLD(taxon = "Mecoptera", ncbi_taxo = FALSE)
+Megaloptera_bold <- refdb::refdb_import_BOLD(taxon = "Megaloptera", ncbi_taxo = FALSE)
+Neuroptera_bold <- refdb::refdb_import_BOLD(taxon = "Neuroptera", ncbi_taxo = FALSE)
+Notoptera_bold <- refdb::refdb_import_BOLD(taxon = "Notoptera", ncbi_taxo = FALSE)
+Odonata_bold <- refdb::refdb_import_BOLD(taxon = "Odonata", ncbi_taxo = FALSE)
+Orthoptera_bold <- refdb::refdb_import_BOLD(taxon = "Orthoptera", ncbi_taxo = FALSE)
+Phasmatodea_bold <- refdb::refdb_import_BOLD(taxon = "Phasmatodea", ncbi_taxo = FALSE)
+Plecoptera_bold <- refdb::refdb_import_BOLD(taxon = "Plecoptera", ncbi_taxo = FALSE)
+Psocodea_bold <- refdb::refdb_import_BOLD(taxon = "Psocodea", ncbi_taxo = FALSE)
+Raphidioptera_bold <- refdb::refdb_import_BOLD(taxon = "Raphidioptera", ncbi_taxo = FALSE)
+Siphonaptera_bold <- refdb::refdb_import_BOLD(taxon = "Siphonaptera", ncbi_taxo = FALSE)
+Strepsiptera_bold <- refdb::refdb_import_BOLD(taxon = "Strepsiptera", ncbi_taxo = FALSE)
+Thysanoptera_bold <- refdb::refdb_import_BOLD(taxon = "Thysanoptera", ncbi_taxo = FALSE)
+Trichoptera_bold <- refdb::refdb_import_BOLD(taxon = "Trichoptera", ncbi_taxo = FALSE)
+Zoraptera_bold <- refdb::refdb_import_BOLD(taxon = "Zoraptera", ncbi_taxo = FALSE)
+Zygentoma_bold <- refdb::refdb_import_BOLD(taxon = "Zygentoma", ncbi_taxo = FALSE)
 
 # Invertebrates that can be downloaded at family - for Diptera families
-```{r}
-Acartophthalmidae_bold <- refdb_import_BOLD(taxon = "Acartophthalmidae" , ncbi_taxo = FALSE)
-Acroceridae_bold <- refdb_import_BOLD(taxon = "Acroceridae" , ncbi_taxo = FALSE)
-Agromyzidae_bold <- refdb_import_BOLD(taxon = "Agromyzidae" , ncbi_taxo = FALSE)
-Anisopodidae_bold <- refdb_import_BOLD(taxon = "Anisopodidae" , ncbi_taxo = FALSE)
-Anthomyiidae_bold <- refdb_import_BOLD(taxon = "Anthomyiidae" , ncbi_taxo = FALSE)
-Anthomyzidae_bold <- refdb_import_BOLD(taxon = "Anthomyzidae" , ncbi_taxo = FALSE)
-Apioceridae_bold <- refdb_import_BOLD(taxon = "Apioceridae" , ncbi_taxo = FALSE)
-Apsilocephalidae_bold <- refdb_import_BOLD(taxon = "Apsilocephalidae" , ncbi_taxo = FALSE)
-Apystomyiidae_bold <- refdb_import_BOLD(taxon = "Apystomyiidae" , ncbi_taxo = FALSE)
-Asilidae_bold <- refdb_import_BOLD(taxon = "Asilidae" , ncbi_taxo = FALSE)
-Asteiidae_bold <- refdb_import_BOLD(taxon = "Asteiidae" , ncbi_taxo = FALSE)
-Atelestidae_bold <- refdb_import_BOLD(taxon = "Atelestidae" , ncbi_taxo = FALSE)
-Athericidae_bold <- refdb_import_BOLD(taxon = "Athericidae" , ncbi_taxo = FALSE)
-Aulacigastridae_bold <- refdb_import_BOLD(taxon = "Aulacigastridae" , ncbi_taxo = FALSE)
-Australimyzidae_bold <- refdb_import_BOLD(taxon = "Australimyzidae" , ncbi_taxo = FALSE)
-Austroleptidae_bold <- refdb_import_BOLD(taxon = "Austroleptidae" , ncbi_taxo = FALSE)
-Bibionidae_bold <- refdb_import_BOLD(taxon = "Bibionidae" , ncbi_taxo = FALSE)
-Blephariceridae_bold <- refdb_import_BOLD(taxon = "Blephariceridae" , ncbi_taxo = FALSE)
-Bolbomyiidae_bold <- refdb_import_BOLD(taxon = "Bolbomyiidae" , ncbi_taxo = FALSE)
-Bolitophilidae_bold <- refdb_import_BOLD(taxon = "Bolitophilidae" , ncbi_taxo = FALSE)
-Bombyliidae_bold <- refdb_import_BOLD(taxon = "Bombyliidae" , ncbi_taxo = FALSE)
-Braulidae_bold <- refdb_import_BOLD(taxon = "Braulidae" , ncbi_taxo = FALSE)
-Calliphoridae_bold <- refdb_import_BOLD(taxon = "Calliphoridae" , ncbi_taxo = FALSE)
-Camillidae_bold <- refdb_import_BOLD(taxon = "Camillidae" , ncbi_taxo = FALSE)
-Canacidae_bold <- refdb_import_BOLD(taxon = "Canacidae" , ncbi_taxo = FALSE)
-Canthyloscelidae_bold <- refdb_import_BOLD(taxon = "Canthyloscelidae" , ncbi_taxo = FALSE)
-Carnidae_bold <- refdb_import_BOLD(taxon = "Carnidae" , ncbi_taxo = FALSE)
-Cecidomyiidae_bold <- refdb_import_BOLD(taxon = "Cecidomyiidae" , ncbi_taxo = FALSE)
-Celyphidae_bold <- refdb_import_BOLD(taxon = "Celyphidae" , ncbi_taxo = FALSE)
-Ceratopogonidae_bold <- refdb_import_BOLD(taxon = "Ceratopogonidae" , ncbi_taxo = FALSE)
-Chamaemyiidae_bold <- refdb_import_BOLD(taxon = "Chamaemyiidae" , ncbi_taxo = FALSE)
-Chaoboridae_bold <- refdb_import_BOLD(taxon = "Chaoboridae" , ncbi_taxo = FALSE)
-Chironomidae_bold <- refdb_import_BOLD(taxon = "Chironomidae" , ncbi_taxo = FALSE)
-Chloropidae_bold <- refdb_import_BOLD(taxon = "Chloropidae" , ncbi_taxo = FALSE)
-Chyromyidae_bold <- refdb_import_BOLD(taxon = "Chyromyidae" , ncbi_taxo = FALSE)
-Clusiidae_bold <- refdb_import_BOLD(taxon = "Clusiidae" , ncbi_taxo = FALSE)
-Coelopidae_bold <- refdb_import_BOLD(taxon = "Coelopidae" , ncbi_taxo = FALSE)
-Conopidae_bold <- refdb_import_BOLD(taxon = "Conopidae" , ncbi_taxo = FALSE)
-Corethrellidae_bold <- refdb_import_BOLD(taxon = "Corethrellidae" , ncbi_taxo = FALSE)
-Cryptochetidae_bold <- refdb_import_BOLD(taxon = "Cryptochetidae" , ncbi_taxo = FALSE)
-Ctenostylidae_bold <- refdb_import_BOLD(taxon = "Ctenostylidae" , ncbi_taxo = FALSE)
-Culicidae_bold <- refdb_import_BOLD(taxon = "Culicidae" , ncbi_taxo = FALSE)
-Curtonotidae_bold <- refdb_import_BOLD(taxon = "Curtonotidae" , ncbi_taxo = FALSE)
-Cylindrotomidae_bold <- refdb_import_BOLD(taxon = "Cylindrotomidae" , ncbi_taxo = FALSE)
-Cypselosomatidae_bold <- refdb_import_BOLD(taxon = "Cypselosomatidae" , ncbi_taxo = FALSE)
-Deuterophlebiidae_bold <- refdb_import_BOLD(taxon = "Deuterophlebiidae" , ncbi_taxo = FALSE)
-Diadocidiidae_bold <- refdb_import_BOLD(taxon = "Diadocidiidae" , ncbi_taxo = FALSE)
-Diastatidae_bold <- refdb_import_BOLD(taxon = "Diastatidae" , ncbi_taxo = FALSE)
-Diopsidae_bold <- refdb_import_BOLD(taxon = "Diopsidae" , ncbi_taxo = FALSE)
-Diptera_family_incertae_sedis_bold <- refdb_import_BOLD(taxon = "Diptera_family_incertae_sedis" , ncbi_taxo = FALSE)
-Ditomyiidae_bold <- refdb_import_BOLD(taxon = "Ditomyiidae" , ncbi_taxo = FALSE)
-Dixidae_bold <- refdb_import_BOLD(taxon = "Dixidae" , ncbi_taxo = FALSE)
-Dolichopodidae_bold <- refdb_import_BOLD(taxon = "Dolichopodidae" , ncbi_taxo = FALSE)
-Drosophilidae_bold <- refdb_import_BOLD(taxon = "Drosophilidae" , ncbi_taxo = FALSE)
-Dryomyzidae_bold <- refdb_import_BOLD(taxon = "Dryomyzidae" , ncbi_taxo = FALSE)
-Empididae_bold <- refdb_import_BOLD(taxon = "Empididae" , ncbi_taxo = FALSE)
-Ephydridae_bold <- refdb_import_BOLD(taxon = "Ephydridae" , ncbi_taxo = FALSE)
-Evocoidae_bold <- refdb_import_BOLD(taxon = "Evocoidae" , ncbi_taxo = FALSE)
-Fanniidae_bold <- refdb_import_BOLD(taxon = "Fanniidae" , ncbi_taxo = FALSE)
-Fergusoninidae_bold <- refdb_import_BOLD(taxon = "Fergusoninidae" , ncbi_taxo = FALSE)
-Glossinidae_bold <- refdb_import_BOLD(taxon = "Glossinidae" , ncbi_taxo = FALSE)
-Gobryidae_bold <- refdb_import_BOLD(taxon = "Gobryidae" , ncbi_taxo = FALSE)
-Helcomyzidae_bold <- refdb_import_BOLD(taxon = "Helcomyzidae" , ncbi_taxo = FALSE)
-Heleomyzidae_bold <- refdb_import_BOLD(taxon = "Heleomyzidae" , ncbi_taxo = FALSE)
-Helosciomyzidae_bold <- refdb_import_BOLD(taxon = "Helosciomyzidae" , ncbi_taxo = FALSE)
-Hesperinidae_bold <- refdb_import_BOLD(taxon = "Hesperinidae" , ncbi_taxo = FALSE)
-Hilarimorphidae_bold <- refdb_import_BOLD(taxon = "Hilarimorphidae" , ncbi_taxo = FALSE)
-Hippoboscidae_bold <- refdb_import_BOLD(taxon = "Hippoboscidae" , ncbi_taxo = FALSE)
-Homalocnemidae_bold <- refdb_import_BOLD(taxon = "Homalocnemidae" , ncbi_taxo = FALSE)
-Huttoninidae_bold <- refdb_import_BOLD(taxon = "Huttoninidae" , ncbi_taxo = FALSE)
-Hybotidae_bold <- refdb_import_BOLD(taxon = "Hybotidae" , ncbi_taxo = FALSE)
-Inbiomyiidae_bold <- refdb_import_BOLD(taxon = "Inbiomyiidae" , ncbi_taxo = FALSE)
-Ironomyiidae_bold <- refdb_import_BOLD(taxon = "Ironomyiidae" , ncbi_taxo = FALSE)
-Iteaphilidae_bold <- refdb_import_BOLD(taxon = "Iteaphilidae" , ncbi_taxo = FALSE)
-Keroplatidae_bold <- refdb_import_BOLD(taxon = "Keroplatidae" , ncbi_taxo = FALSE)
-Lauxaniidae_bold <- refdb_import_BOLD(taxon = "Lauxaniidae" , ncbi_taxo = FALSE)
-Limoniidae_bold <- refdb_import_BOLD(taxon = "Limoniidae" , ncbi_taxo = FALSE)
-Lonchaeidae_bold <- refdb_import_BOLD(taxon = "Lonchaeidae" , ncbi_taxo = FALSE)
-Lonchopteridae_bold <- refdb_import_BOLD(taxon = "Lonchopteridae" , ncbi_taxo = FALSE)
-Marginidae_bold <- refdb_import_BOLD(taxon = "Marginidae" , ncbi_taxo = FALSE)
-Megamerinidae_bold <- refdb_import_BOLD(taxon = "Megamerinidae" , ncbi_taxo = FALSE)
-Mesembrinellidae_bold <- refdb_import_BOLD(taxon = "Mesembrinellidae" , ncbi_taxo = FALSE)
-Micropezidae_bold <- refdb_import_BOLD(taxon = "Micropezidae" , ncbi_taxo = FALSE)
-Milichiidae_bold <- refdb_import_BOLD(taxon = "Milichiidae" , ncbi_taxo = FALSE)
-Mormotomyiidae_bold <- refdb_import_BOLD(taxon = "Mormotomyiidae" , ncbi_taxo = FALSE)
-Muscidae_bold <- refdb_import_BOLD(taxon = "Muscidae" , ncbi_taxo = FALSE)
-Mycetophilidae_bold <- refdb_import_BOLD(taxon = "Mycetophilidae" , ncbi_taxo = FALSE)
-Mydidae_bold <- refdb_import_BOLD(taxon = "Mydidae" , ncbi_taxo = FALSE)
-Mystacinobiidae_bold <- refdb_import_BOLD(taxon = "Mystacinobiidae" , ncbi_taxo = FALSE)
-Nannodastiidae_bold <- refdb_import_BOLD(taxon = "Nannodastiidae" , ncbi_taxo = FALSE)
-Natalimyzidae_bold <- refdb_import_BOLD(taxon = "Natalimyzidae" , ncbi_taxo = FALSE)
-Nemestrinidae_bold <- refdb_import_BOLD(taxon = "Nemestrinidae" , ncbi_taxo = FALSE)
-Neminidae_bold <- refdb_import_BOLD(taxon = "Neminidae" , ncbi_taxo = FALSE)
-Neriidae_bold <- refdb_import_BOLD(taxon = "Neriidae" , ncbi_taxo = FALSE)
-Neurochaetidae_bold <- refdb_import_BOLD(taxon = "Neurochaetidae" , ncbi_taxo = FALSE)
-Nothybidae_bold <- refdb_import_BOLD(taxon = "Nothybidae" , ncbi_taxo = FALSE)
-Nymphomyiidae_bold <- refdb_import_BOLD(taxon = "Nymphomyiidae" , ncbi_taxo = FALSE)
-Odiniidae_bold <- refdb_import_BOLD(taxon = "Odiniidae" , ncbi_taxo = FALSE)
-Oestridae_bold <- refdb_import_BOLD(taxon = "Oestridae" , ncbi_taxo = FALSE)
-Opetiidae_bold <- refdb_import_BOLD(taxon = "Opetiidae" , ncbi_taxo = FALSE)
-Opomyzidae_bold <- refdb_import_BOLD(taxon = "Opomyzidae" , ncbi_taxo = FALSE)
-Oreogetonidae_bold <- refdb_import_BOLD(taxon = "Oreogetonidae" , ncbi_taxo = FALSE)
-Oreoleptidae_bold <- refdb_import_BOLD(taxon = "Oreoleptidae" , ncbi_taxo = FALSE)
-Pachyneuridae_bold <- refdb_import_BOLD(taxon = "Pachyneuridae" , ncbi_taxo = FALSE)
-Pallopteridae_bold <- refdb_import_BOLD(taxon = "Pallopteridae" , ncbi_taxo = FALSE)
-Pantophthalmidae_bold <- refdb_import_BOLD(taxon = "Pantophthalmidae" , ncbi_taxo = FALSE)
-Paraleucopidae_bold <- refdb_import_BOLD(taxon = "Paraleucopidae" , ncbi_taxo = FALSE)
-Pediciidae_bold <- refdb_import_BOLD(taxon = "Pediciidae" , ncbi_taxo = FALSE)
-Pelecorhynchidae_bold <- refdb_import_BOLD(taxon = "Pelecorhynchidae" , ncbi_taxo = FALSE)
-Periscelididae_bold <- refdb_import_BOLD(taxon = "Periscelididae" , ncbi_taxo = FALSE)
-Perissommatidae_bold <- refdb_import_BOLD(taxon = "Perissommatidae" , ncbi_taxo = FALSE)
-Phoridae_bold <- refdb_import_BOLD(taxon = "Phoridae" , ncbi_taxo = FALSE)
-Piophilidae_bold <- refdb_import_BOLD(taxon = "Piophilidae" , ncbi_taxo = FALSE)
-Pipunculidae_bold <- refdb_import_BOLD(taxon = "Pipunculidae" , ncbi_taxo = FALSE)
-Platypezidae_bold <- refdb_import_BOLD(taxon = "Platypezidae" , ncbi_taxo = FALSE)
-Platystomatidae_bold <- refdb_import_BOLD(taxon = "Platystomatidae" , ncbi_taxo = FALSE)
-Polleniidae_bold <- refdb_import_BOLD(taxon = "Polleniidae" , ncbi_taxo = FALSE)
-Pseudopomyzidae_bold <- refdb_import_BOLD(taxon = "Pseudopomyzidae" , ncbi_taxo = FALSE)
-Psilidae_bold <- refdb_import_BOLD(taxon = "Psilidae" , ncbi_taxo = FALSE)
-Psychodidae_bold <- refdb_import_BOLD(taxon = "Psychodidae" , ncbi_taxo = FALSE)
-Ptychopteridae_bold <- refdb_import_BOLD(taxon = "Ptychopteridae" , ncbi_taxo = FALSE)
-Pyrgotidae_bold <- refdb_import_BOLD(taxon = "Pyrgotidae" , ncbi_taxo = FALSE)
-Rhagionidae_bold <- refdb_import_BOLD(taxon = "Rhagionidae" , ncbi_taxo = FALSE)
-Richardiidae_bold <- refdb_import_BOLD(taxon = "Richardiidae" , ncbi_taxo = FALSE)
-Ropalomeridae_bold <- refdb_import_BOLD(taxon = "Ropalomeridae" , ncbi_taxo = FALSE)
-Sarcophagidae_bold <- refdb_import_BOLD(taxon = "Sarcophagidae" , ncbi_taxo = FALSE)
-Scathophagidae_bold <- refdb_import_BOLD(taxon = "Scathophagidae" , ncbi_taxo = FALSE)
-Scatopsidae_bold <- refdb_import_BOLD(taxon = "Scatopsidae" , ncbi_taxo = FALSE)
-Scenopinidae_bold <- refdb_import_BOLD(taxon = "Scenopinidae" , ncbi_taxo = FALSE)
-Sciaridae_bold <- refdb_import_BOLD(taxon = "Sciaridae" , ncbi_taxo = FALSE)
-Sciaroidea_incertae_sedis_bold <- refdb_import_BOLD(taxon = "Sciaroidea_incertae_sedis" , ncbi_taxo = FALSE)
-Sciomyzidae_bold <- refdb_import_BOLD(taxon = "Sciomyzidae" , ncbi_taxo = FALSE)
-Sepsidae_bold <- refdb_import_BOLD(taxon = "Sepsidae" , ncbi_taxo = FALSE)
-Simuliidae_bold <- refdb_import_BOLD(taxon = "Simuliidae" , ncbi_taxo = FALSE)
-Somatiidae_bold <- refdb_import_BOLD(taxon = "Somatiidae" , ncbi_taxo = FALSE)
-Sphaeroceridae_bold <- refdb_import_BOLD(taxon = "Sphaeroceridae" , ncbi_taxo = FALSE)
-Stratiomyidae_bold <- refdb_import_BOLD(taxon = "Stratiomyidae" , ncbi_taxo = FALSE)
-Strongylophthalmyiidae_bold <- refdb_import_BOLD(taxon = "Strongylophthalmyiidae" , ncbi_taxo = FALSE)
-Syringogastridae_bold <- refdb_import_BOLD(taxon = "Syringogastridae" , ncbi_taxo = FALSE)
-Syrphidae_bold <- refdb_import_BOLD(taxon = "Syrphidae" , ncbi_taxo = FALSE)
-Tabanidae_bold <- refdb_import_BOLD(taxon = "Tabanidae" , ncbi_taxo = FALSE)
-Tachinidae_bold <- refdb_import_BOLD(taxon = "Tachinidae" , ncbi_taxo = FALSE)
-Tanyderidae_bold <- refdb_import_BOLD(taxon = "Tanyderidae" , ncbi_taxo = FALSE)
-Tanypezidae_bold <- refdb_import_BOLD(taxon = "Tanypezidae" , ncbi_taxo = FALSE)
-Tephritidae_bold <- refdb_import_BOLD(taxon = "Tephritidae" , ncbi_taxo = FALSE)
-Teratomyzidae_bold <- refdb_import_BOLD(taxon = "Teratomyzidae" , ncbi_taxo = FALSE)
-Thaumaleidae_bold <- refdb_import_BOLD(taxon = "Thaumaleidae" , ncbi_taxo = FALSE)
-Therevidae_bold <- refdb_import_BOLD(taxon = "Therevidae" , ncbi_taxo = FALSE)
-Tipulidae_bold <- refdb_import_BOLD(taxon = "Tipulidae" , ncbi_taxo = FALSE)
-Trichoceridae_bold <- refdb_import_BOLD(taxon = "Trichoceridae" , ncbi_taxo = FALSE)
-Ulidiidae_bold <- refdb_import_BOLD(taxon = "Ulidiidae" , ncbi_taxo = FALSE)
-Vermileonidae_bold <- refdb_import_BOLD(taxon = "Vermileonidae" , ncbi_taxo = FALSE)
-Xenasteiidae_bold <- refdb_import_BOLD(taxon = "Xenasteiidae" , ncbi_taxo = FALSE)
-Xylomyidae_bold <- refdb_import_BOLD(taxon = "Xylomyidae" , ncbi_taxo = FALSE)
-Xylophagidae_bold <- refdb_import_BOLD(taxon = "Xylophagidae" , ncbi_taxo = FALSE) 
-```
+Acartophthalmidae_bold <- refdb::refdb_import_BOLD(taxon = "Acartophthalmidae" , ncbi_taxo = FALSE)
+Acroceridae_bold <- refdb::refdb_import_BOLD(taxon = "Acroceridae" , ncbi_taxo = FALSE)
+Agromyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Agromyzidae" , ncbi_taxo = FALSE)
+Anisopodidae_bold <- refdb::refdb_import_BOLD(taxon = "Anisopodidae" , ncbi_taxo = FALSE)
+Anthomyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Anthomyiidae" , ncbi_taxo = FALSE)
+Anthomyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Anthomyzidae" , ncbi_taxo = FALSE)
+Apioceridae_bold <- refdb::refdb_import_BOLD(taxon = "Apioceridae" , ncbi_taxo = FALSE)
+Apsilocephalidae_bold <- refdb::refdb_import_BOLD(taxon = "Apsilocephalidae" , ncbi_taxo = FALSE)
+Apystomyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Apystomyiidae" , ncbi_taxo = FALSE)
+Asilidae_bold <- refdb::refdb_import_BOLD(taxon = "Asilidae" , ncbi_taxo = FALSE)
+Asteiidae_bold <- refdb::refdb_import_BOLD(taxon = "Asteiidae" , ncbi_taxo = FALSE)
+Atelestidae_bold <- refdb::refdb_import_BOLD(taxon = "Atelestidae" , ncbi_taxo = FALSE)
+Athericidae_bold <- refdb::refdb_import_BOLD(taxon = "Athericidae" , ncbi_taxo = FALSE)
+Aulacigastridae_bold <- refdb::refdb_import_BOLD(taxon = "Aulacigastridae" , ncbi_taxo = FALSE)
+Australimyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Australimyzidae" , ncbi_taxo = FALSE)
+Austroleptidae_bold <- refdb::refdb_import_BOLD(taxon = "Austroleptidae" , ncbi_taxo = FALSE)
+Bibionidae_bold <- refdb::refdb_import_BOLD(taxon = "Bibionidae" , ncbi_taxo = FALSE)
+Blephariceridae_bold <- refdb::refdb_import_BOLD(taxon = "Blephariceridae" , ncbi_taxo = FALSE)
+Bolbomyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Bolbomyiidae" , ncbi_taxo = FALSE)
+Bolitophilidae_bold <- refdb::refdb_import_BOLD(taxon = "Bolitophilidae" , ncbi_taxo = FALSE)
+Bombyliidae_bold <- refdb::refdb_import_BOLD(taxon = "Bombyliidae" , ncbi_taxo = FALSE)
+Braulidae_bold <- refdb::refdb_import_BOLD(taxon = "Braulidae" , ncbi_taxo = FALSE)
+Calliphoridae_bold <- refdb::refdb_import_BOLD(taxon = "Calliphoridae" , ncbi_taxo = FALSE)
+Camillidae_bold <- refdb::refdb_import_BOLD(taxon = "Camillidae" , ncbi_taxo = FALSE)
+Canacidae_bold <- refdb::refdb_import_BOLD(taxon = "Canacidae" , ncbi_taxo = FALSE)
+Canthyloscelidae_bold <- refdb::refdb_import_BOLD(taxon = "Canthyloscelidae" , ncbi_taxo = FALSE)
+Carnidae_bold <- refdb::refdb_import_BOLD(taxon = "Carnidae" , ncbi_taxo = FALSE)
+Cecidomyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Cecidomyiidae" , ncbi_taxo = FALSE)
+Celyphidae_bold <- refdb::refdb_import_BOLD(taxon = "Celyphidae" , ncbi_taxo = FALSE)
+Ceratopogonidae_bold <- refdb::refdb_import_BOLD(taxon = "Ceratopogonidae" , ncbi_taxo = FALSE)
+Chamaemyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Chamaemyiidae" , ncbi_taxo = FALSE)
+Chaoboridae_bold <- refdb::refdb_import_BOLD(taxon = "Chaoboridae" , ncbi_taxo = FALSE)
+Chironomidae_bold <- refdb::refdb_import_BOLD(taxon = "Chironomidae" , ncbi_taxo = FALSE)
+Chloropidae_bold <- refdb::refdb_import_BOLD(taxon = "Chloropidae" , ncbi_taxo = FALSE)
+Chyromyidae_bold <- refdb::refdb_import_BOLD(taxon = "Chyromyidae" , ncbi_taxo = FALSE)
+Clusiidae_bold <- refdb::refdb_import_BOLD(taxon = "Clusiidae" , ncbi_taxo = FALSE)
+Coelopidae_bold <- refdb::refdb_import_BOLD(taxon = "Coelopidae" , ncbi_taxo = FALSE)
+Conopidae_bold <- refdb::refdb_import_BOLD(taxon = "Conopidae" , ncbi_taxo = FALSE)
+Corethrellidae_bold <- refdb::refdb_import_BOLD(taxon = "Corethrellidae" , ncbi_taxo = FALSE)
+Cryptochetidae_bold <- refdb::refdb_import_BOLD(taxon = "Cryptochetidae" , ncbi_taxo = FALSE)
+Ctenostylidae_bold <- refdb::refdb_import_BOLD(taxon = "Ctenostylidae" , ncbi_taxo = FALSE)
+Culicidae_bold <- refdb::refdb_import_BOLD(taxon = "Culicidae" , ncbi_taxo = FALSE)
+Curtonotidae_bold <- refdb::refdb_import_BOLD(taxon = "Curtonotidae" , ncbi_taxo = FALSE)
+Cylindrotomidae_bold <- refdb::refdb_import_BOLD(taxon = "Cylindrotomidae" , ncbi_taxo = FALSE)
+Cypselosomatidae_bold <- refdb::refdb_import_BOLD(taxon = "Cypselosomatidae" , ncbi_taxo = FALSE)
+Deuterophlebiidae_bold <- refdb::refdb_import_BOLD(taxon = "Deuterophlebiidae" , ncbi_taxo = FALSE)
+Diadocidiidae_bold <- refdb::refdb_import_BOLD(taxon = "Diadocidiidae" , ncbi_taxo = FALSE)
+Diastatidae_bold <- refdb::refdb_import_BOLD(taxon = "Diastatidae" , ncbi_taxo = FALSE)
+Diopsidae_bold <- refdb::refdb_import_BOLD(taxon = "Diopsidae" , ncbi_taxo = FALSE)
+Diptera_family_incertae_sedis_bold <- refdb::refdb_import_BOLD(taxon = "Diptera_family_incertae_sedis" , ncbi_taxo = FALSE)
+Ditomyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Ditomyiidae" , ncbi_taxo = FALSE)
+Dixidae_bold <- refdb::refdb_import_BOLD(taxon = "Dixidae" , ncbi_taxo = FALSE)
+Dolichopodidae_bold <- refdb::refdb_import_BOLD(taxon = "Dolichopodidae" , ncbi_taxo = FALSE)
+Drosophilidae_bold <- refdb::refdb_import_BOLD(taxon = "Drosophilidae" , ncbi_taxo = FALSE)
+Dryomyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Dryomyzidae" , ncbi_taxo = FALSE)
+Empididae_bold <- refdb::refdb_import_BOLD(taxon = "Empididae" , ncbi_taxo = FALSE)
+Ephydridae_bold <- refdb::refdb_import_BOLD(taxon = "Ephydridae" , ncbi_taxo = FALSE)
+Evocoidae_bold <- refdb::refdb_import_BOLD(taxon = "Evocoidae" , ncbi_taxo = FALSE)
+Fanniidae_bold <- refdb::refdb_import_BOLD(taxon = "Fanniidae" , ncbi_taxo = FALSE)
+Fergusoninidae_bold <- refdb::refdb_import_BOLD(taxon = "Fergusoninidae" , ncbi_taxo = FALSE)
+Glossinidae_bold <- refdb::refdb_import_BOLD(taxon = "Glossinidae" , ncbi_taxo = FALSE)
+Gobryidae_bold <- refdb::refdb_import_BOLD(taxon = "Gobryidae" , ncbi_taxo = FALSE)
+Helcomyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Helcomyzidae" , ncbi_taxo = FALSE)
+Heleomyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Heleomyzidae" , ncbi_taxo = FALSE)
+Helosciomyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Helosciomyzidae" , ncbi_taxo = FALSE)
+Hesperinidae_bold <- refdb::refdb_import_BOLD(taxon = "Hesperinidae" , ncbi_taxo = FALSE)
+Hilarimorphidae_bold <- refdb::refdb_import_BOLD(taxon = "Hilarimorphidae" , ncbi_taxo = FALSE)
+Hippoboscidae_bold <- refdb::refdb_import_BOLD(taxon = "Hippoboscidae" , ncbi_taxo = FALSE)
+Homalocnemidae_bold <- refdb::refdb_import_BOLD(taxon = "Homalocnemidae" , ncbi_taxo = FALSE)
+Huttoninidae_bold <- refdb::refdb_import_BOLD(taxon = "Huttoninidae" , ncbi_taxo = FALSE)
+Hybotidae_bold <- refdb::refdb_import_BOLD(taxon = "Hybotidae" , ncbi_taxo = FALSE)
+Inbiomyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Inbiomyiidae" , ncbi_taxo = FALSE)
+Ironomyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Ironomyiidae" , ncbi_taxo = FALSE)
+Iteaphilidae_bold <- refdb::refdb_import_BOLD(taxon = "Iteaphilidae" , ncbi_taxo = FALSE)
+Keroplatidae_bold <- refdb::refdb_import_BOLD(taxon = "Keroplatidae" , ncbi_taxo = FALSE)
+Lauxaniidae_bold <- refdb::refdb_import_BOLD(taxon = "Lauxaniidae" , ncbi_taxo = FALSE)
+Limoniidae_bold <- refdb::refdb_import_BOLD(taxon = "Limoniidae" , ncbi_taxo = FALSE)
+Lonchaeidae_bold <- refdb::refdb_import_BOLD(taxon = "Lonchaeidae" , ncbi_taxo = FALSE)
+Lonchopteridae_bold <- refdb::refdb_import_BOLD(taxon = "Lonchopteridae" , ncbi_taxo = FALSE)
+Marginidae_bold <- refdb::refdb_import_BOLD(taxon = "Marginidae" , ncbi_taxo = FALSE)
+Megamerinidae_bold <- refdb::refdb_import_BOLD(taxon = "Megamerinidae" , ncbi_taxo = FALSE)
+Mesembrinellidae_bold <- refdb::refdb_import_BOLD(taxon = "Mesembrinellidae" , ncbi_taxo = FALSE)
+Micropezidae_bold <- refdb::refdb_import_BOLD(taxon = "Micropezidae" , ncbi_taxo = FALSE)
+Milichiidae_bold <- refdb::refdb_import_BOLD(taxon = "Milichiidae" , ncbi_taxo = FALSE)
+Mormotomyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Mormotomyiidae" , ncbi_taxo = FALSE)
+Muscidae_bold <- refdb::refdb_import_BOLD(taxon = "Muscidae" , ncbi_taxo = FALSE)
+Mycetophilidae_bold <- refdb::refdb_import_BOLD(taxon = "Mycetophilidae" , ncbi_taxo = FALSE)
+Mydidae_bold <- refdb::refdb_import_BOLD(taxon = "Mydidae" , ncbi_taxo = FALSE)
+Mystacinobiidae_bold <- refdb::refdb_import_BOLD(taxon = "Mystacinobiidae" , ncbi_taxo = FALSE)
+Nannodastiidae_bold <- refdb::refdb_import_BOLD(taxon = "Nannodastiidae" , ncbi_taxo = FALSE)
+Natalimyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Natalimyzidae" , ncbi_taxo = FALSE)
+Nemestrinidae_bold <- refdb::refdb_import_BOLD(taxon = "Nemestrinidae" , ncbi_taxo = FALSE)
+Neminidae_bold <- refdb::refdb_import_BOLD(taxon = "Neminidae" , ncbi_taxo = FALSE)
+Neriidae_bold <- refdb::refdb_import_BOLD(taxon = "Neriidae" , ncbi_taxo = FALSE)
+Neurochaetidae_bold <- refdb::refdb_import_BOLD(taxon = "Neurochaetidae" , ncbi_taxo = FALSE)
+Nothybidae_bold <- refdb::refdb_import_BOLD(taxon = "Nothybidae" , ncbi_taxo = FALSE)
+Nymphomyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Nymphomyiidae" , ncbi_taxo = FALSE)
+Odiniidae_bold <- refdb::refdb_import_BOLD(taxon = "Odiniidae" , ncbi_taxo = FALSE)
+Oestridae_bold <- refdb::refdb_import_BOLD(taxon = "Oestridae" , ncbi_taxo = FALSE)
+Opetiidae_bold <- refdb::refdb_import_BOLD(taxon = "Opetiidae" , ncbi_taxo = FALSE)
+Opomyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Opomyzidae" , ncbi_taxo = FALSE)
+Oreogetonidae_bold <- refdb::refdb_import_BOLD(taxon = "Oreogetonidae" , ncbi_taxo = FALSE)
+Oreoleptidae_bold <- refdb::refdb_import_BOLD(taxon = "Oreoleptidae" , ncbi_taxo = FALSE)
+Pachyneuridae_bold <- refdb::refdb_import_BOLD(taxon = "Pachyneuridae" , ncbi_taxo = FALSE)
+Pallopteridae_bold <- refdb::refdb_import_BOLD(taxon = "Pallopteridae" , ncbi_taxo = FALSE)
+Pantophthalmidae_bold <- refdb::refdb_import_BOLD(taxon = "Pantophthalmidae" , ncbi_taxo = FALSE)
+Paraleucopidae_bold <- refdb::refdb_import_BOLD(taxon = "Paraleucopidae" , ncbi_taxo = FALSE)
+Pediciidae_bold <- refdb::refdb_import_BOLD(taxon = "Pediciidae" , ncbi_taxo = FALSE)
+Pelecorhynchidae_bold <- refdb::refdb_import_BOLD(taxon = "Pelecorhynchidae" , ncbi_taxo = FALSE)
+Periscelididae_bold <- refdb::refdb_import_BOLD(taxon = "Periscelididae" , ncbi_taxo = FALSE)
+Perissommatidae_bold <- refdb::refdb_import_BOLD(taxon = "Perissommatidae" , ncbi_taxo = FALSE)
+Phoridae_bold <- refdb::refdb_import_BOLD(taxon = "Phoridae" , ncbi_taxo = FALSE)
+Piophilidae_bold <- refdb::refdb_import_BOLD(taxon = "Piophilidae" , ncbi_taxo = FALSE)
+Pipunculidae_bold <- refdb::refdb_import_BOLD(taxon = "Pipunculidae" , ncbi_taxo = FALSE)
+Platypezidae_bold <- refdb::refdb_import_BOLD(taxon = "Platypezidae" , ncbi_taxo = FALSE)
+Platystomatidae_bold <- refdb::refdb_import_BOLD(taxon = "Platystomatidae" , ncbi_taxo = FALSE)
+Polleniidae_bold <- refdb::refdb_import_BOLD(taxon = "Polleniidae" , ncbi_taxo = FALSE)
+Pseudopomyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Pseudopomyzidae" , ncbi_taxo = FALSE)
+Psilidae_bold <- refdb::refdb_import_BOLD(taxon = "Psilidae" , ncbi_taxo = FALSE)
+Psychodidae_bold <- refdb::refdb_import_BOLD(taxon = "Psychodidae" , ncbi_taxo = FALSE)
+Ptychopteridae_bold <- refdb::refdb_import_BOLD(taxon = "Ptychopteridae" , ncbi_taxo = FALSE)
+Pyrgotidae_bold <- refdb::refdb_import_BOLD(taxon = "Pyrgotidae" , ncbi_taxo = FALSE)
+Rhagionidae_bold <- refdb::refdb_import_BOLD(taxon = "Rhagionidae" , ncbi_taxo = FALSE)
+Richardiidae_bold <- refdb::refdb_import_BOLD(taxon = "Richardiidae" , ncbi_taxo = FALSE)
+Ropalomeridae_bold <- refdb::refdb_import_BOLD(taxon = "Ropalomeridae" , ncbi_taxo = FALSE)
+Sarcophagidae_bold <- refdb::refdb_import_BOLD(taxon = "Sarcophagidae" , ncbi_taxo = FALSE)
+Scathophagidae_bold <- refdb::refdb_import_BOLD(taxon = "Scathophagidae" , ncbi_taxo = FALSE)
+Scatopsidae_bold <- refdb::refdb_import_BOLD(taxon = "Scatopsidae" , ncbi_taxo = FALSE)
+Scenopinidae_bold <- refdb::refdb_import_BOLD(taxon = "Scenopinidae" , ncbi_taxo = FALSE)
+Sciaridae_bold <- refdb::refdb_import_BOLD(taxon = "Sciaridae" , ncbi_taxo = FALSE)
+Sciaroidea_incertae_sedis_bold <- refdb::refdb_import_BOLD(taxon = "Sciaroidea_incertae_sedis" , ncbi_taxo = FALSE)
+Sciomyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Sciomyzidae" , ncbi_taxo = FALSE)
+Sepsidae_bold <- refdb::refdb_import_BOLD(taxon = "Sepsidae" , ncbi_taxo = FALSE)
+Simuliidae_bold <- refdb::refdb_import_BOLD(taxon = "Simuliidae" , ncbi_taxo = FALSE)
+Somatiidae_bold <- refdb::refdb_import_BOLD(taxon = "Somatiidae" , ncbi_taxo = FALSE)
+Sphaeroceridae_bold <- refdb::refdb_import_BOLD(taxon = "Sphaeroceridae" , ncbi_taxo = FALSE)
+Stratiomyidae_bold <- refdb::refdb_import_BOLD(taxon = "Stratiomyidae" , ncbi_taxo = FALSE)
+Strongylophthalmyiidae_bold <- refdb::refdb_import_BOLD(taxon = "Strongylophthalmyiidae" , ncbi_taxo = FALSE)
+Syringogastridae_bold <- refdb::refdb_import_BOLD(taxon = "Syringogastridae" , ncbi_taxo = FALSE)
+Syrphidae_bold <- refdb::refdb_import_BOLD(taxon = "Syrphidae" , ncbi_taxo = FALSE)
+Tabanidae_bold <- refdb::refdb_import_BOLD(taxon = "Tabanidae" , ncbi_taxo = FALSE)
+Tachinidae_bold <- refdb::refdb_import_BOLD(taxon = "Tachinidae" , ncbi_taxo = FALSE)
+Tanyderidae_bold <- refdb::refdb_import_BOLD(taxon = "Tanyderidae" , ncbi_taxo = FALSE)
+Tanypezidae_bold <- refdb::refdb_import_BOLD(taxon = "Tanypezidae" , ncbi_taxo = FALSE)
+Tephritidae_bold <- refdb::refdb_import_BOLD(taxon = "Tephritidae" , ncbi_taxo = FALSE)
+Teratomyzidae_bold <- refdb::refdb_import_BOLD(taxon = "Teratomyzidae" , ncbi_taxo = FALSE)
+Thaumaleidae_bold <- refdb::refdb_import_BOLD(taxon = "Thaumaleidae" , ncbi_taxo = FALSE)
+Therevidae_bold <- refdb::refdb_import_BOLD(taxon = "Therevidae" , ncbi_taxo = FALSE)
+Tipulidae_bold <- refdb::refdb_import_BOLD(taxon = "Tipulidae" , ncbi_taxo = FALSE)
+Trichoceridae_bold <- refdb::refdb_import_BOLD(taxon = "Trichoceridae" , ncbi_taxo = FALSE)
+Ulidiidae_bold <- refdb::refdb_import_BOLD(taxon = "Ulidiidae" , ncbi_taxo = FALSE)
+Vermileonidae_bold <- refdb::refdb_import_BOLD(taxon = "Vermileonidae" , ncbi_taxo = FALSE)
+Xenasteiidae_bold <- refdb::refdb_import_BOLD(taxon = "Xenasteiidae" , ncbi_taxo = FALSE)
+Xylomyidae_bold <- refdb::refdb_import_BOLD(taxon = "Xylomyidae" , ncbi_taxo = FALSE)
+Xylophagidae_bold <- refdb::refdb_import_BOLD(taxon = "Xylophagidae" , ncbi_taxo = FALSE) 
 
 # Download for vertebrates barcodes (these may also turn up in our samples via eDNA or by-catch)
-```{r}
-Amphibia_bold <- refdb_import_BOLD(taxon = "	Amphibia", ncbi_taxo = FALSE)
-Leptocardii_bold <- refdb_import_BOLD(taxon = "Leptocardii", ncbi_taxo = FALSE)
-Mammalia_bold <- refdb_import_BOLD(taxon = "Mammalia", ncbi_taxo = FALSE)
-Aves_bold <- refdb_import_BOLD(taxon = "Aves", ncbi_taxo = FALSE)
-Reptilia_bold <- refdb_import_BOLD(taxon = "Reptilia", ncbi_taxo = FALSE)
-Actinopterygii_bold <- refdb_import_BOLD(taxon = "Actinopterygii", ncbi_taxo = FALSE)
-Sarcopterygii_bold <- refdb_import_BOLD(taxon = "Sarcopterygii", ncbi_taxo = FALSE)
+Amphibia_bold <- refdb::refdb_import_BOLD(taxon = "	Amphibia", ncbi_taxo = FALSE)
+Leptocardii_bold <- refdb::refdb_import_BOLD(taxon = "Leptocardii", ncbi_taxo = FALSE)
+Mammalia_bold <- refdb::refdb_import_BOLD(taxon = "Mammalia", ncbi_taxo = FALSE)
+Aves_bold <- refdb::refdb_import_BOLD(taxon = "Aves", ncbi_taxo = FALSE)
+Reptilia_bold <- refdb::refdb_import_BOLD(taxon = "Reptilia", ncbi_taxo = FALSE)
+Actinopterygii_bold <- refdb::refdb_import_BOLD(taxon = "Actinopterygii", ncbi_taxo = FALSE)
+Sarcopterygii_bold <- refdb::refdb_import_BOLD(taxon = "Sarcopterygii", ncbi_taxo = FALSE)
 ```
-
-You may have noticed that the search interface is a bit different. This is because here we rely on another package (bold, Chamberlain 2020) to download the data. You can check the manual of refdb_import_BOLD to see the different arguments available.
 
 # get fields for download BOLD files
 ```{r}
-refdb_get_fields(Annelida_bold)
-refdb_get_fields(Merostomata_bold)
-refdb_get_fields(Pauropoda_bold)
-refdb_get_fields(Symphyla_bold)
-refdb_get_fields(Diplopoda_bold)
-refdb_get_fields(Chilopoda_bold)
-refdb_get_fields(Copepoda_bold)
-refdb_get_fields(Collembola_bold)
-refdb_get_fields(Protura_bold)
-refdb_get_fields(Cephalocarida_bold)
-refdb_get_fields(Remipedia_bold)
-refdb_get_fields(Branchiopoda_bold)
-refdb_get_fields(Thecostraca_bold)
-refdb_get_fields(Malacostraca_bold)
-refdb_get_fields(Ichthyostraca_bold)
-refdb_get_fields(Ostracoda_bold)
-refdb_get_fields(Arachnida_bold)
-refdb_get_fields(Diplura_bold)
-refdb_get_fields(Pycnogonida_bold)
-refdb_get_fields(Annelida_bold)
-refdb_get_fields(Cnidaria_bold)
-refdb_get_fields(Bryozoa_bold)
-refdb_get_fields(Platyhelminthes_bold)
-refdb_get_fields(Porifera_bold)
-refdb_get_fields(Nematoda_bold)
-refdb_get_fields(Bryozoa_bold)
-refdb_get_fields(Rotifera_bold)
-refdb_get_fields(Nemertea_bold)
-refdb_get_fields(Onychophora_bold)
-refdb_get_fields(Priapulida_bold)
-refdb_get_fields(Tardigrada_bold)
-refdb_get_fields(Mollusca_bold)
-refdb_get_fields(Amphibia_bold)
-refdb_get_fields(Leptocardii_bold)
-refdb_get_fields(Mammalia_bold)
-refdb_get_fields(Aves_bold)
-refdb_get_fields(Reptilia_bold)
-refdb_get_fields(Actinopterygii_bold)
-refdb_get_fields(Sarcopterygii_bold)
-refdb_get_fields(Archaeognatha_bold)
-refdb_get_fields(Blattodea_bold)
-refdb_get_fields(Coleoptera_bold)
-refdb_get_fields(Dermaptera_bold)
-refdb_get_fields(Embioptera_bold)
-refdb_get_fields(Ephemeroptera_bold)
-refdb_get_fields(Hemiptera_bold)
-refdb_get_fields(Hymenoptera_bold)
-refdb_get_fields(Lepidoptera_bold)
-refdb_get_fields(Mantodea_bold)
-refdb_get_fields(Mecoptera_bold)
-refdb_get_fields(Megaloptera_bold)
-refdb_get_fields(Neuroptera_bold)
-refdb_get_fields(Notoptera_bold)
-refdb_get_fields(Odonata_bold)
-refdb_get_fields(Orthoptera_bold)
-refdb_get_fields(Phasmatodea_bold)
-refdb_get_fields(Plecoptera_bold)
-refdb_get_fields(Psocodea_bold)
-refdb_get_fields(Raphidioptera_bold)
-refdb_get_fields(Siphonaptera_bold)
-refdb_get_fields(Strepsiptera_bold)
-refdb_get_fields(Thysanoptera_bold)
-refdb_get_fields(Trichoptera_bold)
-refdb_get_fields(Zoraptera_bold)
-refdb_get_fields(Zygentoma_bold)
-refdb_get_fields(Acartophthalmidae_bold)
-refdb_get_fields(Acroceridae_bold)
-refdb_get_fields(Agromyzidae_bold)
-refdb_get_fields(Anisopodidae_bold)
-refdb_get_fields(Anthomyiidae_bold)
-refdb_get_fields(Anthomyzidae_bold)
-refdb_get_fields(Apioceridae_bold)
-refdb_get_fields(Apsilocephalidae_bold)
-refdb_get_fields(Apystomyiidae_bold)
-refdb_get_fields(Asilidae_bold)
-refdb_get_fields(Asteiidae_bold)
-refdb_get_fields(Atelestidae_bold)
-refdb_get_fields(Athericidae_bold)
-refdb_get_fields(Aulacigastridae_bold)
-refdb_get_fields(Australimyzidae_bold)
-refdb_get_fields(Austroleptidae_bold)
-refdb_get_fields(Bibionidae_bold)
-refdb_get_fields(Blephariceridae_bold)
-refdb_get_fields(Bolbomyiidae_bold)
-refdb_get_fields(Bolitophilidae_bold)
-refdb_get_fields(Bombyliidae_bold)
-refdb_get_fields(Calliphoridae_bold)
-refdb_get_fields(Camillidae_bold)
-refdb_get_fields(Canacidae_bold)
-refdb_get_fields(Canthyloscelidae_bold)
-refdb_get_fields(Carnidae_bold)
-refdb_get_fields(Cecidomyiidae_bold)
-refdb_get_fields(Celyphidae_bold)
-refdb_get_fields(Ceratopogonidae_bold)
-refdb_get_fields(Chamaemyiidae_bold)
-refdb_get_fields(Chaoboridae_bold)
-refdb_get_fields(Chironomidae_bold)
-refdb_get_fields(Chloropidae_bold)
-refdb_get_fields(Chyromyidae_bold)
-refdb_get_fields(Clusiidae_bold)
-refdb_get_fields(Coelopidae_bold)
-refdb_get_fields(Conopidae_bold)
-refdb_get_fields(Corethrellidae_bold)
-refdb_get_fields(Cryptochetidae_bold)
-refdb_get_fields(Ctenostylidae_bold)
-refdb_get_fields(Culicidae_bold)
-refdb_get_fields(Curtonotidae_bold)
-refdb_get_fields(Cylindrotomidae_bold)
-refdb_get_fields(Cypselosomatidae_bold)
-refdb_get_fields(Deuterophlebiidae_bold)
-refdb_get_fields(Diadocidiidae_bold)
-refdb_get_fields(Diastatidae_bold)
-refdb_get_fields(Diopsidae_bold)
-refdb_get_fields(Diptera_family_incertae_sedis_bold)
-refdb_get_fields(Ditomyiidae_bold)
-refdb_get_fields(Dixidae_bold)
-refdb_get_fields(Dolichopodidae_bold)
-refdb_get_fields(Drosophilidae_bold)
-refdb_get_fields(Dryomyzidae_bold)
-refdb_get_fields(Empididae_bold)
-refdb_get_fields(Ephydridae_bold)
-refdb_get_fields(Evocoidae_bold)
-refdb_get_fields(Fanniidae_bold)
-refdb_get_fields(Fergusoninidae_bold)
-refdb_get_fields(Glossinidae_bold)
-refdb_get_fields(Gobryidae_bold)
-refdb_get_fields(Helcomyzidae_bold)
-refdb_get_fields(Heleomyzidae_bold)
-refdb_get_fields(Helosciomyzidae_bold)
-refdb_get_fields(Hesperinidae_bold)
-refdb_get_fields(Hilarimorphidae_bold)
-refdb_get_fields(Hippoboscidae_bold)
-refdb_get_fields(Homalocnemidae_bold)
-refdb_get_fields(Huttoninidae_bold)
-refdb_get_fields(Hybotidae_bold)
-refdb_get_fields(Inbiomyiidae_bold)
-refdb_get_fields(Ironomyiidae_bold)
-refdb_get_fields(Iteaphilidae_bold)
-refdb_get_fields(Keroplatidae_bold)
-refdb_get_fields(Lauxaniidae_bold)
-refdb_get_fields(Limoniidae_bold)
-refdb_get_fields(Lonchaeidae_bold)
-refdb_get_fields(Lonchopteridae_bold)
-refdb_get_fields(Marginidae_bold)
-refdb_get_fields(Megamerinidae_bold)
-refdb_get_fields(Mesembrinellidae_bold)
-refdb_get_fields(Micropezidae_bold)
-refdb_get_fields(Milichiidae_bold)
-refdb_get_fields(Muscidae_bold)
-refdb_get_fields(Mycetophilidae_bold)
-refdb_get_fields(Mydidae_bold)
-refdb_get_fields(Mystacinobiidae_bold)
-refdb_get_fields(Nannodastiidae_bold)
-refdb_get_fields(Natalimyzidae_bold)
-refdb_get_fields(Nemestrinidae_bold)
-refdb_get_fields(Neriidae_bold)
-refdb_get_fields(Nothybidae_bold)
-refdb_get_fields(Nymphomyiidae_bold)
-refdb_get_fields(Odiniidae_bold)
-refdb_get_fields(Oestridae_bold)
-refdb_get_fields(Opetiidae_bold)
-refdb_get_fields(Opomyzidae_bold)
-refdb_get_fields(Oreogetonidae_bold)
-refdb_get_fields(Pachyneuridae_bold)
-refdb_get_fields(Pallopteridae_bold)
-refdb_get_fields(Pantophthalmidae_bold)
-refdb_get_fields(Paraleucopidae_bold)
-refdb_get_fields(Pediciidae_bold)
-refdb_get_fields(Pelecorhynchidae_bold)
-refdb_get_fields(Periscelididae_bold)
-refdb_get_fields(Phoridae_bold)
-refdb_get_fields(Piophilidae_bold)
-refdb_get_fields(Pipunculidae_bold)
-refdb_get_fields(Platypezidae_bold)
-refdb_get_fields(Platystomatidae_bold)
-refdb_get_fields(Polleniidae_bold)
-refdb_get_fields(Pseudopomyzidae_bold)
-refdb_get_fields(Psilidae_bold)
-refdb_get_fields(Psychodidae_bold)
-refdb_get_fields(Ptychopteridae_bold)
-refdb_get_fields(Pyrgotidae_bold)
-refdb_get_fields(Rhagionidae_bold)
-refdb_get_fields(Richardiidae_bold)
-refdb_get_fields(Ropalomeridae_bold)
-refdb_get_fields(Sarcophagidae_bold)
-refdb_get_fields(Scathophagidae_bold)
-refdb_get_fields(Scatopsidae_bold)
-refdb_get_fields(Scenopinidae_bold)
-refdb_get_fields(Sciaridae_bold)
-refdb_get_fields(Sciaroidea_incertae_sedis_bold)
-refdb_get_fields(Sciomyzidae_bold)
-refdb_get_fields(Sepsidae_bold)
-refdb_get_fields(Simuliidae_bold)
-refdb_get_fields(Somatiidae_bold)
-refdb_get_fields(Sphaeroceridae_bold)
-refdb_get_fields(Stratiomyidae_bold)
-refdb_get_fields(Strongylophthalmyiidae_bold)
-refdb_get_fields(Syringogastridae_bold)
-refdb_get_fields(Syrphidae_bold)
-refdb_get_fields(Tabanidae_bold)
-refdb_get_fields(Tachinidae_bold)
-refdb_get_fields(Tanyderidae_bold)
-refdb_get_fields(Tanypezidae_bold)
-refdb_get_fields(Tephritidae_bold)
-refdb_get_fields(Thaumaleidae_bold)
-refdb_get_fields(Therevidae_bold)
-refdb_get_fields(Tipulidae_bold)
-refdb_get_fields(Trichoceridae_bold)
-refdb_get_fields(Ulidiidae_bold)
-refdb_get_fields(Vermileonidae_bold)
-refdb_get_fields(Xylomyidae_bold)
-refdb_get_fields(Xylophagidae_bold)
+refdb::refdb_get_fields(Annelida_bold)
+refdb::refdb_get_fields(Merostomata_bold)
+refdb::refdb_get_fields(Pauropoda_bold)
+refdb::refdb_get_fields(Symphyla_bold)
+refdb::refdb_get_fields(Diplopoda_bold)
+refdb::refdb_get_fields(Chilopoda_bold)
+refdb::refdb_get_fields(Copepoda_bold)
+refdb::refdb_get_fields(Collembola_bold)
+refdb::refdb_get_fields(Protura_bold)
+refdb::refdb_get_fields(Cephalocarida_bold)
+refdb::refdb_get_fields(Remipedia_bold)
+refdb::refdb_get_fields(Branchiopoda_bold)
+refdb::refdb_get_fields(Thecostraca_bold)
+refdb::refdb_get_fields(Malacostraca_bold)
+refdb::refdb_get_fields(Ichthyostraca_bold)
+refdb::refdb_get_fields(Ostracoda_bold)
+refdb::refdb_get_fields(Arachnida_bold)
+refdb::refdb_get_fields(Diplura_bold)
+refdb::refdb_get_fields(Pycnogonida_bold)
+refdb::refdb_get_fields(Annelida_bold)
+refdb::refdb_get_fields(Cnidaria_bold)
+refdb::refdb_get_fields(Bryozoa_bold)
+refdb::refdb_get_fields(Platyhelminthes_bold)
+refdb::refdb_get_fields(Porifera_bold)
+refdb::refdb_get_fields(Nematoda_bold)
+refdb::refdb_get_fields(Rotifera_bold)
+refdb::refdb_get_fields(Nemertea_bold)
+refdb::refdb_get_fields(Onychophora_bold)
+refdb::refdb_get_fields(Priapulida_bold)
+refdb::refdb_get_fields(Tardigrada_bold)
+refdb::refdb_get_fields(Mollusca_bold)
+refdb::refdb_get_fields(Amphibia_bold)
+refdb::refdb_get_fields(Leptocardii_bold)
+refdb::refdb_get_fields(Mammalia_bold)
+refdb::refdb_get_fields(Aves_bold)
+refdb::refdb_get_fields(Reptilia_bold)
+refdb::refdb_get_fields(Actinopterygii_bold)
+refdb::refdb_get_fields(Sarcopterygii_bold)
+refdb::refdb_get_fields(Archaeognatha_bold)
+refdb::refdb_get_fields(Blattodea_bold)
+refdb::refdb_get_fields(Coleoptera_bold)
+refdb::refdb_get_fields(Dermaptera_bold)
+refdb::refdb_get_fields(Embioptera_bold)
+refdb::refdb_get_fields(Ephemeroptera_bold)
+refdb::refdb_get_fields(Hemiptera_bold)
+refdb::refdb_get_fields(Hymenoptera_bold)
+refdb::refdb_get_fields(Lepidoptera_bold)
+refdb::refdb_get_fields(Mantodea_bold)
+refdb::refdb_get_fields(Mecoptera_bold)
+refdb::refdb_get_fields(Megaloptera_bold)
+refdb::refdb_get_fields(Neuroptera_bold)
+refdb::refdb_get_fields(Notoptera_bold)
+refdb::refdb_get_fields(Odonata_bold)
+refdb::refdb_get_fields(Orthoptera_bold)
+refdb::refdb_get_fields(Phasmatodea_bold)
+refdb::refdb_get_fields(Plecoptera_bold)
+refdb::refdb_get_fields(Psocodea_bold)
+refdb::refdb_get_fields(Raphidioptera_bold)
+refdb::refdb_get_fields(Siphonaptera_bold)
+refdb::refdb_get_fields(Strepsiptera_bold)
+refdb::refdb_get_fields(Thysanoptera_bold)
+refdb::refdb_get_fields(Trichoptera_bold)
+refdb::refdb_get_fields(Zoraptera_bold)
+refdb::refdb_get_fields(Zygentoma_bold)
+refdb::refdb_get_fields(Acartophthalmidae_bold)
+refdb::refdb_get_fields(Acroceridae_bold)
+refdb::refdb_get_fields(Agromyzidae_bold)
+refdb::refdb_get_fields(Anisopodidae_bold)
+refdb::refdb_get_fields(Anthomyiidae_bold)
+refdb::refdb_get_fields(Anthomyzidae_bold)
+refdb::refdb_get_fields(Apioceridae_bold)
+refdb::refdb_get_fields(Apsilocephalidae_bold)
+refdb::refdb_get_fields(Apystomyiidae_bold)
+refdb::refdb_get_fields(Asilidae_bold)
+refdb::refdb_get_fields(Asteiidae_bold)
+refdb::refdb_get_fields(Atelestidae_bold)
+refdb::refdb_get_fields(Athericidae_bold)
+refdb::refdb_get_fields(Aulacigastridae_bold)
+refdb::refdb_get_fields(Australimyzidae_bold)
+refdb::refdb_get_fields(Austroleptidae_bold)
+refdb::refdb_get_fields(Bibionidae_bold)
+refdb::refdb_get_fields(Blephariceridae_bold)
+refdb::refdb_get_fields(Bolbomyiidae_bold)
+refdb::refdb_get_fields(Bolitophilidae_bold)
+refdb::refdb_get_fields(Bombyliidae_bold)
+refdb::refdb_get_fields(Calliphoridae_bold)
+refdb::refdb_get_fields(Camillidae_bold)
+refdb::refdb_get_fields(Canacidae_bold)
+refdb::refdb_get_fields(Canthyloscelidae_bold)
+refdb::refdb_get_fields(Carnidae_bold)
+refdb::refdb_get_fields(Cecidomyiidae_bold)
+refdb::refdb_get_fields(Celyphidae_bold)
+refdb::refdb_get_fields(Ceratopogonidae_bold)
+refdb::refdb_get_fields(Chamaemyiidae_bold)
+refdb::refdb_get_fields(Chaoboridae_bold)
+refdb::refdb_get_fields(Chironomidae_bold)
+refdb::refdb_get_fields(Chloropidae_bold)
+refdb::refdb_get_fields(Chyromyidae_bold)
+refdb::refdb_get_fields(Clusiidae_bold)
+refdb::refdb_get_fields(Coelopidae_bold)
+refdb::refdb_get_fields(Conopidae_bold)
+refdb::refdb_get_fields(Corethrellidae_bold)
+refdb::refdb_get_fields(Cryptochetidae_bold)
+refdb::refdb_get_fields(Ctenostylidae_bold)
+refdb::refdb_get_fields(Culicidae_bold)
+refdb::refdb_get_fields(Curtonotidae_bold)
+refdb::refdb_get_fields(Cylindrotomidae_bold)
+refdb::refdb_get_fields(Cypselosomatidae_bold)
+refdb::refdb_get_fields(Deuterophlebiidae_bold)
+refdb::refdb_get_fields(Diadocidiidae_bold)
+refdb::refdb_get_fields(Diastatidae_bold)
+refdb::refdb_get_fields(Diopsidae_bold)
+refdb::refdb_get_fields(Diptera_family_incertae_sedis_bold)
+refdb::refdb_get_fields(Ditomyiidae_bold)
+refdb::refdb_get_fields(Dixidae_bold)
+refdb::refdb_get_fields(Dolichopodidae_bold)
+refdb::refdb_get_fields(Drosophilidae_bold)
+refdb::refdb_get_fields(Dryomyzidae_bold)
+refdb::refdb_get_fields(Empididae_bold)
+refdb::refdb_get_fields(Ephydridae_bold)
+refdb::refdb_get_fields(Evocoidae_bold)
+refdb::refdb_get_fields(Fanniidae_bold)
+refdb::refdb_get_fields(Fergusoninidae_bold)
+refdb::refdb_get_fields(Glossinidae_bold)
+refdb::refdb_get_fields(Gobryidae_bold)
+refdb::refdb_get_fields(Helcomyzidae_bold)
+refdb::refdb_get_fields(Heleomyzidae_bold)
+refdb::refdb_get_fields(Helosciomyzidae_bold)
+refdb::refdb_get_fields(Hesperinidae_bold)
+refdb::refdb_get_fields(Hilarimorphidae_bold)
+refdb::refdb_get_fields(Hippoboscidae_bold)
+refdb::refdb_get_fields(Homalocnemidae_bold)
+refdb::refdb_get_fields(Huttoninidae_bold)
+refdb::refdb_get_fields(Hybotidae_bold)
+refdb::refdb_get_fields(Inbiomyiidae_bold)
+refdb::refdb_get_fields(Ironomyiidae_bold)
+refdb::refdb_get_fields(Iteaphilidae_bold)
+refdb::refdb_get_fields(Keroplatidae_bold)
+refdb::refdb_get_fields(Lauxaniidae_bold)
+refdb::refdb_get_fields(Limoniidae_bold)
+refdb::refdb_get_fields(Lonchaeidae_bold)
+refdb::refdb_get_fields(Lonchopteridae_bold)
+refdb::refdb_get_fields(Marginidae_bold)
+refdb::refdb_get_fields(Megamerinidae_bold)
+refdb::refdb_get_fields(Mesembrinellidae_bold)
+refdb::refdb_get_fields(Micropezidae_bold)
+refdb::refdb_get_fields(Milichiidae_bold)
+refdb::refdb_get_fields(Muscidae_bold)
+refdb::refdb_get_fields(Mycetophilidae_bold)
+refdb::refdb_get_fields(Mydidae_bold)
+refdb::refdb_get_fields(Mystacinobiidae_bold)
+refdb::refdb_get_fields(Nannodastiidae_bold)
+refdb::refdb_get_fields(Natalimyzidae_bold)
+refdb::refdb_get_fields(Nemestrinidae_bold)
+refdb::refdb_get_fields(Neriidae_bold)
+refdb::refdb_get_fields(Nothybidae_bold)
+refdb::refdb_get_fields(Nymphomyiidae_bold)
+refdb::refdb_get_fields(Odiniidae_bold)
+refdb::refdb_get_fields(Oestridae_bold)
+refdb::refdb_get_fields(Opetiidae_bold)
+refdb::refdb_get_fields(Opomyzidae_bold)
+refdb::refdb_get_fields(Oreogetonidae_bold)
+refdb::refdb_get_fields(Pachyneuridae_bold)
+refdb::refdb_get_fields(Pallopteridae_bold)
+refdb::refdb_get_fields(Pantophthalmidae_bold)
+refdb::refdb_get_fields(Paraleucopidae_bold)
+refdb::refdb_get_fields(Pediciidae_bold)
+refdb::refdb_get_fields(Pelecorhynchidae_bold)
+refdb::refdb_get_fields(Periscelididae_bold)
+refdb::refdb_get_fields(Phoridae_bold)
+refdb::refdb_get_fields(Piophilidae_bold)
+refdb::refdb_get_fields(Pipunculidae_bold)
+refdb::refdb_get_fields(Platypezidae_bold)
+refdb::refdb_get_fields(Platystomatidae_bold)
+refdb::refdb_get_fields(Polleniidae_bold)
+refdb::refdb_get_fields(Pseudopomyzidae_bold)
+refdb::refdb_get_fields(Psilidae_bold)
+refdb::refdb_get_fields(Psychodidae_bold)
+refdb::refdb_get_fields(Ptychopteridae_bold)
+refdb::refdb_get_fields(Pyrgotidae_bold)
+refdb::refdb_get_fields(Rhagionidae_bold)
+refdb::refdb_get_fields(Richardiidae_bold)
+refdb::refdb_get_fields(Ropalomeridae_bold)
+refdb::refdb_get_fields(Sarcophagidae_bold)
+refdb::refdb_get_fields(Scathophagidae_bold)
+refdb::refdb_get_fields(Scatopsidae_bold)
+refdb::refdb_get_fields(Scenopinidae_bold)
+refdb::refdb_get_fields(Sciaridae_bold)
+refdb::refdb_get_fields(Sciaroidea_incertae_sedis_bold)
+refdb::refdb_get_fields(Sciomyzidae_bold)
+refdb::refdb_get_fields(Sepsidae_bold)
+refdb::refdb_get_fields(Simuliidae_bold)
+refdb::refdb_get_fields(Somatiidae_bold)
+refdb::refdb_get_fields(Sphaeroceridae_bold)
+refdb::refdb_get_fields(Stratiomyidae_bold)
+refdb::refdb_get_fields(Strongylophthalmyiidae_bold)
+refdb::refdb_get_fields(Syringogastridae_bold)
+refdb::refdb_get_fields(Syrphidae_bold)
+refdb::refdb_get_fields(Tabanidae_bold)
+refdb::refdb_get_fields(Tachinidae_bold)
+refdb::refdb_get_fields(Tanyderidae_bold)
+refdb::refdb_get_fields(Tanypezidae_bold)
+refdb::refdb_get_fields(Tephritidae_bold)
+refdb::refdb_get_fields(Thaumaleidae_bold)
+refdb::refdb_get_fields(Therevidae_bold)
+refdb::refdb_get_fields(Tipulidae_bold)
+refdb::refdb_get_fields(Trichoceridae_bold)
+refdb::refdb_get_fields(Ulidiidae_bold)
+refdb::refdb_get_fields(Vermileonidae_bold)
+refdb::refdb_get_fields(Xylomyidae_bold)
+refdb::refdb_get_fields(Xylophagidae_bold)
 ```
 
-The lat and long data is read in as different vectors by R from file to file which prevents files from being merged into a single document. To work around this I have used the control spike sample of Scaptodrosophila that does not contain lat and long data to merge data and 'keep field shared'. The lat and long data is not needed for database construction.
+There is an issue here. I can not merge the BOLD dataset together as the lat and lon variables in some files are character and some numeric. This still needs work.
+##Chris's suggestions to fix lat long inconsistency in vector type (for next download)
+# inspect what might be going wrong with unique
+unique(x$latitude)
+# maybe this will work if R thinks x$latitude is a character rather than a number
+x$latitude <- as.numeric(x$latitude)
 
-#Load  control spike sample
+To work around this I have used the control spike sample of Scaptodrosophila that does not contain lat and long data to merge data and 'keep field shared'. The lat and long data is not needed for database construction.
+
+#Step 2: Load control spike sample
 ```{r}
 control <- read_csv("~/Documents/DNA_reference_db_construction/refdb/Input_data_Oct23/Control_spike.csv")
 
-control <- refdb_set_fields(control,
+control <- refdb::refdb_set_fields(control,
                         taxonomy = c(
                         phylum = "phylum",
                         class = "class",
@@ -950,39 +928,40 @@ control <- refdb_set_fields(control,
                         source = "source",
                         id = "id")
 
-refdb_get_fields(control)
+refdb::refdb_get_fields(control)
 ```
 
-# Merging all BOLD into one dataframe
-
-There is an issue here. I can not merge the BOLD dataset together as the lat and lon variables in some files are character and some numeric. I don't know how to fix this. I have found that I can get around this by using the 'keep = "fields_shared" with my control spike sample.
-##Chris's suggestions to fix lat long inconsistency in vector type (for next download)
-# inspect what might be going wrong with unique
-unique(x$latitude)
-# maybe this will work if R thinks x$latitude is a character rather than a number
-x$latitude <- as.numeric(x$latitude)
-
+#Step 3: Merging all BOLD into one dataframe
 ```{r}
-all_bold <- refdb_merge(Annelida_bold, Cnidaria_bold, Bryozoa_bold, Platyhelminthes_bold, Porifera_bold, Nematoda_bold, Bryozoa_bold, Rotifera_bold, Nemertea_bold, Onychophora_bold, Priapulida_bold, Tardigrada_bold, Mollusca_bold, Merostomata_bold, Pauropoda_bold, Symphyla_bold, Diplopoda_bold, Chilopoda_bold, Copepoda_bold, Collembola_bold, Protura_bold, Cephalocarida_bold, Remipedia_bold, Branchiopoda_bold, Thecostraca_bold, Malacostraca_bold, Ichthyostraca_bold, Diplura_bold, Pycnogonida_bold, Ostracoda_bold, Arachnida_bold, Archaeognatha_bold, Blattodea_bold, Coleoptera_bold, Dermaptera_bold, Embioptera_bold, Ephemeroptera_bold, Hemiptera_bold, Hymenoptera_bold, Lepidoptera_bold, Mantodea_bold, Mecoptera_bold, Megaloptera_bold, Neuroptera_bold, Notoptera_bold, Odonata_bold, Orthoptera_bold, Phasmatodea_bold, Plecoptera_bold, Psocodea_bold, Raphidioptera_bold, Siphonaptera_bold, Strepsiptera_bold, Thysanoptera_bold, Trichoptera_bold, Zoraptera_bold, Zygentoma_bold, Acartophthalmidae_bold, Acroceridae_bold, Agromyzidae_bold, Anisopodidae_bold, Anthomyiidae_bold, Anthomyzidae_bold, Apioceridae_bold, Apsilocephalidae_bold, Apystomyiidae_bold, Asilidae_bold, Asteiidae_bold, Atelestidae_bold, Athericidae_bold, Aulacigastridae_bold, Australimyzidae_bold, Austroleptidae_bold, Bibionidae_bold, Blephariceridae_bold, Bolbomyiidae_bold, Bolitophilidae_bold, Bombyliidae_bold, Calliphoridae_bold, Camillidae_bold, Canacidae_bold, Canthyloscelidae_bold, Carnidae_bold, Cecidomyiidae_bold, Celyphidae_bold, Ceratopogonidae_bold, Chamaemyiidae_bold, Chaoboridae_bold, Chironomidae_bold, Chloropidae_bold, Chyromyidae_bold, Clusiidae_bold, Coelopidae_bold, Conopidae_bold, Corethrellidae_bold, Cryptochetidae_bold, Ctenostylidae_bold, Culicidae_bold, Curtonotidae_bold, Cylindrotomidae_bold, Cypselosomatidae_bold, Deuterophlebiidae_bold, Diadocidiidae_bold, Diastatidae_bold, Diopsidae_bold, Diptera_family_incertae_sedis_bold, Ditomyiidae_bold, Dixidae_bold, Dolichopodidae_bold, Drosophilidae_bold, Dryomyzidae_bold, Empididae_bold, Ephydridae_bold, Evocoidae_bold, Fanniidae_bold, Fergusoninidae_bold, Glossinidae_bold, Gobryidae_bold, Helcomyzidae_bold, Heleomyzidae_bold, Helosciomyzidae_bold, Hesperinidae_bold, Hilarimorphidae_bold, Hippoboscidae_bold, Homalocnemidae_bold, Huttoninidae_bold, Hybotidae_bold, Inbiomyiidae_bold, Ironomyiidae_bold, Iteaphilidae_bold, Keroplatidae_bold, Lauxaniidae_bold, Limoniidae_bold, Lonchaeidae_bold, Lonchopteridae_bold, Marginidae_bold, Megamerinidae_bold, Mesembrinellidae_bold, Micropezidae_bold, Milichiidae_bold, Muscidae_bold, Mycetophilidae_bold, Mydidae_bold, Mystacinobiidae_bold, Nannodastiidae_bold, Natalimyzidae_bold, Nemestrinidae_bold, Neriidae_bold, Nothybidae_bold, Nymphomyiidae_bold, Odiniidae_bold, Oestridae_bold, Opetiidae_bold, Opomyzidae_bold, Oreogetonidae_bold, Pachyneuridae_bold, Pallopteridae_bold, Pantophthalmidae_bold, Paraleucopidae_bold, Pediciidae_bold, Pelecorhynchidae_bold, Periscelididae_bold, Phoridae_bold, Piophilidae_bold, Pipunculidae_bold, Platypezidae_bold, Platystomatidae_bold, Polleniidae_bold, Pseudopomyzidae_bold, Psilidae_bold, Psychodidae_bold, Ptychopteridae_bold, Pyrgotidae_bold, Rhagionidae_bold, Richardiidae_bold, Ropalomeridae_bold, Sarcophagidae_bold, Scathophagidae_bold, Scatopsidae_bold, Scenopinidae_bold, Sciaridae_bold, Sciaroidea_incertae_sedis_bold, Sciomyzidae_bold, Sepsidae_bold, Simuliidae_bold, Somatiidae_bold, Sphaeroceridae_bold, Stratiomyidae_bold, Strongylophthalmyiidae_bold, Syringogastridae_bold, Syrphidae_bold, Tabanidae_bold, Tachinidae_bold, Tanyderidae_bold, Tanypezidae_bold, Tephritidae_bold, Thaumaleidae_bold, Therevidae_bold, Tipulidae_bold, Trichoceridae_bold, Ulidiidae_bold, Vermileonidae_bold, Xylomyidae_bold, Xylophagidae_bold, Amphibia_bold, Leptocardii_bold, Mammalia_bold, Aves_bold, Reptilia_bold, Actinopterygii_bold, Sarcopterygii_bold, control, keep = "fields_shared")
+all_bold <- refdb::refdb_merge(Annelida_bold, Cnidaria_bold, Bryozoa_bold, Platyhelminthes_bold, Porifera_bold, Nematoda_bold, Rotifera_bold, Nemertea_bold, Onychophora_bold, Priapulida_bold, Tardigrada_bold, Mollusca_bold, Merostomata_bold, Pauropoda_bold, Symphyla_bold, Diplopoda_bold, Chilopoda_bold, Copepoda_bold, Collembola_bold, Protura_bold, Cephalocarida_bold, Remipedia_bold, Branchiopoda_bold, Thecostraca_bold, Malacostraca_bold, Ichthyostraca_bold, Diplura_bold, Pycnogonida_bold, Ostracoda_bold, Arachnida_bold, Archaeognatha_bold, Blattodea_bold, Coleoptera_bold, Dermaptera_bold, Embioptera_bold, Ephemeroptera_bold, Hemiptera_bold, Hymenoptera_bold, Lepidoptera_bold, Mantodea_bold, Mecoptera_bold, Megaloptera_bold, Neuroptera_bold, Notoptera_bold, Odonata_bold, Orthoptera_bold, Phasmatodea_bold, Plecoptera_bold, Psocodea_bold, Raphidioptera_bold, Siphonaptera_bold, Strepsiptera_bold, Thysanoptera_bold, Trichoptera_bold, Zoraptera_bold, Zygentoma_bold, Acartophthalmidae_bold, Acroceridae_bold, Agromyzidae_bold, Anisopodidae_bold, Anthomyiidae_bold, Anthomyzidae_bold, Apioceridae_bold, Apsilocephalidae_bold, Apystomyiidae_bold, Asilidae_bold, Asteiidae_bold, Atelestidae_bold, Athericidae_bold, Aulacigastridae_bold, Australimyzidae_bold, Austroleptidae_bold, Bibionidae_bold, Blephariceridae_bold, Bolbomyiidae_bold, Bolitophilidae_bold, Bombyliidae_bold, Calliphoridae_bold, Camillidae_bold, Canacidae_bold, Canthyloscelidae_bold, Carnidae_bold, Cecidomyiidae_bold, Celyphidae_bold, Ceratopogonidae_bold, Chamaemyiidae_bold, Chaoboridae_bold, Chironomidae_bold, Chloropidae_bold, Chyromyidae_bold, Clusiidae_bold, Coelopidae_bold, Conopidae_bold, Corethrellidae_bold, Cryptochetidae_bold, Ctenostylidae_bold, Culicidae_bold, Curtonotidae_bold, Cylindrotomidae_bold, Cypselosomatidae_bold, Deuterophlebiidae_bold, Diadocidiidae_bold, Diastatidae_bold, Diopsidae_bold, Diptera_family_incertae_sedis_bold, Ditomyiidae_bold, Dixidae_bold, Dolichopodidae_bold, Drosophilidae_bold, Dryomyzidae_bold, Empididae_bold, Ephydridae_bold, Evocoidae_bold, Fanniidae_bold, Fergusoninidae_bold, Glossinidae_bold, Gobryidae_bold, Helcomyzidae_bold, Heleomyzidae_bold, Helosciomyzidae_bold, Hesperinidae_bold, Hilarimorphidae_bold, Hippoboscidae_bold, Homalocnemidae_bold, Huttoninidae_bold, Hybotidae_bold, Inbiomyiidae_bold, Ironomyiidae_bold, Iteaphilidae_bold, Keroplatidae_bold, Lauxaniidae_bold, Limoniidae_bold, Lonchaeidae_bold, Lonchopteridae_bold, Marginidae_bold, Megamerinidae_bold, Mesembrinellidae_bold, Micropezidae_bold, Milichiidae_bold, Muscidae_bold, Mycetophilidae_bold, Mydidae_bold, Mystacinobiidae_bold, Nannodastiidae_bold, Natalimyzidae_bold, Nemestrinidae_bold, Neriidae_bold, Nothybidae_bold, Nymphomyiidae_bold, Odiniidae_bold, Oestridae_bold, Opetiidae_bold, Opomyzidae_bold, Oreogetonidae_bold, Pachyneuridae_bold, Pallopteridae_bold, Pantophthalmidae_bold, Paraleucopidae_bold, Pediciidae_bold, Pelecorhynchidae_bold, Periscelididae_bold, Phoridae_bold, Piophilidae_bold, Pipunculidae_bold, Platypezidae_bold, Platystomatidae_bold, Polleniidae_bold, Pseudopomyzidae_bold, Psilidae_bold, Psychodidae_bold, Ptychopteridae_bold, Pyrgotidae_bold, Rhagionidae_bold, Richardiidae_bold, Ropalomeridae_bold, Sarcophagidae_bold, Scathophagidae_bold, Scatopsidae_bold, Scenopinidae_bold, Sciaridae_bold, Sciaroidea_incertae_sedis_bold, Sciomyzidae_bold, Sepsidae_bold, Simuliidae_bold, Somatiidae_bold, Sphaeroceridae_bold, Stratiomyidae_bold, Strongylophthalmyiidae_bold, Syringogastridae_bold, Syrphidae_bold, Tabanidae_bold, Tachinidae_bold, Tanyderidae_bold, Tanypezidae_bold, Tephritidae_bold, Thaumaleidae_bold, Therevidae_bold, Tipulidae_bold, Trichoceridae_bold, Ulidiidae_bold, Vermileonidae_bold, Xylomyidae_bold, Xylophagidae_bold, Amphibia_bold, Leptocardii_bold, Mammalia_bold, Aves_bold, Reptilia_bold, Actinopterygii_bold, Sarcopterygii_bold, control, keep = "fields_shared")
 ```
+
+# add superkingdom column to bring in line with NCBI GenBank data
+Note: All data downloaded from BOLD is from Eukaryotes
+```{r}
+bold_data <- bold_data_clean %>%
+dplyr::mutate(skingdom_name = "Eukaryota",
+  .before = "phylum_name")
+```
+
 
 # save merged raw data from BOLD library (note change date for new downloads when saving)
 ```{r}
-write_csv(bold_data,"~/Documents/DNA_reference_db_construction/refdb/bold_data_Oct23/bold_data_oct23.rds")
+write_rds(bold_data,"~/Documents/DNA_reference_db_construction/refdb/Input_data_Oct23/bold_data_oct23.rds")
 ```
 
 # reload all BOLD document for cleaning (if needed)
 ```{r}
-bold_data <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Input_data_Oct23/all_bold_oct23.rds")
+bold_data <- readRDS("~/Documents/DNA_reference_db_construction/refdb/Input_data_Oct23/bold_data_oct23.rds")
 ```
 
-# setting fields for bold data
-
+# Step 5: Setting fields for BOLD data
 ```{r}
-bold_data <- refdb_set_fields(bold_data,
+bold_data <- refdb::refdb_set_fields(bold_data,
                              source = "source",
                              id = "sequenceID",
-                             taxonomy = c(phylum = "phylum_name",
+                             taxonomy = c(kingdom = "superkingdom_name",
+                                          phylum = "phylum_name",
                                           class = "class_name",
                                           order = "order_name",
                                           family = "family_name",
@@ -993,65 +972,50 @@ bold_data <- refdb_set_fields(bold_data,
 
 ```
 
-#filter for CO1 only. BOLD contains sequences mostly COI but also from other gene regions
+## Preparing and cleaning DNA sequences and taxonomic data from BOLD
 
-The scripts below can be used to group sequences on BOLD for difference gene regions
+#Step 6: Pulling out COI sequences and cleaning of data
 ```{r}
+#Filter for CO1 only. BOLD contains sequences mostly COI but also DNA sequences from other gene regions.The scripts commented out below can be used to group sequences on BOLD for difference gene regions
+
 bold_data_COI <- subset(bold_data, markercode=="COI-5P")
 #bold_data_18S <- subset(bold_data, markercode=="18S")
 #bold_data_ITS <- subset(bold_data, markercode=="ITS")
 #bold_data_12S <- subset(bold_data, markercode=="12S")
 #bold_data_ND2 <- subset(bold_data, markercode=="ND2")
 #bold_data_16S <- subset(bold_data, markercode=="16S")
+
+# Remove sequence alignment gaps from BOLD library:
+bold_data_clean1 <- refdb::refdb_clean_seq_remove_gaps(bold_data_COI)
+
+# Remove side N's (removes N's at start or end of sequence)
+bold_data_clean2 <- refdb::refdb_clean_seq_remove_sideN(bold_data_clean1)
+
+rm(bold_data_clean1)
+
+# Remove extra bits on the end of species names
+bold_data_clean <- refdb::refdb_clean_tax_remove_extra(bold_data_clean2)
+
+#remove files no longer needed
+rm(bold_data_clean1)
+rm(bold_data_clean2)
+rm(bold_data)
+rm(bold_data_COI)
 ```
 
-## Cleaning DNA sequences and taxonomic data
-
-#Step 1: Remove sequence alignment gaps from BOLD library:
-```{r}
-bold_data_clean <- refdb_clean_seq_remove_gaps(bold_data_COI)
-
-head(bold_data_clean)
-```
-
-#Step 2: Remove side N's (removes N's at start or end of sequence)
-
-```{r}
-bold_data_clean <- refdb_clean_seq_remove_sideN(bold_data_clean)
-
-head(bold_data_clean)
-```
-
-#Step 3: Remove extra bits on the end of species names
-This command can not be used on my private database as it removes my interim species names. I think this is best not used as it can remove all interim spacies names which can be useful.
-
-```{r}
-all_bold_clean <- refdb_clean_tax_remove_extra(bold_data_clean)
-
-head(bold_data_clean)
-```
-
-Note: DO NOT use remove refdb_clean_tax_NA. There is a bug as it removes interm names and any the letter 'na'  within an taxonomic names. A customised script is provided further down to to remove NA from the library so that they don't appear in taxonomic names.
+Note: DO NOT use remove refdb_clean_tax_NA. There is a bug as it removes interm names and the letters 'na'  within an taxonomic names. Another script is provided to remove 'NA' from the library so that 'NA's don't appear in taxonomic information of the final library files.
 
 #Step 4: Remove duplicates. It is good to write this file prior to preforming other clean_up steps
-This step removes a large amount of data it looks for with idenitical sequences and taxonomic information and removes all duplications.
-
+This step removes a large amount of data it looks for records with identical sequences and taxonomic information and removes all duplications. Expect the number of records to reduce by 30-50%.
 ```{r}
-bold_data_clean <-refdb_filter_seq_duplicates(bold_data_clean)
+bold_data_clean <- refdb::refdb_filter_seq_duplicates(bold_data_clean)
 ```
 
 #Step 5:Plot sequence length
+Gives an idea of the distribution of the data
 ```{r}
-refdb_plot_seqlen_hist(bold_data_clean)
+refdb::refdb_plot_seqlen_hist(bold_data_clean)
 ```
-
-#remove files not needed
-```{r}
-rm(bold_data)
-rm(bold_data_COI)
-rm(bold_data_dup)
-```
-
 
 #Visualizing the reference library (Optional)
 Some of the functions you can use to produce graphical representation of your reference database. Because refdb stores reference database as dataframes it is straightforward to produce plots (e.g. with the tidyverse and ggplot2). For example, we can make a barplot showing the distribution of the families like this:
@@ -1064,7 +1028,7 @@ bold_data_clean %>%
   geom_col() +
   xlab("Phylum") +
   ylab("Number of records") +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1))
 ```
 
 ```{r}
@@ -1080,13 +1044,13 @@ bold_data_clean %>%
 
 
 ```{r}
-refdb_plot_tax_treemap(bold_data_clean, cols = 1)
+refdb::refdb_plot_tax_treemap(bold_data_clean, cols = 2)
 ```
 
 Alternatively you can represent this information with a taxonomic tree. These functions have several parameters to control what is represented in the plot (taxonomic ranks, colors, etc.).
 
 ```{r}
-refdb_plot_tax_tree(bold_data_clean)
+refdb::refdb_plot_tax_tree(bold_data_clean)
 ```
 
 # Step 6: Export cleaned data (add database, datatype and date)
@@ -1112,18 +1076,17 @@ The result (not shown here) is an interactive HTML report that can be opened in 
 
 _____________________________
 
-## Section 3: Preparing a private library as a DNA reference database
+## SECTION 3: Preparing a private library as a DNA reference database
 
 This step imports DNA barcodes which I have produced from invertebrates. It is a mixture of unpublished and published data. The private reference library is managed in Geneious prime.
 
-# read in DNA barcode datafile in .csv 
-
+#read in DNA barcode datafile in .csv 
 ```{r}
 priv_lib <- read_csv ("~/Documents/DNA_reference_db_construction/refdb/Input_data_Oct23/priv_lib_Oct23.csv")
 ```
 
-#corrections to private library
-
+# Corrections to private library
+Chris- I have included the scripts below in this R markdown for now so I could complete the libraries. I would like to have the scripts you put together for check the data against BOLD with any other corrections needed and in a separate R markdown (or Qmd). The idea being that the corrected and vetted data can then be imported into this document for constructing the final libraries.
 ```{r}
 priv_lib$species <- gsub("Craspedacusta sowerbyi", "Craspedacusta sowerbii",
                          gsub("Polypedilum griseguttataum", "Polypedilum griseoguttatum",
@@ -1141,6 +1104,8 @@ priv_lib$genus <- gsub("AustroLimnophila", "Austrolimnophila", priv_lib$genus)
 
 
 #check corrections have been made
+
+Praon volucre
 print (sum(str_detect(priv_lib$species, 'Craspedacusta sowerbii')) > 0)
 print (sum(str_detect(priv_lib$species, 'Polypedilum griseoguttatum')) > 0)
 print (sum(str_detect(priv_lib$species, 'Culicoides bundyensis')) > 0)
@@ -1151,7 +1116,7 @@ print (sum(str_detect(priv_lib$family, 'Chironominae')) > 0)
 print (sum(str_detect(priv_lib$order, 'Unionoida')) > 0)
 #should be NA
 
-#records for updating
+#records for updating (theses temporary scripts for now corrections so the amplicon library could be completed)
 #629 VIS3TLN50 Ceratopogonidae sp. B-AAV5109 Ceratopogonidae sp. B-AED5657
 priv_lib[629,6] <- "Ceratopogonidae sp. B-AED5657"
 
@@ -1206,11 +1171,17 @@ priv_lib[1361,6] <- "Polypedilum sp. B-ACQ1511"
 #2426 Co18Cono6 Lingora sp. B-AAY5550 Lingora sp. B-ADF2103
 priv_lib[1141,6] <- "Lingora sp. B-ADF2103"
 ```
-
-#Set fields
+# add superkingdom column to bring in line with NCBI GenBank data
 ```{r}
-priv_lib <- refdb_set_fields(priv_lib,
-                             taxonomy = c(
+priv_lib <- priv_lib %>%
+mutate(superkingdom = "Eukaryota",
+  .before = "phylum")
+```
+
+# set fields for refdb
+```{r}
+priv_lib <- refdb::refdb_set_fields(priv_lib,
+                             taxonomy = c(kingdom ="superkingdom",
                                phylum = "phylum",
                                class = "class",
                                order = "order",
@@ -1222,16 +1193,18 @@ priv_lib <- refdb_set_fields(priv_lib,
                              source = "source",
                              id = "id")
 
-refdb_get_fields(priv_lib)
+refdb::refdb_get_fields(priv_lib)
 ```
 #Step 1: Remove duplicates.
 ```{r}
-priv_lib_clean <- refdb_filter_seq_duplicates(priv_lib)
+priv_lib_clean <- refdb::refdb_filter_seq_duplicates(priv_lib)
+
+rm(priv_lib)
 ```
 
 # plot sequence length
 ```{r}
-refdb_plot_seqlen_hist(priv_lib_clean)
+refdb::refdb_plot_seqlen_hist(priv_lib_clean)
 ```
 
 Note: Primer cropping in refdb does not work! I could not get refdb to properly trim primers it needed really high error setting to do any trimming, but with these settings over trimmed most of the data. for the short amplicon the forward primer trims ok but the reverse trims in the wrong spot.
@@ -1267,7 +1240,7 @@ Additionally, refdb provides ready-to-use functions to produce more sophisticate
 Jess - This does not work but not important as there is simply too much data to get anything meaningful out.
 
 ```{r}
-refdb_plot_tax_treemap(priv_lib_clean, cols = 4)
+refdb::refdb_plot_tax_treemap(priv_lib_clean, cols = 4)
 ```
 
 Alternatively you can represent this information with a taxonomic tree. These functions have several parameters to control what is represented in the plot (taxonomic ranks, colors, etc.).
@@ -1314,17 +1287,6 @@ priv_lib_clean <- refdb_set_fields(priv_lib_clean,
 refdb_get_fields(priv_lib_clean)
 ```
 
-
-```{r}
-refdb_export_mothur(priv_lib_clean, "~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_clean")
-refdb_export_dada2(priv_lib_clean, "~/Documents/DNA_reference_db_construction/refdb/Output_data_Oct23/priv_lib_clean.fasta", mode = "taxonomy")
-```
-
-
-```{r}
-rm(priv_lib)
-```
-
 _____________________________
 # Section 4: Creating the final library
 
@@ -1333,28 +1295,24 @@ We can now use refdb_merge to merge all data into a single database. Note that y
 
 # mergeing all libraries into a single document
 ```{r}
-all_bold_priv_NCBI <- refdb_merge(priv_lib_clean, NCBI_data_clean, bold_data_clean, keep = "fields_shared")
-```
+all_bold_priv_ncbi <- refdb::refdb_merge(priv_lib_clean, ncbi_data_clean, bold_data_clean, keep = "fields_shared")
 
-```{r}
 rm(bold_data_clean)
-rm(NCBI_data_clean)
+rm(ncbi_data_clean)
 rm(priv_lib_clean)
 ```
 
 # adjust taxonomy across datasets
-
 Ensures that the consist taxonomic classification is use in specified columns (Phyla to genus, leave out species as it removes interim names (specify columns). This should be used on the final dataset (with GB data included) for the taxonomic field of phylum, class, order, family, genus. Species need to be left out as this function will remove interim species names from the private database.
 
-# adjust taxonomy across datasets                                                                               
 ```{r}
-all_bold_priv_NCBI <- refdb_clean_tax_harmonize_nomenclature(all_bold_priv_NCBI, cols = 1:7)
-head(all_bold_priv_NCBI)
+all_bold_priv_ncbi <- refdb::refdb_clean_tax_harmonize_nomenclature(all_bold_priv_ncbi, 4:7)
+head(all_bold_priv_ncbi)
 ```
 
 # remove duplicates between private, BOLD and NCBI GenBank datasets
 ```{r}
-all_bold_priv_NCBI <-refdb_filter_seq_duplicates(all_bold_priv_NCBI)
+all_bold_priv_ncbi <- refdb::refdb_filter_seq_duplicates(all_bold_priv_ncbi)
 ```
 
 ## resolving issues from refdb in the final library
@@ -1365,11 +1323,11 @@ Also, there are some strange additions to the end for species names from the 're
 ```{r}
 #remove "NA" in taxonomic information and replace with blank (this needs to be done so NA do not occur in the final reference library taxonomic assignments)
 
-all_bold_priv_NCBI[is.na(all_bold_priv_NCBI)] <- ""
+all_bold_priv_ncbi[is.na(all_bold_priv_ncbi)] <- ""
 
 #replacing odd additions to the end of species names from refdb
 
-all_bold_priv_NCBI$species <- gsub("\\'", "",
+all_bold_priv_ncbi$species <- gsub("\\'", "",
            gsub("\\.\\.", "",
            gsub("\\+", "",
            gsub("./Se/", "",
@@ -1381,42 +1339,32 @@ all_bold_priv_NCBI$species <- gsub("\\'", "",
            gsub("/Amp", "",
            gsub("<>", "",
            gsub("\\  ", "",     
-           gsub("/", "", all_bold_priv_NCBI$species)))))))))))))
-
-# Mel playing with functions
-# print (sum(str_detect(all_bold_priv_NCBI$species, ':')) > 0)
-# print (sum(str_detect(all_bold_priv_NCBI$species, '\\+')) > 0)
-# print (sum(str_detect(all_bold_priv_NCBI$species, '\\.\\.')) > 0)
-# print (sum(str_detect(all_bold_priv_NCBI$species, './Se/')) > 0)
-# print (sum(str_detect(all_bold_priv_NCBI$species, '.cf.')) > 0)
-# print (sum(str_detect(all_bold_priv_NCBI$species, 'sp.-')) > 0)
-# print (sum(str_detect(all_bold_priv_NCBI$species, '//Amp')) > 0)
-# print (sum(str_detect(all_bold_priv_NCBI$species, '<>')) > 0)
-# print (sum(str_detect(all_bold_priv_NCBI$species, '\\  ')) > 0)
-# print (sum(str_detect(all_bold_priv_NCBI$species, '<>')) > 0)
+           gsub("/", "", all_bold_priv_ncbi$species)))))))))))))
 
 #remove trailing spaces in species names
-trimws(all_bold_priv_NCBI$species, "right")
+trimws(all_bold_priv_ncbi$species, "right")
 ```
 
 #Step 2: Fix outdated taxonomic names 
 ```{r}
 #Fix outdated taxonomic names (Changing Ancylidae to Planorbidae, Sphaeriidae to Pisidiidae, Corbiculidae to Cyrenidae, Brentidae to Nanophyidae) that remian in the database
 
-all_bold_priv_NCBI$family <- gsub("Ancylidae",
+all_bold_priv_ncbi$family <- gsub("Ancylidae",
            "Planorbidae",
            gsub("Sphaeriidae",
            "Pisidiidae",
            gsub("Corbiculidae",
            "Cyrenidae",
            gsub("Brentidae",
-           "Nanophyidae", all_bold_priv_NCBI$family))))
+           "Nanophyidae", all_bold_priv_ncbi$family))))
 
-# check changes should all be FALSE
+# check changes should all be TRUE
 #print (sum(str_detect(all_bold_priv_NCBI$family, 'Ancylidae')) > 0)
 #print (sum(str_detect(all_bold_priv_NCBI$family, 'Sphaeriidae')) > 0)
 #print (sum(str_detect(all_bold_priv_NCBI$family, 'Corbiculidae')) > 0)
 #print (sum(str_detect(all_bold_priv_NCBI$family, 'Brentidae')) > 0)
+
+colnames(all_bold_priv_ncbi)[colnames(all_bold_priv_ncbi) == "all_bold_priv_ncbi"] ="sequence"
 ```  
 
 #exporting as a fasta file using refdb
@@ -1424,22 +1372,56 @@ Annoyingly, this does not work. I suspect that this uses too much memory at once
 
 ```{r}
 #Export library final clean library 
-write_rds(all_bold_priv_NCBI,"~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final_clean_Oct23.rds")
-```
+write_rds(all_bold_priv_ncbi,"~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final_clean_Oct23.rds")
 
+all_bold_priv_ncbi <- readRDS("~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final_clean_Oct23.rds")
+```
 
 # exporting to other formats (files are too large)
 
+# convert to fasta file
 ```{r}
-#not working
-refdb_export_mothur(all_bold_priv_NCBI, "~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final")
-#not working
-refdb_export_dada2(all_bold_priv_NCBI, "~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final.fasta", mode = "taxonomy")
+all_bold_priv_ncbi2 <- all_bold_priv_ncbi
+
+all_bold_priv_ncbi2$species <- gsub(" ",
+           "_", all_bold_priv_ncbi$species)
+
+head(all_bold_priv_ncbi2)
+
+export <- all_bold_priv_ncbi2[1:2000000, ] 
+
+refdb_export_dada2(export, "~/Documents/DNA_reference_db_construction/refdb/final_library/final_lib_export_1.fasta", mode = "taxonomy")
+
+rm(export)
+
+export2 <- all_bold_priv_ncbi2[2000001:4000000, ] 
+
+refdb_export_dada2(export2, "~/Documents/DNA_reference_db_construction/refdb/final_library/final_lib_export_2.fasta", mode = "taxonomy")
+
+rm(export2)
+
+export3 <- all_bold_priv_ncbi2[4000000:5520322, ] 
+
+refdb_export_dada2(export3, "~/Documents/DNA_reference_db_construction/refdb/final_library/final_lib_export_3.fasta", mode = "taxonomy")
+
+rm(export3)
+
+
+
+fasta1 <- bioseq::read_fasta("~/Documents/DNA_reference_db_construction/refdb/final_library/final_lib_export_1.fasta")
+
+fasta2 <- bioseq::read_fasta("~/Documents/DNA_reference_db_construction/refdb/final_library/final_lib_export_2.fasta")
+
+fasta3 <- bioseq::read_fasta("~/Documents/DNA_reference_db_construction/refdb/final_library/final_lib_export_3.fasta")
+
+rm(all_bold_priv_ncbi2)
+
+#comb_comp_lib <-  bioseq::seq_combine(fasta1, fasta2, fasta3)
 ```
 
 # remove files no longer needed
 ```{r}
-rm(all_bold_priv_NCBI)
+rm(all_bold_priv_ncbi)
 ```
 
 #SECTION 5: Creating amplicon specific libraries for bioinformatic pipelines
@@ -1447,7 +1429,6 @@ Unfortunately, the primer cropping in refdb does not work! I could not get refdb
 
 Therefore for this step we can use cutadapt.....
 
-##still needs editing from here to end Jess's code for trimming to amplicon specific libraries....
 #set options
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning=TRUE, message=TRUE, error=TRUE, echo=TRUE, results="hold")
@@ -1468,7 +1449,25 @@ library(refdb)
 # Data was previously downloaded with refdb
 # Load in the data
 all_db <- readRDS("~/Documents/DNA_reference_db_construction/refdb/final_library/all_bold_priv_NCBI_final_clean_Oct23.rds")
+colnames(all_db)[colnames(all_db) == "DNA_seq"] ="sequence"
 nrow(all_db)
+```
+#Step 1: set fields for refdb
+```{r}
+all_db <- refdb::refdb_set_fields(all_db,
+                             taxonomy = c(kingdom = "superkingdom",
+                               phylum = "phylum",
+                               class = "class",
+                               order = "order",
+                               family = "family",
+                               genus = "genus",
+                               species = "species"),
+                             sequence = "sequence",
+                             marker = "marker",
+                             source = "source",
+                             id = "id")
+
+refdb::refdb_get_fields(all_db)
 ```
 
 ```{r}
@@ -1480,9 +1479,10 @@ all_db %>% object.size()
 head (all_db)
 ```
 
-# convert to fasta file
+#Step 2: Convert to fasta file for trimming in cutadapt
+The file size is large so it can be partioned for this step (in 4 parts here). The input files for cutadapt is .fasta
 ```{r}
-seqs <- all_db[, "DNA_seq",drop=TRUE]
+seqs <- all_db[, "sequence",drop=TRUE]
 names(seqs) <- 1:nrow(all_db)
 parts <- as.numeric(cut(seq_along(seqs), 4))
 bioseq::write_fasta(seqs[parts == 1], file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_db.fasta",
@@ -1495,46 +1495,10 @@ bioseq::write_fasta(seqs[parts == 4], file = "~/Documents/DNA_reference_db_const
                     line_length = 80, block_length=Inf, append=TRUE)
 ```
 
-##Mel trialing data file incomplete this script has memory error
-```{r}
-#seqs <- all_db[, "DNA_seq",drop=TRUE]
-#names(seqs) <- 1:nrow(all_db)
-#bioseq::write_fasta(seqs, file = "~/Documents/DNA_reference_db_construction/refdb/final_library/all_NBP.fasta",
-#                    line_length = 80, block_length=Inf)
-```
-
-##testing converting to fasta if file is split in two:
-```{r}
-#select all columns and only the rows you want spliting file into two dataframes
-#export1 <- all_db[1:2475190, 1:10]
-
-#export2 <- all_db[2859081:5724421, 1:10]
-```
-
-```{r}
-#convert first half of sequence files to fasta
-#seqs <- export1[, "DNA_seq",drop=TRUE]
-#names(seqs) <- 1:nrow(export1)
-#bioseq::write_fasta(seqs, file = "~/Documents/DNA_reference_db_construction/refdb/final_library/NBP1.fasta",
-#                   line_length = 80, block_length=Inf)
-```
-
-```{r}
-#convert second half of sequences files to fasta
-#seqs <- export2[, "DNA_seq",drop=TRUE]
-#names(seqs) <- 1:nrow(export2)
-#bioseq::write_fasta(seqs, file = "~/Documents/DNA_reference_db_construction/refdb/final_library/NBP2.fasta",
-#                    line_length = 80, block_length=Inf)
-```
-# bind file back into a single document
-```{r}
-#NBP1 <- read_fasta("~/Documents/DNA_reference_db_construction/refdb/final_library/NBP1.fasta")
-#NBP2 <- read_fasta("~/Documents/DNA_reference_db_construction/refdb/final_library/NBP2.fasta")
-```
-
-
+#Step 3: use Cutadapt (python) to create amplicon specific DNA barcode reference libraries.
+If working on the ARC macroinvertebrate project the libraries will only need to be set up for the "short" and the "right" amplicon. 
 ```{bash}
-#doesn't seem to run as a bash. At this point I need to run the commands by copying and pasting into the terminal.
+# Mel_comment -doesn't seem to run as a bash chunk. I need to run the commands by copying and pasting into the terminal.
 
 # # module load cutadapt/4.2 - first time only?
 #conda create -n metabarcoding
@@ -1635,7 +1599,7 @@ cutadapt \
      > ~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/${ampliconGroup}_amplicon_cutadapt.log
 ```      
 
-##Need more work
+##Need more work (this is a library that would be used for DNA barcoding only)
 #LCO amplicon
 ampliconGroup=LCO
 cutadapt \
@@ -1655,7 +1619,7 @@ cutadapt \
 
 
 
-# Merge sequences back
+#Step4: Merge sequences back together with taxonomic information.
 
 ```{r}
 short_fasta <- bioseq::read_fasta(file="~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/short_amplicon_trimmed.fasta")
@@ -1669,9 +1633,8 @@ short_fasta %>% tail
 ```{r}
 length(short_fasta)
 ```
-
+# Some sequences are now the reverse complement these need to be corrected
 ```{r}
-# Some sequences are now the reverse complement
 rc_ids <- names(short_fasta)[! names(short_fasta) %in% rownames(all_db)]
 length(rc_ids)
 head(rc_ids)
@@ -1689,12 +1652,11 @@ short_db <- all_db[str_remove(names(short_fasta), " rc$"),]
 short_db$sequence <- short_fasta
 ```
 
-
 ```{r}
 table(is.na(short_db$id))
 ```
-
-
+# Set parameters for writing files into library file format for the bioinformatic pipeline. 
+The output flies will include a text file containing the taxonomic information ant a fasta file with the sequence data.
 ```{r}
 # Write files
 # Change from default behaviour (refdb::refdb_export_mothur and bioseq::write_fasta)
@@ -1704,7 +1666,7 @@ table(is.na(short_db$id))
 
 write_db_files <- function (x, path_prefix) {
     # Which taxonomy levels to include in output and the label names:
-    tax_levels <- c("k"="superkingdom", "p"="phylum", "c"="class", "o"="order", "f"="family",
+    tax_levels <- c("k" ="superkingdom", "p"="phylum", "c"="class", "o"="order", "f"="family",
                     "g"="genus", "s"="species")
     refdb:::check_fields(x, what = c("sequence", "taxonomy", "id"))
     # col_tax <- attributes(x)$refdb_fields$taxonomy
@@ -1775,17 +1737,14 @@ write_fasta <- function (x, file, append = FALSE, line_length = 80, block_length
 # write_db_files(short_db, path_prefix=here("ref_db/short_db"))
 ```
 
-
 # Write all
-
-
 ```{r}
 # Output prefix name and input file path
 db_files <- c(
-  "short_db_2023-07" = "~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/short_amplicon_trimmed.fasta",
-  "long_db_2023-07" = "~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/long_amplicon_trimmed.fasta",
-  "left_db_2023-07" = "~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimmingleft_amplicon_trimmed.fasta",
-  "right_db_2023-07" = "~/Documents/DNA_reference_db_construction/refdb/final_library/trim_seq/trimming/right_amplicon_trimmed.fasta")
+  "short_db_2023-07" = "~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/short_amplicon_trimmed.fasta",
+  "long_db_2023-07" = "~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/long_amplicon_trimmed.fasta",
+  "left_db_2023-07" = "~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/left_amplicon_trimmed.fasta",
+  "right_db_2023-07" = "~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/right_amplicon_trimmed.fasta")
 ```
 
 ```{r}
@@ -1795,272 +1754,8 @@ for (i in seq_along(db_files)) {
   fasta <- bioseq::read_fasta(file=db_files[i])
   db <- all_db[str_remove(names(fasta), " rc$"),]
   db$sequence <- fasta
-  stopifnot(! is.na(db$id))
+  db <- db %>% filter(! is.na(id))
   message("Writing files for ", names(db_files[i]))
   write_db_files(db, path_prefix=file.path(output_dir, names(db_files[i])))
 }
 ```
-
-
-# BOLD sequences
-
-
-```{r}
-# load("/mnt/galaxy/home/mecarew/Documents/DNA_reference_db_construction/refdb/DNA_bold_data.RData")
-# saveRDS(all_bold_priv2_nogap_noN_NA_H_len2, here("ref_db/bold_tbl_df.rds"))
-```
-
-```{r}
-bold_db <- readRDS(here("ref_db/bold_tbl_df.rds"))
-```
-
-```{r}
-table(bold_db$phylum_name)
-```
-
-```{r}
-bold_db %>% head
-```
-
-
-```{r}
-seqs <- bold_db[, "nucleotides",drop=TRUE]
-names(seqs) <- 1:nrow(bold_db)
-parts <- as.numeric(cut(seq_along(seqs), 4))
-bioseq::write_fasta(seqs[parts == 1], file = here("ref_db/bold_ref_db.fasta"),
-                    line_length = 80, block_length=Inf, append=FALSE)
-bioseq::write_fasta(seqs[parts == 2], file = here("ref_db/bold_ref_db.fasta"),
-                    line_length = 80, block_length=Inf, append=TRUE)
-bioseq::write_fasta(seqs[parts == 3], file = here("ref_db/bold_ref_db.fasta"),
-                    line_length = 80, block_length=Inf, append=TRUE)
-bioseq::write_fasta(seqs[parts == 4], file = here("ref_db/bold_ref_db.fasta"),
-                    line_length = 80, block_length=Inf, append=TRUE)
-```
-
-
-
-```{r}
-dedup_bold <- refdb::refdb_filter_seq_duplicates(bold_db)
-dim(dedup_bold)
-```
-
-```{r}
-refdb::refdb_filter_seq_duplicates
-```
-
-```{r}
-seqs <- dedup_bold[, "nucleotides",drop=TRUE]
-names(seqs) <- 1:nrow(dedup_bold)
-parts <- as.numeric(cut(seq_along(seqs), 4))
-bioseq::write_fasta(seqs[parts == 1], file = here("ref_db/dedup_bold_ref_db.fasta"),
-                    line_length = 80, block_length=Inf, append=FALSE)
-bioseq::write_fasta(seqs[parts == 2], file = here("ref_db/dedup_bold_ref_db.fasta"),
-                    line_length = 80, block_length=Inf, append=TRUE)
-bioseq::write_fasta(seqs[parts == 3], file = here("ref_db/dedup_bold_ref_db.fasta"),
-                    line_length = 80, block_length=Inf, append=TRUE)
-bioseq::write_fasta(seqs[parts == 4], file = here("ref_db/dedup_bold_ref_db.fasta"),
-                    line_length = 80, block_length=Inf, append=TRUE)
-```
-
-
-# trimming
-
-```{bash}
-conda create -n cutadapt
-conda activate cutadapt
-conda install -c bioconda cutadapt
-
-sinteractive --ntasks=1 --cpus-per-task=4
-conda activate cutadapt
-cd ~/Documents/DNA_reference_db_construction/refdb/Trimmed_libraries
-
-mkdir 
-cutadapt \
-    --cores 4 \
-    -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT \
-    -e 0.2 \
-    --revcomp \
-    -m 100 \
-    -M 450 \
-    --max-n 0.05 \
-    --too-short-output bold/bold_${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output bold/bold_${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output bold/bold_${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o bold/bold_${ampliconGroup}_amplicon_trimmed.fasta \
-    dedup_bold_ref_db.fasta \
-    > bold/bold_${ampliconGroup}_amplicon_cutadapt.log
-    
-
-ampliconGroup=long
-cutadapt \
-    --cores 4 \
-    -g GCHCCHGAYATRGCHTTYCC...TGRTTYTTYGGNCAYCCHGA \
-    -e 0.2 \
-    --revcomp \
-    -m 200 \
-    -M 550 \
-    --max-n 0.05 \
-    --too-short-output bold/bold_${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output bold/bold_${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output bold/bold_${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o bold/bold_${ampliconGroup}_amplicon_trimmed.fasta \
-    dedup_bold_ref_db.fasta \
-    > bold/bold_${ampliconGroup}_amplicon_cutadapt.log
-    
-ampliconGroup=right
-cutadapt \
-    --cores 4 \
-    -g ACWGGWTGRACWGTNTAYCC...TGRTTYTTYGGNCAYCCHGA \
-    -e 0.25 \
-    --revcomp \
-    -m 200 \
-    -M 550 \
-    --max-n 0.05 \
-    --too-short-output bold/bold_${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output bold/bold_${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output bold/bold_${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o bold/bold_${ampliconGroup}_amplicon_trimmed.fasta \
-    dedup_bold_ref_db.fasta \
-    > bold/bold_${ampliconGroup}_amplicon_cutadapt.log
-    
-ampliconGroup=left
-cutadapt \
-    --cores 4 \
-    -g CCNGAYATRGCNTTYCC...CCNGTNYTNGCNGGNGCNATYACH \
-    -e 0.2 \
-    --revcomp \
-    -m 200 \
-    -M 450 \
-    --max-n 0.05 \
-    --too-short-output bold/bold_${ampliconGroup}_amplicon_too_short.fasta \
-    --too-long-output bold/bold_${ampliconGroup}_amplicon_too_long.fasta \
-    --untrimmed-output bold/bold_${ampliconGroup}_amplicon_untrimmed.fasta \
-    -o bold/bold_${ampliconGroup}_amplicon_trimmed.fasta \
-    dedup_bold_ref_db.fasta \
-    > bold/bold_${ampliconGroup}_amplicon_cutadapt.log
-
-```
-
-### Create db files
-
-
-```{r}
-# Write files
-# Change from default behaviour (refdb::refdb_export_mothur and bioseq::write_fasta)
-# - include taxonomy labels, e.g. k__Eukaryota;p__Arthropoda;c__Insecta
-# - only use taxonmy levels: k, p, c, o, f, g, s
-# - single line break between sequences and no block size
-
-write_db_files <- function (x, path_prefix) {
-    # Which taxonomy levels to include in output and the label names:
-    tax_levels <- c("k"="kingdom_name", 
-                    "p"="phylum_name", "c"="class_name", "o"="order_name",
-                    "f"="family_name", "g"="genus_name", "s"="species_name")
-    refdb:::check_fields(x, what = c("sequence", "taxonomy", "id"))
-    # col_tax <- attributes(x)$refdb_fields$taxonomy
-    col_tax <- tax_levels
-    col_id <- attributes(x)$refdb_fields$id
-    col_seq <- attributes(x)$refdb_fields$sequence
-    labs <- x[[col_id]]
-    labs <- stringr::str_replace_all(labs, "[:blank:]", "_")
-    seqs <- x[[col_seq]]
-    names(seqs) <- labs
-    # Change NA values to ""
-    x[, col_tax][is.na(x[, col_tax])] <- ""
-    # Add labels names
-    tax <- apply(x[, col_tax], 1, function(x) paste0(names(tax_levels), "__", x, collapse = ";"))
-    tax <- paste0(labs, "\t", tax, ";")
-    file_fas <- paste0(path_prefix, ".fasta")
-    file_txt <- paste0(path_prefix, ".txt")
-    write_fasta(seqs, file = file_fas)
-    readr::write_lines(tax, file = file_txt)
-}
-
-write_fasta <- function (x, file, append = FALSE, line_length = 80, block_length = Inf) 
-{
-    x_nchar <- stringr::str_length(x)
-    x_is_na <- is.na(x)
-    if (line_length == Inf) {
-        line_length <- max(x_nchar, na.rm = TRUE)
-    }
-    if (block_length == Inf) {
-        block_length <- line_length
-    }
-    blocks_by_line <- line_length/block_length
-    if (block_length > line_length) {
-        stop("The length of blocks cannot be higher than the length of lines")
-    }
-    if (line_length%%block_length > 0L) {
-        stop("The length of lines must be a multiple of the length of blocks")
-    }
-    if (any(x_is_na | x_nchar == 0L)) {
-        input_len <- length(x)
-        x <- x[!is.na(x)]
-        output_len <- length(x)
-        warning("Found ", input_len - output_len, " NA and/or empty sequences. They were not exported since ", 
-            "the FASTA format does not support missing values.")
-    }
-    x <- as.character(x)
-    x <- vapply(x, function(x) {
-        x_len <- stringr::str_length(x)
-        blocks <- seq(1, x_len, by = block_length)
-        res <- stringr::str_sub(x, blocks, blocks - 1 + block_length)
-        separator <- rep(" ", length(res))
-        if (x_len > line_length) {
-            separator[seq(blocks_by_line, blocks_by_line * (x_len%/%line_length), 
-                blocks_by_line)] <- "\n"
-        }
-        separator[length(separator)] <- ""
-        res <- stringr::str_c(res, separator, collapse = "")
-        res
-    }, vector("character", 1))
-    fas <- stringr::str_c(">", names(x), sep = "")
-    fas <- stringr::str_c(fas, x, sep = "\n", collapse = "\n") # Changed collapse to one line break
-    readr::write_file(fas, file, append = append)
-    readr::write_file("\n", file, append = TRUE) # Add one additional line break at the end
-}
-```
-
-```{r}
-# # BOLD dataframe doesn't have a kingdom column, so get it from ncbi data
-# ncbi_dedup_db <- readRDS(here("ref_db/dedup_db_tbl_df.rds"))
-# kingdom_df <- ncbi_dedup_db %>% select(superkingdom, phylum) %>% .[! duplicated(.),]
-# kingdom_df
-# 
-# table(kingdom_df$superkingdom, useNA = "ifany")
-# 
-# # Check all BOLD phyla are in ncbi data
-# bold_phyla <- dedup_bold %>% pull(phylum_name) %>% .[! duplicated(.)]
-# stopifnot(bold_phyla %in% kingdom_df$phylum)
-
-# They're all eukaryota, so just add an extra column
-dedup_bold$kingdom_name <- "Eukaryota"
-dedup_bold$kingdom_name[is.na(dedup_bold$phylum_name)] <- NA
-```
-
-
-
-```{r}
-# Output prefix name and input file path
-db_files <- c(
-  "bold_short_db_2023-06" = here("ref_db/bold/bold_short_amplicon_trimmed.fasta"),
-  "bold_long_db_2023-06" = here("ref_db/bold/bold_long_amplicon_trimmed.fasta"),
-  "bold_left_db_2023-06" = here("ref_db/bold/bold_left_amplicon_trimmed.fasta"),
-  "bold_right_db_2023-06" = here("ref_db/bold/bold_right_amplicon_trimmed.fasta")
-)
-```
-
-```{r}
-output_dir <- here("ref_db")
-for (i in seq_along(db_files)) {
-  message("Processing ", names(db_files[i]))
-  fasta <- bioseq::read_fasta(file=db_files[i])
-  db <- dedup_bold[str_remove(names(fasta), " rc$"),]
-  db$sequence <- fasta
-  db <- db %>% filter(! is.na(sequenceID))
-  message("Writing files for ", names(db_files[i]))
-  write_db_files(db, path_prefix=file.path(output_dir, names(db_files[i])))
-}
-```
-
-
