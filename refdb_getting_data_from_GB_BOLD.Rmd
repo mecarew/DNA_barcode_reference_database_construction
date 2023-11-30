@@ -1473,7 +1473,7 @@ library(tidyverse)
 library(refdb)
 ```
 
-#Load library
+# load library
 ```{r}
 # Data was previously downloaded with refdb
 # Load in the data
@@ -1651,13 +1651,12 @@ cutadapt \
 
 
 
-#Step4: Merge sequences back together with taxonomic information.
-
+#Step 4: Merge sequences back together with taxonomic information.
+# short amplicon
 ```{r}
 # read in trimmed short fasta
 short_fasta <- bioseq::read_fasta(file="~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/short_amplicon_trimmed.fasta")
 ```
-
 
 ```{r}
 # check format
@@ -1692,6 +1691,129 @@ short_db$sequence <- short_fasta
 ```{r}
 #table(is.na(short_db$id))
 ```
+
+# right amplicon
+```{r}
+# read in trimmed short fasta
+right_fasta <- bioseq::read_fasta(file="~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/right_amplicon_trimmed.fasta")
+```
+
+```{r}
+# check format
+right_fasta %>% tail
+```
+
+```{r}
+# check number of sequences
+length(right_fasta)
+```
+
+```{r}
+# Some sequences are now the reverse complement these need to be corrected
+rc_ids <- names(right_fasta)[! names(right_fasta) %in% rownames(all_db)]
+length(rc_ids)
+head(rc_ids)
+```
+
+```{r}
+# Check sequences in reverse compliment (rc)
+right_fasta["110 rc"] %>% as.character
+right_fasta["110 rc"] %>% seq_reverse %>% seq_complement %>% as.character
+all_db["110", "sequence", drop=TRUE] %>% as.character
+```
+
+```{r}
+# remove 'rc' from sequences
+right_db <- all_db[str_remove(names(right_fasta), " rc$"),]
+right_db$sequence <- right_fasta
+```
+
+```{r}
+#table(is.na(right_db$id))
+```
+# long amplicon
+```{r}
+# read in trimmed short fasta
+long_fasta <- bioseq::read_fasta(file="~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/long_amplicon_trimmed.fasta")
+```
+
+```{r}
+# check format
+long_fasta %>% tail
+```
+
+```{r}
+# check number of sequences
+length(long_fasta)
+```
+
+# some sequences are now the reverse complement (rc) these need to be corrected
+```{r}
+# find rc sequences
+rc_ids <- names(long_fasta)[! names(long_fasta) %in% rownames(all_db)]
+length(rc_ids)
+head(rc_ids)
+```
+
+```{r}
+# reverse complement rc sequences - make sure number corresponds to the first record number i.e., 110 rc
+long_fasta["110 rc"] %>% as.character
+long_fasta["110 rc"] %>% seq_reverse %>% seq_complement %>% as.character
+all_db["110", "sequence", drop=TRUE] %>% as.character
+```
+
+```{r}
+# remove 'rc' from sequences
+long_db <- all_db[str_remove(names(long_fasta), " rc$"),]
+long_db$sequence <- long_fasta
+```
+
+```{r}
+#table(is.na(right_db$id))
+```
+
+# left amplicon
+```{r}
+# read in trimmed short fasta
+left_fasta <- bioseq::read_fasta(file="~/Documents/DNA_reference_db_construction/refdb/final_library/trimming/left_amplicon_trimmed.fasta")
+```
+
+```{r}
+# check format
+left_fasta %>% tail
+```
+
+```{r}
+# check number of sequences
+length(left_fasta)
+```
+
+# some sequences are now the reverse complement (rc) these need to be corrected
+```{r}
+# find rc sequences
+rc_ids <- names(left_fasta)[! names(left_fasta) %in% rownames(all_db)]
+length(rc_ids)
+head(rc_ids)
+```
+
+```{r}
+# reverse complement rc sequences - make sure number corresponds to the first record number i.e., 110 rc
+left_fasta["110 rc"] %>% as.character
+left_fasta["110 rc"] %>% seq_reverse %>% seq_complement %>% as.character
+all_db["110", "sequence", drop=TRUE] %>% as.character
+```
+
+```{r}
+# remove 'rc' from sequences
+left_db <- all_db[str_remove(names(left_fasta), " rc$"),]
+left_db$sequence <- left_fasta
+```
+
+```{r}
+#table(is.na(right_db$id))
+```
+
+
 # Set parameters for writing files into library file format for the bioinformatic pipeline. 
 The output flies will include a text file containing the taxonomic information ant a fasta file with the sequence data.
 ```{r}
