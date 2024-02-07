@@ -1410,6 +1410,10 @@ all_bold_priv_ncbi$species <- gsub("\\'", "",
 
 #remove trailing spaces in species names
 trimws(all_bold_priv_ncbi$species, "right")
+
+missing_rows <- which(is.na(all_bold_priv_ncbi$id))
+
+print(missing_rows)
 ```
 
 #Step 2: Fix outdated taxonomic names 
@@ -1573,6 +1577,15 @@ bioseq::write_fasta(seqs[parts == 4], file = here::here("final_library/trimming/
                     line_length = 80, block_length=Inf, append=TRUE)
 ```
 
+```{r}
+# Append qiime2 path to PATH
+current_path_env <- Sys.getenv("PATH")
+
+# Also set qiime2 conda environment in batchtools.slurm.tmpl
+Sys.setenv(PATH=paste0("/mnt/galaxy/gvl/software/shared_envs/qiime2_2023-07/bin:",
+                       current_path_env))
+Sys.setenv(PYTHONPATH="/mnt/galaxy/gvl/software/shared_envs/qiime2_2023-07/lib/python3.8/site-packages/")
+```
 #Step 3: use Cutadapt (python) to create amplicon specific DNA barcode reference libraries.
 If working on the ARC macroinvertebrate project the libraries will only need to be set up for the "short" and the "right" amplicon. 
 ```{bash, engine.opts='-l'}
