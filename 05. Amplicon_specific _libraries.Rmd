@@ -9,23 +9,20 @@ output: html_document
 #SECTION 5: Creating amplicon specific libraries for bioinformatic pipelines
 Unfortunately, the primer cropping in refdb does not work! I could not get refdb to properly trim primers it needed really high error setting to do any trimming, but with these settings over trimmed most of the data. for the short amplicon the forward primer trims ok but the reverse trims in the wrong spot.
 
-Therefore for this step we can use cutadapt.....
+Therefore for this step we can use cutadapt.
 # Load packages
-```{r}
+
+```{r message=FALSE, warning=FALSE}
+suppressPackageStartupMessages({
 library(dplyr)
 library(refdb)
 library(bioseq)
-library(stringr)
+library(stringr)})
 ```
+
 
 # load library
-```{r}
-#change column header from 'DNA_seq' to 'sequence' for further analysis
-colnames(all_db)[colnames(all_db) == "DNA_seq"] ="sequence"
 
-#count rows
-nrow(DNA_seq)
-```
 #Step 1: set fields for refdb
 ```{r}
 all_db <- refdb::refdb_set_fields(all_db,
@@ -662,45 +659,6 @@ close(output_connection)
 ```
 
 #Step 4: Merge sequences back together with taxonomic information.
-# short amplicon (not need as completed with the writing script below)
-```{r}
-# read in trimmed short fasta
-#short_fasta <- bioseq::read_fasta(file="~/git/DNA_reference_db_construction/refdb/final_library/trimming/short_amplicon_trimmed.fasta")
-```
-
-```{r}
-# check format
-#short_fasta %>% tail
-```
-
-```{r}
-# check number of sequences
-#length(short_fasta)
-```
-
-```{r}
-# # Some sequences are now the reverse complement these need to be corrected
-# rc_ids <- names(short_fasta)[! names(short_fasta) %in% rownames(all_db)]
-# length(rc_ids)
-# head(rc_ids)
-```
-
-```{r}
-# # Check sequences in reverse compliment (rc)
-# short_fasta["1927 rc"] %>% as.character
-# short_fasta["1927 rc"] %>% seq_reverse %>% seq_complement %>% as.character
-# all_db["1927", "sequence", drop=TRUE] %>% as.character
-```
-
-```{r}
-# remove 'rc' from sequences
-#short_db <- all_db[str_remove(names(short_fasta), " rc$"),]
-#short_db$sequence <- short_fasta
-```
-
-```{r}
-#table(is.na(short_db$id))
-```
 
 # Set parameters for writing files into library file format for the bioinformatic pipeline. 
 The output flies will include a text file containing the taxonomic information ant a fasta file with the sequence data.

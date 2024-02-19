@@ -62,9 +62,11 @@ all_db$species <- gsub("\\'", "",
 trimws(all_db$species, "right")
 
 # check that all samples have id's
-rows_with_empty_values <- all_db[all_db$id == "", , drop = FALSE]
+#rows_with_empty_values <- all_db[all_db$id == "", , drop = FALSE]
+#rows_with_empty_values <- bold_data_clean_Oct23[bold_data_clean_Oct23$sequenceID == "", , drop = FALSE]
+print(rows_with_empty_values)
 # fix control samples and add name
-#all_db[5523131, "id"] <- "control"
+#bold_data_clean_Oct23[3425930, "sequenceID"] <- "control"
 ```
 
 #Step 2: Fix outdated taxonomic names 
@@ -86,6 +88,12 @@ all_db$family <- gsub("Ancylidae",
 #print (sum(str_detect(all_db$family, 'Corbiculidae')) > 0)
 #print (sum(str_detect(all_db$family, 'Brentidae')) > 0)
 ```  
+
+# align column names
+```{r}
+#change column header from 'DNA_seq' to 'sequence' for further analysis
+colnames(all_db)[colnames(all_db) == "DNA_seq"] ="sequence"
+```
 
 # remove NCBI duplicates with different 'sp.' instead of taxonomic names
 ```{r}
@@ -222,7 +230,7 @@ all_db$species <- gsub("Craspedacusta sowerbyi", "Craspedacusta sowerbii",
 			gsub("Pisidium sp. /", "Pisidium sp. cf. hallae",
  			gsub("Pisidium sp. hallae", "Pisidium sp. cf. hallae", all_db$species))))
 
-# records for deleting (wrong id's or incomplete taxonomy causes taxonomic assigment issues)
+# records for deleting (wrong id's or incomplete taxonomy causes taxonomic assignment issues)
 
 values_to_delete <- c("9045802", "6211936", "6211937", "7685744", "12440123", "4476585", "ON506903", "ON506899")
 
@@ -234,12 +242,9 @@ all_db <- all_db[!all_db$id %in% values_to_delete, ]
 # export final library as a dataframe
 ```{r}
 saveRDS(all_db, here::here("final_library/all_bold_priv_NCBI_final_clean_Nov23.rds"))
-
-#read in if needed
-#all_db <- readRDS(here::here("final_library/all_bold_priv_NCBI_final_clean_Nov23.rds"))
 ```
 
-# convert to fasta file for import to Geneious
+# OPTIONAL convert to fasta file for import to Geneious
 ```{r}
 # files are too large to export in one go so need to be broken in to smaller parts.
 
@@ -279,15 +284,5 @@ refdb_export_dada2(export3, here::here("geneious_library/final_lib_export_nov23_
 # remove files no longer needed
 rm(export3)
 rm(all_db2)
-
-# trialing ways to combine split fasta files. This can be done outside of r using Geneious
-#fasta1 <- bioseq::read_fasta(here::here("geneious_library/final_lib_export_1.fasta")
-
-#fasta2 <- bioseq::read_fasta(here::here("geneious_library/final_lib_export_2.fasta")
-
-#fasta3 <- bioseq::read_fasta(here::here("geneious_library/final_lib_export_3.fasta")
- 
-#comb_comp_lib <-  bioseq::seq_combine(fasta1, fasta2, fasta3)
-
 ```
 
