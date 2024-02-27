@@ -21,7 +21,12 @@ library(stringr)})
 ```
 
 
-# load library
+# load library (IF NEEDED)
+
+```{r}
+all_db <- readRDS(here::here("final_library/all_bold_priv_NCBI_final_clean_Nov23.rds"))
+```
+
 
 #Step 1: set fields for refdb
 ```{r}
