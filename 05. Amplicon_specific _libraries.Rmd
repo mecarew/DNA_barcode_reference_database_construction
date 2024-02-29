@@ -119,12 +119,12 @@ if (!dir.exists(trimming_dir)) {
 
 # Construct and execute the Cutadapt command
 command <- paste(
-    "cutadapt -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT -e 0.10 --revcomp -m 100 -M 450 --max-n 0.05",
+    "cutadapt -g TAGGWACWGGWTGAACWGTWTAYCCYCC...CCNGTNYTNGCNGGNGCNATYACGG -e 0.28 --revcomp -m 100 -M 658 --max-n 0.05 ",
     "--too-short-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_short1.fasta"),
     "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long1.fasta"),
     "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed1.fasta"),
     "-o", paste0(trimming_dir, ampliconGroup, "_amplicon_trimmed1.fasta"),
-    paste0(output_dir, "/all_db.fasta"),
+    paste0(output_dir, "/trimming/all_db.fasta"),
     ">", log_file,
     collapse = " "
 )
@@ -141,7 +141,7 @@ trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt2.log")
 
 command <- paste(
-    "cutadapt -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT -e 0.31 --revcomp -m 100 -M 450 --max-n 0.05",
+    "cutadapt -g WGGWTGAACWGTWTAYCCYCC...YTNGCNGGNGCNATYACGG -e 0.3 --revcomp -m 100 -M 658 --max-n 0.05",
     "--too-short-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_short2.fasta"),
     "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long2.fasta"),
     "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed2.fasta"),
@@ -150,6 +150,8 @@ command <- paste(
     ">", log_file,
     collapse = " "
 )
+
+#cutadapt -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT -e 0.19 --revcomp -m 100 -M 450 --max-n 0.05"
 
 system(command)
 ```
@@ -164,7 +166,7 @@ trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt3.log")
 
 command <- paste(
-    "cutadapt -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT -e 0.31 --revcomp -m 100 -M 450 --max-n 0.05",
+    "cutadapt -g ACWGGWTGRACWGTNTAYCC...CCNGTNYTNGCNGGNGCNATYACGG -e 0.3 --revcomp -m 100 -M 450 --max-n 0.05",
     "--too-short-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_short3.fasta"),
     "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long3.fasta"),
     "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed3.fasta"),
@@ -186,7 +188,8 @@ output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_const
 trimmed_files <- c(
     paste0(output_dir, "/trimming/short_amplicon_trimmed1.fasta"),
     paste0(output_dir, "/trimming/short_amplicon_trimmed2.fasta"),
-    paste0(output_dir, "/trimming/short_amplicon_trimmed3.fasta")
+    paste0(output_dir, "/trimming/short_amplicon_trimmed3.fasta"),
+    paste0(output_dir, "/trimming/short_amplicon_untrimmed3.fasta")
 )
 
 # Output file to create
@@ -231,12 +234,12 @@ if (!dir.exists(trimming_dir)) {
 
 # Construct and execute the Cutadapt command
 command <- paste(
-"cutadapt -g AACWGGWTGRACWGTNTAYCC...TGRTTYTTYGGNCAYCCHGA -e 0.3 --revcomp -m 200 -M 550 --max-n 0.05",
+"cutadapt -g TAGGWACWGGWTGAACWGTWTAYCCYCC...TGRTTYTTTGGWCAYCCWGAAGTTTA -e 0.25 --revcomp -m 200 -M 658 --max-n 0.05",
     "--too-short-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_short1.fasta"),
     "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long1.fasta"),
     "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed1.fasta"),
     "-o", paste0(trimming_dir, ampliconGroup, "_amplicon_trimmed1.fasta"),
-    paste0(output_dir, "/all_db.fasta"),
+    paste0(output_dir, "/trimming/all_db.fasta"),
     ">", log_file,
     collapse = " "
 )
@@ -253,7 +256,7 @@ trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt2.log")
 
 command <- paste(
-    "cutadapt -g ACWGGWTGRACWGTNTAYCC...TGRTTYTTYGGNCAYCCHGA -e 0.36 --revcomp -m 200 -M 550 --max-n 0.05",
+    "cutadapt -g WACWGGWTGAACWGTWTAYCCYCC...GCHGGDGCHATYACHATRYT -e 0.1 --revcomp -m 200 -M 658 --max-n 0.05",
     "--too-short-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_short2.fasta"),
     "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long2.fasta"),
     "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed2.fasta"),
@@ -276,12 +279,35 @@ trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt3.log")
 
 command <- paste(
-    "cutadapt -g ACWGGWTGRACWGTNTAYCC...GCHGGDGCHATYACHATRYT -e 0.32 --revcomp -m 100 -M 450 --max-n 0.05",
+    "cutadapt -g WGGWTGAACWGTWTAYCCYC...GCHGGDGCHATYACHATRYT -e 0.14 --revcomp -m 100 -M 658 --max-n 0.05",
     "--too-short-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_short3.fasta"),
     "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long3.fasta"),
     "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed3.fasta"),
     "-o", paste0(trimming_dir, ampliconGroup, "_amplicon_trimmed3.fasta"),
     paste0(trimming_dir, ampliconGroup,"_amplicon_untrimmed1.fasta"),
+    ">", log_file,
+    collapse = " "
+)
+
+
+system(command)
+```
+
+```{r}
+# Construct and execute the Cutadapt command
+
+ampliconGroup <- "right"
+output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+trimming_dir <- paste0(output_dir, "/trimming/")
+log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt3.log")
+
+command <- paste(
+    "cutadapt -g ACWGGWTGRACWGTNTAYCC...GRTTYTTYGGNCAYCCHGA -e 0.26 --revcomp -m 100 -M 658 --max-n 0.05",
+    "--too-short-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_short4.fasta"),
+    "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long4.fasta"),
+    "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed4.fasta"),
+    "-o", paste0(trimming_dir, ampliconGroup, "_amplicon_trimmed4.fasta"),
+    paste0(trimming_dir, ampliconGroup,"_amplicon_untrimmed3.fasta"),
     ">", log_file,
     collapse = " "
 )
@@ -298,7 +324,9 @@ output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_const
 trimmed_files <- c(
     paste0(output_dir, "/trimming/right_amplicon_trimmed1.fasta"),
     paste0(output_dir, "/trimming/right_amplicon_trimmed2.fasta"),
-    paste0(output_dir, "/trimming/right_amplicon_trimmed3.fasta")
+    paste0(output_dir, "/trimming/right_amplicon_trimmed3.fasta"),
+    paste0(output_dir, "/trimming/right_amplicon_trimmed4.fasta"),
+    paste0(output_dir, "/trimming/right_amplicon_untrimmed4.fasta")
 )
 
 # Output file to create
@@ -326,7 +354,6 @@ for (file_path in trimmed_files) {
 close(output_connection)
 
 ```
-
 #long amplicon
 
 # 1. first 'strict' trim (long amplicon)

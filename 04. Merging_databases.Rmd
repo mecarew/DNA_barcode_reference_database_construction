@@ -115,7 +115,7 @@ all_db$class <- gsub("Copepoda", "Hexanauplia", all_db$class)
 colnames(all_db)[colnames(all_db) == "DNA_seq"] ="sequence"
 ```
 
-# remove NCBI duplicates with different 'sp.' instead of taxonomic names
+# remove NCBI duplicates with 'sp.' instead of taxonomic names
 ```{r}
 # Filter rows with 'bold' in 'source'
 bold_data <- all_db %>%
@@ -128,7 +128,12 @@ ncbi_data <- all_db %>%
    dplyr::filter(source == "NCBI" & !(sequence %in% bold_data$sequence) & !(sequence %in% private_data$sequence))
 
 # Combine the bold and unique ncbi data
-all_db2 <- rbind(private_data, bold_data, ncbi_data)
+all_db <- rbind(private_data, bold_data, ncbi_data)
+
+rm(bold_data)
+rm(ncbi_data)
+rm(private_data)
+
 ```
 
 
@@ -1040,10 +1045,9 @@ values_to_delete <- c("9045802", "6211936", "6211937", "7685744", "12440123", "4
 all_db <- all_db[!all_db$id %in% values_to_delete, ]
 ```
 
-
 # export final library as a dataframe
 ```{r}
-saveRDS(all_db, here::here("final_library/all_bold_priv_NCBI_final_clean_Nov23.rds"))
+saveRDS(all_db, here::here("final_library/all_bold_priv_NCBI_final_clean_Feb24.rds"))
 ```
 
 # OPTIONAL convert to fasta file for import to Geneious
