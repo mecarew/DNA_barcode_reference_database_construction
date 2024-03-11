@@ -13,7 +13,7 @@ output: html_document
 # import cleaned libraries IF NEEDED
 priv_lib_clean <- readRDS(here::here("cleaned_libraries/priv_lib_clean_Oct23.rds"))
 ncbi_data_clean <- readRDS(here::here("cleaned_libraries/NCBI_data_clean_Oct23.rds"))
-bold_data_clean <-readRDS(here::here("cleaned_libraries/bold_data_clean_Oct23.rds"))
+bold_data_clean <- readRDS(here::here("cleaned_libraries/bold_data_clean_Oct23.rds"))
 ```
 
 
@@ -140,6 +140,248 @@ rm(private_data)
 # targeted corrections based on feedback from using the library
 ```{r}
 # completing and updating records with outdated or incomplete taxonomy
+all_db[all_db$id == '6360803', 'species'] <- 'Agapetus sp. B-ACN2227';
+all_db[all_db$id == 'KX291413', 'species'] <- 'Agapetus sp. B-ACN2227';
+all_db[all_db$id == 'KX291989', 'species'] <- 'Agapetus sp. B-ACN2227';
+all_db[all_db$id == 'KX292033', 'species'] <- 'Agapetus sp. B-ACN2227';
+all_db[all_db$id == 'KX294319', 'species'] <- 'Agapetus sp. B-ACN2227';
+all_db[all_db$id == 'KX294720', 'species'] <- 'Agapetus sp. B-ACN2227';
+all_db[all_db$id == '7864408', 'species'] <- 'Anax papuensis';
+all_db[all_db$id == '7864411', 'species'] <- 'Austrolestes annulosus';
+all_db[all_db$id == '9038340', 'species'] <- 'Austropsyche sp. B-ACM3628';
+all_db[all_db$id == '9722281', 'species'] <- 'Barbronia weberi';
+all_db[all_db$id == 'DQ009666', 'species'] <- 'Barbronia weberi';
+all_db[all_db$id == 'OQ281713', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'OQ281725', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'OQ309202', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'OQ309210', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'OQ309225', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'OQ309233', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'OQ309235', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'OQ309244', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'OQ309263', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'OQ309278', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'OQ309286', 'species'] <- 'Chaetogaster diastrophus';
+all_db[all_db$id == 'AY380495', 'species'] <- 'Cheumatopsyche sp. B-AAE9243';
+all_db[all_db$id == 'AY380496', 'species'] <- 'Cheumatopsyche sp. B-AAE9243';
+all_db[all_db$id == 'AY380497', 'species'] <- 'Cheumatopsyche sp. B-AAE9243';
+all_db[all_db$id == 'KX106950', 'species'] <- 'Cheumatopsyche sp. B-AAE9243';
+all_db[all_db$id == 'KX296496', 'species'] <- 'Cheumatopsyche sp. B-AAE9243';
+all_db[all_db$id == '4410776', 'species'] <- 'Cheumatopsyche sp. B-AAJ0493';
+all_db[all_db$id == 'AY324046', 'species'] <- 'Cheumatopsyche sp. B-AAJ0493';
+all_db[all_db$id == 'AY324047', 'species'] <- 'Cheumatopsyche sp. B-AAJ0493';
+all_db[all_db$id == 'AY324051', 'species'] <- 'Cheumatopsyche sp. B-AAJ0493';
+all_db[all_db$id == 'AY324053', 'species'] <- 'Cheumatopsyche sp. B-AAJ0493';
+all_db[all_db$id == 'AY324055', 'species'] <- 'Cheumatopsyche sp. B-AAJ0493';
+all_db[all_db$id == 'AY324056', 'species'] <- 'Cheumatopsyche sp. B-AAJ0493';
+all_db[all_db$id == 'AY380490', 'species'] <- 'Cheumatopsyche sp. B-AAJ0493';
+all_db[all_db$id == 'AY380492', 'species'] <- 'Cheumatopsyche sp. B-AAJ0493';
+all_db[all_db$id == 'Co18Hydps3', 'species'] <- 'Cheumatopsyche sp. B-AAJ0493';
+all_db[all_db$id == '4400572', 'species'] <- 'Cheumatopsyche¬†sp. B-AAE9243';
+all_db[all_db$id == '4304176', 'species'] <- 'Chironomidae sp. B-ABA7844';
+all_db[all_db$id == '4304188', 'species'] <- 'Chironomidae sp. B-ABA7844';
+all_db[all_db$id == '4304131', 'species'] <- 'Chironomidae sp. B-ABA7848';
+all_db[all_db$id == '8657541', 'species'] <- 'Chironomidae sp. B-ADC5579';
+all_db[all_db$id == '8658142', 'species'] <- 'Chironomidae sp. B-ADC5579';
+all_db[all_db$id == '8659050', 'species'] <- 'Chironomidae sp. B-ADC5579';
+all_db[all_db$id == '8666060', 'species'] <- 'Chironomidae sp. B-ADC5579';
+all_db[all_db$id == '3107202', 'species'] <- 'Cladopelma sp. B-AAD7362';
+all_db[all_db$id == '3107203', 'species'] <- 'Cladopelma sp. B-AAD7362';
+all_db[all_db$id == '4571653', 'species'] <- 'Cladopelma sp. B-AAD7362';
+all_db[all_db$id == '4575823', 'species'] <- 'Cladopelma sp. B-AAD7362';
+all_db[all_db$id == '4575824', 'species'] <- 'Cladopelma sp. B-AAD7362';
+all_db[all_db$id == '4575978', 'species'] <- 'Cladopelma sp. B-AAD7362';
+all_db[all_db$id == '4576059', 'species'] <- 'Cladopelma sp. B-AAD7362';
+all_db[all_db$id == '4603669', 'species'] <- 'Cladopelma sp. B-AAD7362';
+all_db[all_db$id == 'AY752677', 'species'] <- 'Cladopelma sp. B-AAD7362';
+all_db[all_db$id == '4402309', 'species'] <- 'Coenoria sp. B-AAX3064';
+all_db[all_db$id == '3900152', 'species'] <- 'Cognettia varisetosa';
+all_db[all_db$id == '3900153', 'species'] <- 'Cognettia varisetosa';
+all_db[all_db$id == '3096390', 'species'] <- 'Dero digitata';
+all_db[all_db$id == 'AF534840', 'species'] <- 'Dero digitata';
+all_db[all_db$id == 'GQ355368', 'species'] <- 'Dero digitata';
+all_db[all_db$id == '8372736', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8372806', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8372835', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8372854', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8427930', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8428007', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8428604', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8428605', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8428668', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8428743', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8429263', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '8429641', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == 'T07755', 'species'] <- 'Dicranomyia sp. B-ADA2218';
+all_db[all_db$id == '16874299', 'species'] <- 'Dicrotendipes sp. B-ACQ5956';
+all_db[all_db$id == '16874522', 'species'] <- 'Dicrotendipes sp. B-ACQ5956';
+all_db[all_db$id == '6855293', 'species'] <- 'Dicrotendipes sp. B-ACQ5956';
+all_db[all_db$id == '6855295', 'species'] <- 'Dicrotendipes sp. B-ACQ5956';
+all_db[all_db$id == '6855300', 'species'] <- 'Dicrotendipes sp. B-ACQ5956';
+all_db[all_db$id == 'BCM14T3Orth1', 'species'] <- 'Dicrotendipes sp. B-ACQ5956';
+all_db[all_db$id == '6233660', 'species'] <- 'Dinotoperla thwaitesi';
+all_db[all_db$id == '2733459', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '3641580', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '3684190', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '3901591', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '3905141', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '4088164', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '9722859', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '9722895', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '9722927', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '9722938', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '9722972', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == '9723702', 'species'] <- 'Eiseniella tetraedra';
+all_db[all_db$id == 'FC15ASDug1', 'species'] <- 'Girardia sp. MC-1';
+all_db[all_db$id == 'FC15ASDug2', 'species'] <- 'Girardia sp. MC-1';
+all_db[all_db$id == '10955370', 'species'] <- 'Kiefferulus intertinctus';
+all_db[all_db$id == '4398576', 'species'] <- 'Koorrnonga sp. B-ABV9141';
+all_db[all_db$id == '4398577', 'species'] <- 'Koorrnonga sp. B-ABV9141';
+all_db[all_db$id == '4585648', 'species'] <- 'Koorrnonga sp. B-ABV9141';
+all_db[all_db$id == '6233935', 'species'] <- 'Koorrnonga sp. B-ABV9141';
+all_db[all_db$id == '6233941', 'species'] <- 'Koorrnonga sp. B-ABV9141';
+all_db[all_db$id == '6233934', 'species'] <- 'Koorrnonga sp. B-ABV9141';
+all_db[all_db$id == '12916638', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == '4995320', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == '5112192', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == '5176824', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == '9528890', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == '9529230', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == '9529234', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == '9761237', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == 'KR759557', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == 'ME09Cr4', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == 'MF727341', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == 'MG143010', 'species'] <- 'Limnophyes sp. B-ABW2734';
+all_db[all_db$id == '11304405', 'species'] <- 'Limnophyes sp. MC-A1';
+all_db[all_db$id == '11412524', 'species'] <- 'Limnophyes sp. MC-A1';
+all_db[all_db$id == '11440113', 'species'] <- 'Limnophyes sp. MC-A1';
+all_db[all_db$id == '4456156', 'species'] <- 'Limnophyes sp. MC-A1';
+all_db[all_db$id == '4456489', 'species'] <- 'Limnophyes sp. MC-A1';
+all_db[all_db$id == '4478444', 'species'] <- 'Limnophyes sp. MC-A1';
+all_db[all_db$id == '4492770', 'species'] <- 'Limnophyes sp. MC-A1';
+all_db[all_db$id == '4493214', 'species'] <- 'Limnophyes sp. MC-A1';
+all_db[all_db$id == '4493530', 'species'] <- 'Limnophyes sp. MC-A1';
+all_db[all_db$id == '4525787', 'species'] <- 'Limnophyes sp. MC-A1';
+all_db[all_db$id == '4819950', 'species'] <- 'Nais sp. B-AAF9652';
+all_db[all_db$id == '4819959', 'species'] <- 'Nais sp. B-AAF9652';
+all_db[all_db$id == '7697265', 'species'] <- 'Nais sp. B-AAF9652';
+all_db[all_db$id == '2646383', 'species'] <- 'Nais sp. B-AAF9652';
+all_db[all_db$id == '3358325', 'species'] <- 'Nais sp. B-AAF9652';
+all_db[all_db$id == 'LN810253', 'species'] <- 'Nais sp. B-AAF9652';
+all_db[all_db$id == '12918246', 'species'] <- 'Polypedilum sp. B-ACQ1511';
+all_db[all_db$id == '6855368', 'species'] <- 'Polypedilum sp. B-ACQ1511';
+all_db[all_db$id == '6855370', 'species'] <- 'Polypedilum sp. B-ACQ1511';
+all_db[all_db$id == '6855372', 'species'] <- 'Polypedilum sp. B-ACQ1511';
+all_db[all_db$id == '7210808', 'species'] <- 'Polypedilum sp. B-ACQ1511';
+all_db[all_db$id == 'E06Po101', 'species'] <- 'Polypedilum sp. B-ACQ1511';
+all_db[all_db$id == 'E06Po132', 'species'] <- 'Polypedilum sp. B-ACQ1511';
+all_db[all_db$id == 'E06Po74', 'species'] <- 'Polypedilum sp. B-ACQ1511';
+all_db[all_db$id == 'KJ946755', 'species'] <- 'Polypedilum sp. B-ACQ1511';
+all_db[all_db$id == '7210840', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == '7210842', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == '7210843', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == '7210845', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == 'HQ248001', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == 'HQ248002', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == 'KJ946787', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == 'KJ946792', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == 'Pr117', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == 'Pr128', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == 'HQ248003', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == 'HQ248004', 'species'] <- 'Procladius sp. B-ACD4742';
+all_db[all_db$id == '10690799', 'species'] <- 'Spongillidae sp. B-AAJ0256';
+all_db[all_db$id == '10691930', 'species'] <- 'Spongillidae sp. B-AAJ0256';
+all_db[all_db$id == '11708647', 'species'] <- 'Spongillidae sp. B-AAJ0256';
+all_db[all_db$id == '11708650', 'species'] <- 'Spongillidae sp. B-AAJ0256';
+all_db[all_db$id == '11708654', 'species'] <- 'Spongillidae sp. B-AAJ0256';
+all_db[all_db$id == '4126868', 'species'] <- 'Spongillidae sp. B-AAJ0256';
+all_db[all_db$id == '5386250', 'species'] <- 'Spongillidae sp. B-AAJ0256';
+all_db[all_db$id == '7214650', 'species'] <- 'Spongillidae sp. B-AAJ0256';
+all_db[all_db$id == '8701402', 'species'] <- 'Spongillidae sp. B-AAJ0256';
+all_db[all_db$id == '4569841', 'species'] <- 'Trinotoperla montana/minor/nivata';
+all_db[all_db$id == '4569864', 'species'] <- 'Trinotoperla montana/minor/nivata';
+all_db[all_db$id == '6233674', 'species'] <- 'Trinotoperla montana/minor/nivata';
+all_db[all_db$id == 'Co18Grip12', 'species'] <- 'Trinotoperla montana/minor/nivata';
+all_db[all_db$id == 'KU366085', 'species'] <- 'Trinotoperla montana/minor/nivata';
+all_db[all_db$id == 'KY078198', 'species'] <- 'Trinotoperla montana/minor/nivata';
+all_db[all_db$id == '4382986', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '4391595', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '4391617', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '4585637', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '6233858', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '6233859', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '6233860', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '6233861', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '6233862', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '6233863', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '6233864', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '6233865', 'species'] <- 'Ulmerophlebia sp. B-ABV4550';
+all_db[all_db$id == '10690799', 'genus'] <- '';
+all_db[all_db$id == '10691930', 'genus'] <- '';
+all_db[all_db$id == '11708647', 'genus'] <- '';
+all_db[all_db$id == '11708650', 'genus'] <- '';
+all_db[all_db$id == '11708654', 'genus'] <- '';
+all_db[all_db$id == '4126868', 'genus'] <- '';
+all_db[all_db$id == '5386250', 'genus'] <- '';
+all_db[all_db$id == '7214650', 'genus'] <- '';
+all_db[all_db$id == '8701402', 'genus'] <- '';
+all_db[all_db$id == '7864408', 'genus'] <- 'Anax';
+all_db[all_db$id == '7864411', 'genus'] <- 'Austrolestes';
+all_db[all_db$id == '9722281', 'genus'] <- 'Barbronia';
+all_db[all_db$id == 'DQ009666', 'genus'] <- 'Barbronia';
+all_db[all_db$id == 'KX296496', 'genus'] <- 'Cheumatopsyche';
+all_db[all_db$id == '4410776', 'genus'] <- 'Cheumatopsyche';
+all_db[all_db$id == '3900152', 'genus'] <- 'Cognettia';
+all_db[all_db$id == '3900153', 'genus'] <- 'Cognettia';
+all_db[all_db$id == '3096390', 'genus'] <- 'Dero';
+all_db[all_db$id == 'AF534840', 'genus'] <- 'Dero';
+all_db[all_db$id == 'GQ355368', 'genus'] <- 'Dero';
+all_db[all_db$id == '2733459', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '3641580', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '3684190', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '3901591', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '3905141', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '4088164', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '9722859', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '9722895', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '9722927', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '9722938', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '9722972', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '9723702', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == 'FER17Oligo4', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == 'FEROligo1', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == 'OL458180', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == 'OL458315', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == 'OL458337', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == 'OL458353', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == 'OL458571', 'genus'] <- 'Eiseniella';
+all_db[all_db$id == '7697265', 'genus'] <- 'Nais';
+all_db[all_db$id == '7864408', 'family'] <- 'Aeshnidae';
+all_db[all_db$id == '3900152', 'family'] <- 'Enchytraeidae';
+all_db[all_db$id == '3900153', 'family'] <- 'Enchytraeidae';
+all_db[all_db$id == 'KX296496', 'family'] <- 'Hydropsychidae';
+all_db[all_db$id == '7864411', 'family'] <- 'Lestidae';
+all_db[all_db$id == '2733459', 'family'] <- 'Lumbricidae';
+all_db[all_db$id == '3641580', 'family'] <- 'Lumbricidae';
+all_db[all_db$id == '3684190', 'family'] <- 'Lumbricidae';
+all_db[all_db$id == '3901591', 'family'] <- 'Lumbricidae';
+all_db[all_db$id == '3905141', 'family'] <- 'Lumbricidae';
+all_db[all_db$id == '4088164', 'family'] <- 'Lumbricidae';
+all_db[all_db$id == '3096390', 'family'] <- 'Naididae';
+all_db[all_db$id == 'AF534840', 'family'] <- 'Naididae';
+all_db[all_db$id == 'GQ355368', 'family'] <- 'Naididae';
+all_db[all_db$id == '3358325', 'family'] <- 'Naididae';
+all_db[all_db$id == 'DQ009666', 'family'] <- 'Salifidae';
+all_db[all_db$id == '10691930', 'family'] <- 'Spongillidae';
+all_db[all_db$id == '11708647', 'family'] <- 'Spongillidae';
+all_db[all_db$id == '11708650', 'family'] <- 'Spongillidae';
+all_db[all_db$id == '11708654', 'family'] <- 'Spongillidae';
+all_db[all_db$id == '4126868', 'family'] <- 'Spongillidae';
+all_db[all_db$id == '7214650', 'family'] <- 'Spongillidae';
+all_db[all_db$id == 'LIS417Oligo5', 'order'] <- 'Enchytraeida';
+all_db[all_db$id == 'AF534840', 'order'] <- 'Tubificida';
+all_db[all_db$id == 'GQ355368', 'order'] <- 'Tubificida';
 all_db[all_db$id == 'MG976157', 'species'] <- 'Acruroperla atra';
 all_db[all_db$id == 'MG976088', 'species'] <- 'Agraptocorixa eurynome';
 all_db[all_db$id == '10702399', 'species'] <- 'Alboglossiphonia sp. B-ADR6587';
@@ -210,18 +452,18 @@ all_db[all_db$id == 'EU669980', 'species'] <- 'Cardiocladius sp. B-AAW4309';
 all_db[all_db$id == 'M8', 'species'] <- 'Cardiocladius sp. B-AAW4309';
 all_db[all_db$id == '6233853', 'species'] <- 'Centroptilum sp. B-ACM3453';
 all_db[all_db$id == '12825683', 'species'] <- 'Centroptilum sp. B-ACM3453';
-all_db[all_db$id == '8665185', 'genus'] <- 'Ceratopogonidae';
+all_db[all_db$id == '8665185', 'family'] <- 'Ceratopogonidae';
 all_db[all_db$id == '8666149', 'family'] <- 'Ceratopogonidae';
-all_db[all_db$id == '8663458', 'species'] <- 'Ceratopogonidae sp. B-:ABX1763';
-all_db[all_db$id == '8664497', 'species'] <- 'Ceratopogonidae sp. B-:ABX1763';
-all_db[all_db$id == '8664973', 'species'] <- 'Ceratopogonidae sp. B-:ABX1763';
-all_db[all_db$id == '8665185', 'species'] <- 'Ceratopogonidae sp. B-:ABX1763';
-all_db[all_db$id == '8665630', 'species'] <- 'Ceratopogonidae sp. B-:ABX1763';
-all_db[all_db$id == '8665753', 'species'] <- 'Ceratopogonidae sp. B-:ABX1763';
-all_db[all_db$id == '8666149', 'species'] <- 'Ceratopogonidae sp. B-:ABX1763';
-all_db[all_db$id == '8666871', 'species'] <- 'Ceratopogonidae sp. B-:ABX1763';
-all_db[all_db$id == '8668419', 'species'] <- 'Ceratopogonidae sp. B-:ABX1763';
-all_db[all_db$id == '8760423', 'species'] <- 'Ceratopogonidae sp. B-:ABX1763';
+all_db[all_db$id == '8663458', 'species'] <- 'Ceratopogonidae sp. B-ABX1763';
+all_db[all_db$id == '8664497', 'species'] <- 'Ceratopogonidae sp. B-ABX1763';
+all_db[all_db$id == '8664973', 'species'] <- 'Ceratopogonidae sp. B-ABX1763';
+all_db[all_db$id == '8665185', 'species'] <- 'Ceratopogonidae sp. B-ABX1763';
+all_db[all_db$id == '8665630', 'species'] <- 'Ceratopogonidae sp. B-ABX1763';
+all_db[all_db$id == '8665753', 'species'] <- 'Ceratopogonidae sp. B-ABX1763';
+all_db[all_db$id == '8666149', 'species'] <- 'Ceratopogonidae sp. B-ABX1763';
+all_db[all_db$id == '8666871', 'species'] <- 'Ceratopogonidae sp. B-ABX1763';
+all_db[all_db$id == '8668419', 'species'] <- 'Ceratopogonidae sp. B-ABX1763';
+all_db[all_db$id == '8760423', 'species'] <- 'Ceratopogonidae sp. B-ABX1763';
 all_db[all_db$id == '4515960', 'species'] <- 'Ceratopogonidae sp. B-ABX0996';
 all_db[all_db$id == '4522527', 'species'] <- 'Ceratopogonidae sp. B-ABX0996';
 all_db[all_db$id == '4588236', 'species'] <- 'Ceratopogonidae sp. B-ABX0996';
@@ -303,14 +545,13 @@ all_db[all_db$id == 'KP878469', 'species'] <- 'Chamaedrilus varisetosus';
 all_db[all_db$id == 'KP878470', 'species'] <- 'Chamaedrilus varisetosus';
 all_db[all_db$id == 'SC15AKOlig1', 'species'] <- 'Chamaedrilus varisetosus';
 all_db[all_db$id == 'KX296496', 'genus'] <- 'Cheumatopsyche';
-all_db[all_db$id == '5023709', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == 'AY380481', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == 'AY380482', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == 'KX291371', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == 'KX293048', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == 'KX293263', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == 'KX296032', 'species'] <- 'Cheumatopsyche sp. AV2';
-all_db[all_db$id == 'KX296496', 'species'] <- 'Cheumatopsyche sp. B-AAE9243';
+all_db[all_db$id == 'KX296496', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == '4400540', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == '4913016', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == '5023709', 'species'] <- 'Cheumatopsyche sp. AV2';
@@ -319,8 +560,8 @@ all_db[all_db$id == '475eef2c987843530d51b22ecb52cca2', 'species'] <- 'Cheumatop
 all_db[all_db$id == '535dcffc59e5549a510564b1416eb27b', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == 'KX291541', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == 'KX296653', 'species'] <- 'Cheumatopsyche sp. AV2';
-all_db[all_db$id == '4400572', 'species'] <- 'Cheumatopsyche sp. B-AAE9243';
-all_db[all_db$id == 'KX106950', 'species'] <- 'Cheumatopsyche sp. B-AAE9243';
+all_db[all_db$id == '4400572', 'species'] <- 'Cheumatopsyche sp. AV2';
+all_db[all_db$id == 'KX106950', 'species'] <- 'Cheumatopsyche sp. AV2';
 all_db[all_db$id == '4304131', 'species'] <- 'Chironomidae sp. B-ABA7844';
 all_db[all_db$id == '4304176', 'species'] <- 'Chironomidae sp. B-ABA7844';
 all_db[all_db$id == '4304188', 'species'] <- 'Chironomidae sp. B-ABA7844';
@@ -411,14 +652,14 @@ all_db[all_db$id == '16873276', 'species'] <- 'Chironomidae sp. B-AEV3624';
 all_db[all_db$id == '16873279', 'species'] <- 'Chironomidae sp. B-AEV3624';
 all_db[all_db$id == '16873285', 'species'] <- 'Chironomidae sp. B-AEV3624';
 all_db[all_db$id == '16874391', 'species'] <- 'Chironomidae sp. B-AEV3624';
-all_db[all_db$id == '13118299', 'species'] <- 'Chironomidae sp.B-AABA7844';
-all_db[all_db$id == '13118390', 'species'] <- 'Chironomidae sp.B-AABA7844';
-all_db[all_db$id == '17460089', 'species'] <- 'Chironomidae sp.B-AABA7844';
-all_db[all_db$id == '4576666', 'species'] <- 'Chironomidae sp.B-ABX4818';
-all_db[all_db$id == '8647267', 'species'] <- 'Chironomidae sp.B-ADC2294';
-all_db[all_db$id == '12788717', 'species'] <- 'Chironomidae sp.B-AEC8525';
-all_db[all_db$id == '8f2bff5317b4e64a06fa96f53d357235', 'species'] <- 'Chironomidae sp.B-AEC8525';
-all_db[all_db$id == '17457262', 'species'] <- 'Chironomidae sp.B-AEZ6316';
+all_db[all_db$id == '13118299', 'species'] <- 'Chironomidae sp. B-AABA7844';
+all_db[all_db$id == '13118390', 'species'] <- 'Chironomidae sp. B-AABA7844';
+all_db[all_db$id == '17460089', 'species'] <- 'Chironomidae sp. B-AABA7844';
+all_db[all_db$id == '4576666', 'species'] <- 'Chironomidae sp. B-ABX4818';
+all_db[all_db$id == '8647267', 'species'] <- 'Chironomidae sp. B-ADC2294';
+all_db[all_db$id == '12788717', 'species'] <- 'Chironomidae sp. B-AEC8525';
+all_db[all_db$id == '8f2bff5317b4e64a06fa96f53d357235', 'species'] <- 'Chironomidae sp. B-AEC8525';
+all_db[all_db$id == '17457262', 'species'] <- 'Chironomidae sp. B-AEZ6316';
 all_db[all_db$id == '4576080', 'species'] <- 'Chironominae sp. B-ABX4803';
 all_db[all_db$id == '660ecc251fbe0a28635d4058b387714b', 'species'] <- 'Chironominae sp. B-ABX4803';
 all_db[all_db$id == '5325896', 'species'] <- 'Chironominae sp. B-ACG9553';
@@ -444,7 +685,7 @@ all_db[all_db$id == 'KJ946687', 'species'] <- 'Cladopelma sp. B-AAE2753';
 all_db[all_db$id == '4402309', 'genus'] <- 'Coenoria';
 all_db[all_db$id == 'FJ263240', 'genus'] <- 'Coenoria';
 all_db[all_db$id == '4402309', 'species'] <- 'Coenoria sp. B-AAX3064';
-all_db[all_db$id == 'FJ263240', 'species'] <- 'Coenoria sp. BOLD:AAX3064';
+all_db[all_db$id == 'FJ263240', 'species'] <- 'Coenoria sp. B-AAX3064';
 all_db[all_db$id == 'MG976103', 'species'] <- 'Coloburiscoides sp. B-ADW5046';
 all_db[all_db$id == '6360811', 'genus'] <- 'Conoesucus';
 all_db[all_db$id == '6360812', 'genus'] <- 'Conoesucus';
@@ -663,11 +904,6 @@ all_db[all_db$id == '6233938', 'species'] <- 'Koorrnonga sp. B-ABV9141';
 all_db[all_db$id == '6233939', 'species'] <- 'Koorrnonga sp. B-ABV9141';
 all_db[all_db$id == '6233940', 'species'] <- 'Koorrnonga sp. B-ABV9141';
 all_db[all_db$id == '6233941', 'species'] <- 'Koorrnonga sp. B-ABV9141';
-all_db[all_db$id == '6233936', 'species'] <- 'Koorrnonga sp.B-ABV9141';
-all_db[all_db$id == '6233937', 'species'] <- 'Koorrnonga sp.B-ABV9141';
-all_db[all_db$id == '6233938', 'species'] <- 'Koorrnonga sp.B-ABV9141';
-all_db[all_db$id == '6233939', 'species'] <- 'Koorrnonga sp.B-ABV9141';
-all_db[all_db$id == '6233940', 'species'] <- 'Koorrnonga sp.B-ABV9141';
 all_db[all_db$id == 'KX295219', 'family'] <- 'Leptoceridae';
 all_db[all_db$id == '3935378', 'genus'] <- 'Limnodrilus';
 all_db[all_db$id == '5159050', 'genus'] <- 'Limnodrilus';
@@ -918,7 +1154,6 @@ all_db[all_db$id == '12188772', 'species'] <- 'Potamothrix bavaricus';
 all_db[all_db$id == '12188773', 'species'] <- 'Potamothrix bavaricus';
 all_db[all_db$id == '12188774', 'species'] <- 'Potamothrix bavaricus';
 all_db[all_db$id == '3785720', 'species'] <- 'Prostoma graecense';
-all_db[all_db$id == '3785720', 'species'] <- 'Prostoma graecense';
 all_db[all_db$id == '12420306', 'species'] <- 'Prostoma graecense';
 all_db[all_db$id == 'MK047681', 'species'] <- 'Prostoma graecense';
 all_db[all_db$id == '8649013', 'species'] <- 'Psychodidae sp. B-ABA8299';
@@ -1039,7 +1274,7 @@ all_db$species <- gsub("Craspedacusta sowerbyi", "Craspedacusta sowerbii",
  			gsub("Pisidium sp. hallae", "Pisidium sp. cf. hallae", all_db$species))))
 
 # records for deleting (wrong id's or incomplete taxonomy causes taxonomic assignment issues)
-values_to_delete <- c("9045802", "6211936", "6211937", "7685744", "12440123", "4476585", "ON506903", "ON506899", "KP184905", "KP184906", "7730754", "7730753", "16869862", "8743451", "8664793", "8758551", "9047206", "9047213", "9038292", "MN226944")
+values_to_delete <- c("9045802", "6211936", "6211937", "7685744", "12440123", "4476585", "ON506903", "ON506899", "KP184905", "KP184906", "7730754", "7730753", "16869862", "8743451", "8664793", "8758551", "9047206", "9047213", "9038292", "MN226944", "4492196", "6692301", "7178169", "7372798", "8354237", "8769883", "FJ263240", "12862412", "MF739720")
 
 # delete rows with specified values in the id column
 all_db <- all_db[!all_db$id %in% values_to_delete, ]
@@ -1057,17 +1292,37 @@ saveRDS(all_db, here::here("final_library/all_bold_priv_NCBI_final_clean_Feb24.r
 # create a duplicate document to format for Geneious 
 all_db2 <- all_db
 
+# get fields for refdb
+all_db2 <- refdb::refdb_set_fields(all_db2,
+                             taxonomy = c(kingdom = "superkingdom",
+                               phylum = "phylum",
+                               class = "class",
+                               order = "order",
+                               family = "family",
+                               genus = "genus",
+                               species = "species"),
+                             sequence = "sequence",
+                             marker = "marker",
+                             source = "source",
+                             id = "id")
+
+refdb::refdb_get_fields(all_db2)
+
+
 # add a an underscore to species to replace space in species names (fasta files cannot have gaps)
 all_db2$species <- gsub(" ",
            "_", all_db$species)
 
 head(all_db2)
+```
 
+# export files
+```{r}
 # export group 1
 export <- all_db2[1:2000000, ] 
 
 # save fasta 
-refdb_export_dada2(export, here::here("geneious_library/final_lib_export_nov23_1of3.fasta", mode = "taxonomy"))
+refdb::refdb_export_dada2(export, here::here("final_library/geneious_library/final_lib_export_Mar23_1of3.fasta", mode = "taxonomy"))
 
 # remove files no longer needed
 rm(export)
@@ -1076,16 +1331,16 @@ rm(export)
 export2 <- all_db2[2000001:4000000, ] 
 
 # save fasta 
-refdb_export_dada2(export2, here::here("geneious_library/final_lib_export_nov23_2of3.fasta", mode = "taxonomy"))
+refdb::refdb_export_dada2(export2, here::here("final_library/geneious_library/final_lib_export_Mar23_2of3.fasta", mode = "taxonomy"))
 
 # remove files no longer needed
 rm(export2)
 
 # export group 3 (adjust final row number to match the final record number)
-export3 <- all_db2[4000000:XXXXXXXX, ] 
+export3 <- all_db2[4000000:4589877, ] 
 
 # save fasta 
-refdb_export_dada2(export3, here::here("geneious_library/final_lib_export_nov23_3of3.fasta", mode = "taxonomy"))
+refdb::refdb_export_dada2(export3, here::here("final_library/geneious_library/final_lib_export_Mar23_3of3.fasta", mode = "taxonomy"))
 
 # remove files no longer needed
 rm(export3)

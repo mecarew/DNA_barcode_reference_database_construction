@@ -17,6 +17,7 @@ suppressPackageStartupMessages({
 library(dplyr)
 library(refdb)
 library(bioseq)
+library(here)  
 library(stringr)})
 ```
 
@@ -793,11 +794,11 @@ write_fasta <- function (x, file, append = FALSE, line_length = 80, block_length
 ```{r}
 # Output prefix name and input file path
 db_files <- c(
-  "short_db_2023-07" = "~/git/DNA_barcode_reference_database_construction/final_library/short_amplicon_trimmed.fasta"
-  "right_db_2023-07" = "~/git/DNA_barcode_reference_database_construction/final_library/right_amplicon_trimmed.fasta",,
-  "long_db_2023-07" = "~/git/DNA_barcode_reference_database_construction/final_library/long_amplicon_trimmed.fasta",
-  "left_db_2023-07" = "~/git/DNA_barcode_reference_database_construction/final_library/left_amplicon_trimmed.fasta",
-   "lco_db_2023-07" = "~/git/DNA_barcode_reference_database_construction/final_library/right_amplicon_trimmed.fasta")
+  "short_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/short_amplicon_trimmed.fasta",
+  "right_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/right_amplicon_trimmed.fasta",
+"long_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/long_amplicon_trimmed.fasta",
+ "left_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/left_amplicon_trimmed.fasta",
+"lco_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/right_amplicon_trimmed.fasta")
 ```
 
 # Write all - write data as .txt files for taxonomic information and .fasta files with the sequence data
@@ -814,3 +815,111 @@ for (i in seq_along(db_files)) {
 }
 ```
 
+
+# Add in important species inadvertantly omitted from amplicon libraries can be added at this point to produce final libraries
+
+# right amplicon (combine fasta files)
+```{r}
+# List of files to concatenate
+final_lib <- c(
+    paste0(output_dir, "/right_db_2023-07_1.fasta"),
+    paste0(output_dir, "/amp_mis_sp/right_miss.fasta")
+) 
+
+# Output file to create
+output_file <- paste0(output_dir, "/right_db_2023-07.fasta")
+
+# Open output file in write mode
+output_connection <- file(output_file, "w")
+
+# Loop through each file and write its contents to the output file
+for (file_path in final_lib) {
+    # Open current file
+    input_connection <- file(file_path, "r")
+    
+    # Read contents of current file
+    file_contents <- readLines(input_connection)
+    
+    # Write contents to output file
+    writeLines(file_contents, output_connection)
+    
+    # Close input file connection
+    close(input_connection)
+}
+
+# Close output file connection
+close(output_connection)
+```
+
+# right amplicon (text files)
+```{r}
+# File paths
+amp_lib <- here::here("final_library/right_db_2023-07_1.txt")
+mis_sp <- here::here("final_library/amp_mis_sp/right_miss.txt")
+output_file <- here::here("final_library/right_db_2023-07.txt")
+
+# Read contents of file1
+amp_lib_tax <- readLines(amp_lib)
+
+# Read contents of file2
+mis_sp_tax <- readLines(mis_sp)
+
+# Combine contents of both files
+fin_lib_tax <- c(amp_lib_tax, mis_sp_tax)
+
+# Write combined content to a new file
+writeLines(fin_lib_tax, output_file)
+```
+
+# short amplicon (combine fasta files)
+```{r}
+# List of files to concatenate
+final_lib <- c(
+    paste0(output_dir, "/short_db_2023-07_1.fasta"),
+    paste0(output_dir, "/amp_mis_sp/short_miss.fasta")
+) 
+
+# Output file to create
+output_file <- paste0(output_dir, "/short_db_2023-07.fasta")
+
+# Open output file in write mode
+output_connection <- file(output_file, "w")
+
+# Loop through each file and write its contents to the output file
+for (file_path in final_lib) {
+    # Open current file
+    input_connection <- file(file_path, "r")
+    
+    # Read contents of current file
+    file_contents <- readLines(input_connection)
+    
+    # Write contents to output file
+    writeLines(file_contents, output_connection)
+    
+    # Close input file connection
+    close(input_connection)
+}
+
+# Close output file connection
+close(output_connection)
+```
+
+# short amplicon (text files)
+```{r}
+# File paths
+amp_lib <- here::here("final_library/short_db_2023-07_1.txt")
+mis_sp <- here::here("final_library/amp_mis_sp/short_miss.txt")
+output_file <- here::here("final_library/short_db_2023-07.txt")
+
+# Read contents of file1
+amp_lib_tax <- readLines(amp_lib)
+
+# Read contents of file2
+mis_sp_tax <- readLines(mis_sp)
+
+# Combine contents of both files
+fin_lib_tax <- c(amp_lib_tax, mis_sp_tax)
+
+# Write combined content to a new file
+writeLines(fin_lib_tax, output_file)
+```
