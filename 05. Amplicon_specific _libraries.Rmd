@@ -376,7 +376,7 @@ command <- paste(
     "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long1.fasta"),
     "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed1.fasta"),
     "-o", paste0(trimming_dir, ampliconGroup, "_amplicon_trimmed1.fasta"),
-    paste0(output_dir, "/all_db.fasta"),
+    paste0(output_dir, "/trimming/all_db.fasta"),
     ">", log_file,
     collapse = " "
 )
@@ -488,7 +488,7 @@ command <- paste(
     "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long1.fasta"),
     "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed1.fasta"),
     "-o", paste0(trimming_dir, ampliconGroup, "_amplicon_trimmed1.fasta"),
-    paste0(output_dir, "/all_db.fasta"),
+    paste0(output_dir, "/trimming/all_db.fasta"),
     ">", log_file,
     collapse = " "
 )
@@ -600,7 +600,7 @@ command <- paste(
     "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long1.fasta"),
     "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed1.fasta"),
     "-o", paste0(trimming_dir, ampliconGroup, "_amplicon_trimmed1.fasta"),
-    paste0(output_dir, "/all_db.fasta"),
+    paste0(output_dir, "/trimming/all_db.fasta"),
     ">", log_file,
     collapse = " "
 )

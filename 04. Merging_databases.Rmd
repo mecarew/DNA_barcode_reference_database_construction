@@ -1321,8 +1321,8 @@ head(all_db2)
 # export group 1
 export <- all_db2[1:2000000, ] 
 
-# save fasta 
-refdb::refdb_export_dada2(export, here::here("final_library/geneious_library/final_lib_export_Mar23_1of3.fasta", mode = "taxonomy"))
+# save fasta          
+refdb::refdb_export_dada2(export, here::here("final_library/geneious_library/final_lib_export_Mar23_1of3.fasta"), mode = "taxonomy")
 
 # remove files no longer needed
 rm(export)
@@ -1331,7 +1331,7 @@ rm(export)
 export2 <- all_db2[2000001:4000000, ] 
 
 # save fasta 
-refdb::refdb_export_dada2(export2, here::here("final_library/geneious_library/final_lib_export_Mar23_2of3.fasta", mode = "taxonomy"))
+refdb::refdb_export_dada2(export2, here::here("final_library/geneious_library/final_lib_export_Mar23_2of3.fasta"), mode = "taxonomy")
 
 # remove files no longer needed
 rm(export2)
@@ -1340,7 +1340,7 @@ rm(export2)
 export3 <- all_db2[4000000:4589877, ] 
 
 # save fasta 
-refdb::refdb_export_dada2(export3, here::here("final_library/geneious_library/final_lib_export_Mar23_3of3.fasta", mode = "taxonomy"))
+refdb::refdb_export_dada2(export3, here::here("final_library/geneious_library/final_lib_export_Mar23_3of3.fasta"), mode = "taxonomy")
 
 # remove files no longer needed
 rm(export3)
