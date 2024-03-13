@@ -181,6 +181,29 @@ command <- paste(
 system(command)
 ```
 
+```{r}
+# Construct and execute the Cutadapt command
+
+ampliconGroup <- "short"
+output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+trimming_dir <- paste0(output_dir, "/trimming/")
+log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt3.log")
+
+command <- paste(
+    "cutadapt -g TAGGWACWGGWTGAACWGTWTAYCCYCC...CCNGTNYTNGCNGGNGCNATYACGG -e 0.42 --revcomp -m 100 -M 658 --max-n 0.05",
+    "--too-short-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_short4.fasta"),
+    "--too-long-output", paste0(trimming_dir, ampliconGroup, "_amplicon_too_long4.fasta"),
+    "--untrimmed-output", paste0(trimming_dir, ampliconGroup, "_amplicon_untrimmed4.fasta"),
+    "-o", paste0(trimming_dir, ampliconGroup, "_amplicon_trimmed4.fasta"),
+    paste0(trimming_dir, ampliconGroup,"_amplicon_untrimmed3.fasta"),
+    ">", log_file,
+    collapse = " "
+)
+
+
+system(command)
+```
+
 # 4. join trimmed files (short amplicon)
 ```{r}
 output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
@@ -190,7 +213,7 @@ trimmed_files <- c(
     paste0(output_dir, "/trimming/short_amplicon_trimmed1.fasta"),
     paste0(output_dir, "/trimming/short_amplicon_trimmed2.fasta"),
     paste0(output_dir, "/trimming/short_amplicon_trimmed3.fasta"),
-    paste0(output_dir, "/trimming/short_amplicon_untrimmed3.fasta")
+    paste0(output_dir, "/trimming/short_amplicon_trimmed4.fasta")
 )
 
 # Output file to create
@@ -816,8 +839,9 @@ write_fasta <- function (x, file, append = FALSE, line_length = 80, block_length
 ```{r}
 # Output prefix name and input file path
 db_files <- c(
-  "right_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/right_amplicon_trimmed.fasta", "short_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/short_amplicon_trimmed.fasta",
-"long_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/long_amplicon_trimmed.fasta",
+  "short_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/short_amplicon_trimmed.fasta", 
+  "right_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/right_amplicon_trimmed.fasta", 
+  "long_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/long_amplicon_trimmed.fasta",
 "left_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/left_amplicon_trimmed.fasta",
 "lco_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/right_amplicon_trimmed.fasta")
 ```
