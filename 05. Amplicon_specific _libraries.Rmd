@@ -25,7 +25,7 @@ library(stringr)})
 # load library (IF NEEDED)
 
 ```{r}
-all_db <- readRDS(here::here("final_library/all_bold_priv_NCBI_final_clean_Nov23.rds"))
+all_db <- readRDS("~/Documents/DNA_reference_db_construction_final_libraries/final_library/all_bold_priv_NCBI_final_clean_Feb24.rds")
 ```
 
 
@@ -68,7 +68,8 @@ head (all_db)
 The file size is large so it can be partitioned for this step (in 4 parts here). The input files for cutadapt is .fasta
 ```{r}
 seqs <- all_db[, "sequence",drop=TRUE]
-names(seqs) <- 1:nrow(all_db)
+#names(seqs) <- 1:nrow(all_db)
+names(seqs) <- all_db$id
 parts <- as.numeric(cut(seq_along(seqs), 4))
 bioseq::write_fasta(seqs[parts == 1], file = here::here("final_library/trimming/all_db.fasta"),
                     line_length = 80, block_length=Inf, append=FALSE)
@@ -247,7 +248,7 @@ close(output_connection)
 # 1. first 'strict' trim (right amplicon)
 ```{r}
 ampliconGroup <- "right"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt1.log")
 
@@ -275,7 +276,7 @@ system(command)
 ```{r}
 # Construct and execute the Cutadapt command
 ampliconGroup <- "right"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt2.log")
 
@@ -298,7 +299,7 @@ system(command)
 # Construct and execute the Cutadapt command
 
 ampliconGroup <- "right"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt3.log")
 
@@ -321,7 +322,7 @@ system(command)
 # Construct and execute the Cutadapt command
 
 ampliconGroup <- "right"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt3.log")
 
@@ -344,7 +345,7 @@ system(command)
 # Construct and execute the Cutadapt command
 
 ampliconGroup <- "right"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt3.log")
 
@@ -364,7 +365,7 @@ system(command)
 ```
 #4.join trimmed files (right amplicon)
 ```{r}
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 
 # List of trimmed files to concatenate
 trimmed_files <- c(
@@ -400,12 +401,12 @@ for (file_path in trimmed_files) {
 close(output_connection)
 
 ```
-#long amplicon
+##Long amplicon
 
 # 1. first 'strict' trim (long amplicon)
 ```{r}
 ampliconGroup <- "long"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt1.log")
 
@@ -433,7 +434,7 @@ system(command)
 ```{r}
 # Construct and execute the Cutadapt command
 ampliconGroup <- "long"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt2.log")
 
@@ -456,7 +457,7 @@ system(command)
 # Construct and execute the Cutadapt command
 
 ampliconGroup <- "long"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt3.log")
 
@@ -476,7 +477,7 @@ system(command)
 
 #4.join trimmed files (long amplicon)
 ```{r}
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 
 # List of trimmed files to concatenate
 trimmed_files <- c(
@@ -517,7 +518,7 @@ close(output_connection)
 # 1. first 'strict' trim (left amplicon)
 ```{r}
 ampliconGroup <- "left"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt1.log")
 
@@ -545,7 +546,7 @@ system(command)
 ```{r}
 # Construct and execute the Cutadapt command
 ampliconGroup <- "left"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt2.log")
 
@@ -568,7 +569,7 @@ system(command)
 # Construct and execute the Cutadapt command
 
 ampliconGroup <- "left"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt3.log")
 
@@ -589,7 +590,7 @@ system(command)
 
 #4.join trimmed files (left amplicon)
 ```{r}
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 
 # List of trimmed files to concatenate
 trimmed_files <- c(
@@ -629,7 +630,7 @@ close(output_connection)
 # 1. first 'strict' trim (LCO amplicon)
 ```{r}
 ampliconGroup <- "lco"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt1.log")
 
@@ -658,7 +659,7 @@ system(command)
 ```{r}
 # Construct and execute the Cutadapt command
 ampliconGroup <- "lco"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt2.log")
 
@@ -680,8 +681,8 @@ system(command)
 ```{r}
 # Construct and execute the Cutadapt command
 
-ampliconGroup <- "left"
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+ampliconGroup <- "lco"
+output_dir <- here::here("final_library")
 trimming_dir <- paste0(output_dir, "/trimming/")
 log_file <- paste0(trimming_dir, ampliconGroup, "_amplicon_cutadapt3.log")
 
@@ -702,7 +703,7 @@ system(command)
 
 #4.join trimmed files (lco amplicon)
 ```{r}
-output_dir <- "/mnt/galaxy/home/mecarew/git/DNA_barcode_reference_database_construction/final_library"
+output_dir <- here::here("final_library")
 
 # List of trimmed files to concatenate
 trimmed_files <- c(
@@ -712,7 +713,7 @@ trimmed_files <- c(
 )
 
 # Output file to create
-output_file <- paste0(output_dir, "/left_amplicon_trimmed.fasta")
+output_file <- paste0(output_dir, "/lco_amplicon_trimmed.fasta")
 
 # Open output file in write mode
 output_connection <- file(output_file, "w")
@@ -835,20 +836,150 @@ write_fasta <- function (x, file, append = FALSE, line_length = 80, block_length
 }
 ```
 
+# revised block using ids instead of row numbers to keep track of sequences
+```{r}##
+#ChatGPT
+write_db_files <- function(x, path_prefix, n_parts) {
+    # Define taxonomy levels and labels
+    tax_levels <- c("k" = "superkingdom", "p" = "phylum", "c" = "class", 
+                    "o" = "order", "f" = "family", "g" = "genus", "s" = "species")
+    
+    # Ensure required fields are present
+    refdb:::check_fields(x, what = c("sequence", "taxonomy", "id"))
+    
+    # Extract columns for ID, sequence, and taxonomy
+    col_tax <- tax_levels
+    col_id <- attributes(x)$refdb_fields$id
+    col_seq <- attributes(x)$refdb_fields$sequence
+    labs <- x[[col_id]]
+    
+    # Replace blank spaces in labels with underscores
+    labs <- stringr::str_replace_all(labs, "[:blank:]", "_")
+    seqs <- x[[col_seq]]
+    names(seqs) <- labs  # Use 'id' values to label sequences
+    
+    # Replace NA values in taxonomy with empty strings
+    x[, col_tax][is.na(x[, col_tax])] <- ""
+    
+    # Create taxonomy labels for each sequence
+    tax <- apply(x[, col_tax], 1, function(x) paste0(names(tax_levels), "__", x, collapse = ";"))
+    tax <- paste0(labs, "\t", tax, ";")
+    
+    # Set output file names
+    file_fas <- paste0(path_prefix, ".fasta")
+    file_txt <- paste0(path_prefix, ".txt")
+    
+    # Write sequences to FASTA file, either as one file or in parts
+    if (n_parts <= 1) {
+        write_fasta(seqs, file = file_fas)
+    } else {
+        write_fasta_parts(seqs, file = file_fas, n_parts = n_parts)
+    }
+    
+    # Write taxonomy information to a text file
+    readr::write_lines(tax, file = file_txt)
+}
+
+# Helper function to write FASTA file in parts
+write_fasta_parts <- function(x, file, n_parts) {
+    parts <- as.numeric(cut(seq_along(x), n_parts))
+    for (i in 1:n_parts) {
+        append_mode <- if (i == 1) FALSE else TRUE
+        write_fasta(x[parts == i], file = file,
+                    line_length = 80, block_length = Inf, append = append_mode)
+    }
+}
+
+# Helper function to write FASTA file
+write_fasta <- function(x, file, append = FALSE, line_length = 80, block_length = Inf) {
+    x_nchar <- stringr::str_length(x)
+    x_is_na <- is.na(x)
+    if (line_length == Inf) line_length <- max(x_nchar, na.rm = TRUE)
+    if (block_length == Inf) block_length <- line_length
+    blocks_by_line <- line_length / block_length
+    
+    if (block_length > line_length || line_length %% block_length > 0L) {
+        stop("Invalid line or block length settings.")
+    }
+    
+    if (any(x_is_na | x_nchar == 0L)) {
+        x <- x[!is.na(x)]
+        warning("Empty or NA sequences were excluded from export.")
+    }
+    
+    x <- as.character(x)
+    x <- vapply(x, function(seq) {
+        res <- stringr::str_sub(seq, seq(1, stringr::str_length(seq), by = block_length), 
+                                seq(0, stringr::str_length(seq) - 1, by = block_length))
+        res <- stringr::str_c(res, collapse = " ")
+        res
+    }, character(1))
+    
+    fas <- stringr::str_c(">", names(x), "\n", x, collapse = "\n")
+    readr::write_file(fas, file, append = append)
+    readr::write_file("\n", file, append = TRUE)
+}
+
+```
+
+```{r}#
+#chatGPT
+
+output_dir <- here::here("final_library")
+
+# Ensure the output directory exists
+if (!dir.exists(output_dir)) {
+  dir.create(output_dir, recursive = TRUE)
+}
+
+for (i in seq_along(db_files)) {
+  message("Processing ", names(db_files)[i])
+  
+  fasta <- bioseq::read_fasta(file = db_files[i])
+  
+  # Match sequences in `all_db` with `fasta` names, removing " rc" if present
+  matched_ids <- str_remove(names(fasta), " rc$")
+  db <- all_db[all_db$id %in% matched_ids, ]
+  
+  # Align `fasta` sequences with `db` by `id`
+  db$sequence <- fasta[match(db$id, matched_ids)]
+  
+  # Debugging: Confirm that sequences are correctly assigned
+  message("Total sequences in fasta: ", length(fasta))
+  message("Total sequences in db after matching: ", nrow(db))
+  
+  # Ensure no NA values in db$sequence
+  if (any(is.na(db$sequence))) {
+    warning("Some sequences could not be matched to ids in db.")
+    db <- db %>% filter(!is.na(sequence))  # Remove rows with NA sequences
+  }
+  
+  db <- db %>% filter(!is.na(id))
+  
+  message("Writing files for ", names(db_files)[i])
+  
+  # Verify that sequences are being written
+  write_db_files(db, path_prefix = file.path(output_dir, names(db_files)[i]), n_parts = 10)
+}
+
+```
+
+
 # Write all - set directories
 ```{r}
 # Output prefix name and input file path
 db_files <- c(
-  "short_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/short_amplicon_trimmed.fasta", 
-  "right_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/right_amplicon_trimmed.fasta", 
-  "long_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/long_amplicon_trimmed.fasta",
-"left_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/left_amplicon_trimmed.fasta",
-"lco_db_2023-07_1" = "~/git/DNA_barcode_reference_database_construction/final_library/right_amplicon_trimmed.fasta")
+"short_db_2023-10" = here::here("final_library/short_amplicon_trimmed.fasta"),
+"right_db_2023-10" = here::here("final_library/right_amplicon_trimmed.fasta"), 
+"long_db_2023-10" = here::here("final_library/long_amplicon_trimmed.fasta"),
+"left_db_2023-10" = here::here("final_library/left_amplicon_trimmed.fasta"),
+"lco_db_2023-10" = here::here("final_li#brary/right_amplicon_trimmed.fasta"))
 ```
 
+
 # Write all - write data as .txt files for taxonomic information and .fasta files with the sequence data
-```{r}
-output_dir <- "~/git/DNA_barcode_reference_database_construction/final_library"
+```#{r}
+output_dir <- here::here("final_library")
 for (i in seq_along(db_files)) {
   message("Processing ", names(db_files[i]))
   fasta <- bioseq::read_fasta(file=db_files[i])
@@ -859,6 +990,23 @@ for (i in seq_along(db_files)) {
   write_db_files(db, path_prefix=file.path(output_dir, names(db_files[i])), n_parts = 10)
 }
 ```
+```{r}
+# chatGPT
+output_dir <- here::here("final_library")
+
+for (i in seq_along(db_files)) {
+  message("Processing ", names(db_files)[i])
+  fasta <- bioseq::read_fasta(file = db_files[i])
+  # Match sequences in `all_db` with `fasta` names, removing " rc" if present
+  matched_ids <- str_remove(names(fasta), " rc$")
+  db <- all_db[all_db$id %in% matched_ids, ]
+  # Align `fasta` sequences with `db` by `id`
+  db$sequence <- fasta[match(db$id, matched_ids)]
+  db <- db %>% filter(!is.na(id))
+  message("Writing files for ", names(db_files)[i])
+  write_db_files(db, path_prefix = file.path(output_dir, names(db_files)[i]), n_parts = 10)
+}
+```
 
 
 # Add in important species inadvertantly omitted from amplicon libraries can be added at this point to produce final libraries
@@ -867,12 +1015,12 @@ for (i in seq_along(db_files)) {
 ```{r}
 # List of files to concatenate
 final_lib <- c(
-    paste0(output_dir, "/right_db_2023-07_1.fasta"),
+    paste0(output_dir, "/right_db_2023-10.fasta"),
     paste0(output_dir, "/amp_mis_sp/right_miss.fasta")
 ) 
 
 # Output file to create
-output_file <- paste0(output_dir, "/right_db_2023-07.fasta")
+output_file <- paste0(output_dir, "/right_db_2024-10.fasta")
 
 # Open output file in write mode
 output_connection <- file(output_file, "w")
@@ -899,9 +1047,9 @@ close(output_connection)
 # right amplicon (text files)
 ```{r}
 # File paths
-amp_lib <- here::here("final_library/right_db_2023-07_1.txt")
+amp_lib <- here::here("final_library/right_db_2023-10.txt")
 mis_sp <- here::here("final_library/amp_mis_sp/right_miss.txt")
-output_file <- here::here("final_library/right_db_2023-07.txt")
+output_file <- here::here("final_library/right_db_2024-10.txt")
 
 # Read contents of file1
 amp_lib_tax <- readLines(amp_lib)
@@ -920,12 +1068,12 @@ writeLines(fin_lib_tax, output_file)
 ```{r}
 # List of files to concatenate
 final_lib <- c(
-    paste0(output_dir, "/short_db_2023-07_1.fasta"),
+    paste0(output_dir, "/short_db_2023-10.fasta"),
     paste0(output_dir, "/amp_mis_sp/short_miss.fasta")
 ) 
 
 # Output file to create
-output_file <- paste0(output_dir, "/short_db_2023-07.fasta")
+output_file <- paste0(output_dir, "/short_db_2024-10.fasta")
 
 # Open output file in write mode
 output_connection <- file(output_file, "w")
@@ -952,9 +1100,9 @@ close(output_connection)
 # short amplicon (text files)
 ```{r}
 # File paths
-amp_lib <- here::here("final_library/short_db_2023-07_1.txt")
+amp_lib <- here::here("final_library/short_db_2024-10.txt")
 mis_sp <- here::here("final_library/amp_mis_sp/short_miss.txt")
-output_file <- here::here("final_library/short_db_2023-07.txt")
+output_file <- here::here("final_library/short_db_2024-10.txt")
 
 # Read contents of file1
 amp_lib_tax <- readLines(amp_lib)

@@ -1,0 +1,3217 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!DOCTYPE GBSet PUBLIC "-//NCBI//NCBI GBSeq/EN" "https://www.ncbi.nlm.nih.gov/dtd/NCBI_GBSeq.dtd">
+<GBSet>
+  <GBSeq>
+
+    <GBSeq_locus>X75704</GBSeq_locus>
+    <GBSeq_length>385</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>G.verna chloroplast trnL intron 1 sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75704</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75704.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75704.1|</GBSeqid>
+      <GBSeqid>gi|663184</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intron</GBKeyword>
+      <GBKeyword>transfer RNA-Leu</GBKeyword>
+      <GBKeyword>trnL gene</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Gentiana verna subsp. verna</GBSeq_source>
+    <GBSeq_organism>Gentiana verna subsp. verna</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; lamiids; Gentianales; Gentianaceae; Gentianeae; Gentianinae; Gentiana</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..385</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..385</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..385</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>385</GBInterval_to>
+            <GBInterval_accession>X75704.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Gentiana verna subsp. verna</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>sub_species</GBQualifier_name>
+            <GBQualifier_value>verna</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:553061</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..385</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>385</GBInterval_to>
+            <GBInterval_accession>X75704.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>intron</GBFeature_key>
+        <GBFeature_location>1..385</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>385</GBInterval_to>
+            <GBInterval_accession>X75704.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>aattggattgagccttggtatggaaacctactaagtgataattttcaaattcagagaaaccctggaattaataaaaagggcaatcctgagccaaatcctagttttcgaaaaagcaaaaagaaaggcttagaaagaaatgaaagaaataaaggataggtgcagagactcaacggaagctgttctaacaaatggagttgattgcgttggtaaagaaacctttctacaaaaattccaaaaggtgaggaaaaggggtatatacagactgaatcaaatgattcacccacaacctgcagatcttttcacgaacggttaatcagcgagaaataaagagagagtcccattctgcagtgtcaatgccgacaacaatgaaatttatagtaagagg</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75703</GBSeq_locus>
+    <GBSeq_length>387</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>G.nivalis chloroplast trnL intron 1 sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75703</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75703.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75703.1|</GBSeqid>
+      <GBSeqid>gi|663183</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intron</GBKeyword>
+      <GBKeyword>transfer RNA-Leu</GBKeyword>
+      <GBKeyword>trnL gene</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Gentiana nivalis</GBSeq_source>
+    <GBSeq_organism>Gentiana nivalis</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; lamiids; Gentianales; Gentianaceae; Gentianeae; Gentianinae; Gentiana</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..387</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..387</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..387</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>387</GBInterval_to>
+            <GBInterval_accession>X75703.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Gentiana nivalis</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:38852</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..387</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>387</GBInterval_to>
+            <GBInterval_accession>X75703.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>intron</GBFeature_key>
+        <GBFeature_location>1..387</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>387</GBInterval_to>
+            <GBInterval_accession>X75703.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>aattggattgagccttggtatggaaacctactaagtgataattttcaaattcagagaaaccctggaattaataaaaagggcaatcctgagccaaatcctagttttcgaaaaagcaaaaagaaaggcttagaaagaaatgaaagaaataaaggataggtgcagagactcaacggaagctgttctaacaaatggagttgattgcgttggtaaagaaacctttctaccaaaaattccaaaaggatgaggaagaggggtatatacaaactgtatcaaatgattcacccacaacctgcagatcttttcacgaacggattaatcagacgagaataaagagagagtcccattctgcatgtcaatgccgacaacaatgaaatttatagtaagagg</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75702</GBSeq_locus>
+    <GBSeq_length>385</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>G.lutea chloroplast trnL intron 1 sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75702</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75702.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75702.1|</GBSeqid>
+      <GBSeqid>gi|663182</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intron</GBKeyword>
+      <GBKeyword>transfer RNA-Leu</GBKeyword>
+      <GBKeyword>trnL gene</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Gentiana lutea subsp. lutea</GBSeq_source>
+    <GBSeq_organism>Gentiana lutea subsp. lutea</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; lamiids; Gentianales; Gentianaceae; Gentianeae; Gentianinae; Gentiana</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..385</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..385</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..385</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>385</GBInterval_to>
+            <GBInterval_accession>X75702.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Gentiana lutea subsp. lutea</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>sub_species</GBQualifier_name>
+            <GBQualifier_value>lutea</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:553052</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..385</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>385</GBInterval_to>
+            <GBInterval_accession>X75702.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>intron</GBFeature_key>
+        <GBFeature_location>1..385</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>385</GBInterval_to>
+            <GBInterval_accession>X75702.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>aattggattgagccttggtatggaaacctactaagtgataattttcaaattcagagaaaccctggaattaataaaaagggcaatcctgagccaaatcctatttttcgaaaaagcaaaaagaaaggcttagaaagaaatgaaagaaataaaggataggtgcagagactcaacggaagctgttctaacaaagagttggttgcgttggtaaagaaacctttctaccaaaaattccaaaaggatgaagaagaggggtatatacagactgtatcaaacgattcacccacagcctgtagatcttttcacgaacggattaatcggacgagaataaagagagagtcccattctgcatgtcaatgcagacaacaatgaaatttatagtaagagg</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75701</GBSeq_locus>
+    <GBSeq_length>387</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>G.burseri villarsii chloroplast trnL intron 1 sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75701</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75701.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75701.1|</GBSeqid>
+      <GBSeqid>gi|663181</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intron</GBKeyword>
+      <GBKeyword>transfer RNA-Leu</GBKeyword>
+      <GBKeyword>trnL gene</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Gentiana burseri subsp. villarsii</GBSeq_source>
+    <GBSeq_organism>Gentiana burseri subsp. villarsii</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; lamiids; Gentianales; Gentianaceae; Gentianeae; Gentianinae; Gentiana</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..387</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..387</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..387</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>387</GBInterval_to>
+            <GBInterval_accession>X75701.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Gentiana burseri subsp. villarsii</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>sub_species</GBQualifier_name>
+            <GBQualifier_value>villarsii</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:1533084</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..387</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>387</GBInterval_to>
+            <GBInterval_accession>X75701.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>intron</GBFeature_key>
+        <GBFeature_location>1..387</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>387</GBInterval_to>
+            <GBInterval_accession>X75701.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>aattggattgagccttggtatggaaacctactaagtgataattttcaaattcagagaaaccctggaattaataaaaagggcaatcctgagccaaatcctatttttcgaaaaagcaaaaagaaaggcttagaaagaaatgaaagaaataaaggataggtgcagagactcaacggaagctgttctaacaaatggagttggttgcgttggtaaagaaacctttctaccaaaaattccaaaaggatgaagaagaggggtatatacagacatgtctcacacgattcacccacagcctgtagatcttttcacgaacggattaatcgacgagaataaagagagagtcccattctgcatgtcaatgcagacaacaatgaaatttatagtaagagg</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75700</GBSeq_locus>
+    <GBSeq_length>387</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>G.burseri chloroplast trnL intron 1 sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75700</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75700.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75700.1|</GBSeqid>
+      <GBSeqid>gi|663180</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intron</GBKeyword>
+      <GBKeyword>transfer RNA-Leu</GBKeyword>
+      <GBKeyword>trnL gene</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Gentiana burseri subsp. burseri</GBSeq_source>
+    <GBSeq_organism>Gentiana burseri subsp. burseri</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; lamiids; Gentianales; Gentianaceae; Gentianeae; Gentianinae; Gentiana</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..387</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..387</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..387</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>387</GBInterval_to>
+            <GBInterval_accession>X75700.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Gentiana burseri subsp. burseri</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>sub_species</GBQualifier_name>
+            <GBQualifier_value>burseri</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:1643299</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..387</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>387</GBInterval_to>
+            <GBInterval_accession>X75700.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>intron</GBFeature_key>
+        <GBFeature_location>1..387</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>387</GBInterval_to>
+            <GBInterval_accession>X75700.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>aattggattgagccttggtatggaaacctactaagtgataattttcaaattcagagaaaccctggaattaataaaaagggcaatcctgagccaaatcctatttttcgaaaaagcaaaaagaaaggcttagaaagaaatgaaagaaataaaggataggtgcagagactcaacggaagctgttctaacaaatggagttggttgcgttggtaaagaaacctttctaccaaaaattccaaaaggatgaagaagaggggtatatacagacatgtctcacactattcacccacagcctgtagatcttttcactaatggattaatcgacgagaataaagagagagtcccattctgcatgtcaatgcagacaacaatgaaatttatagtaagagg</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75699</GBSeq_locus>
+    <GBSeq_length>363</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>G.angustifolia chloroplast trnL intron 1 sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75699</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75699.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75699.1|</GBSeqid>
+      <GBSeqid>gi|663179</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intron</GBKeyword>
+      <GBKeyword>transfer RNA-Leu</GBKeyword>
+      <GBKeyword>trnL gene</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Gentiana angustifolia</GBSeq_source>
+    <GBSeq_organism>Gentiana angustifolia</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; lamiids; Gentianales; Gentianaceae; Gentianeae; Gentianinae; Gentiana</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..363</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..363</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..363</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>363</GBInterval_to>
+            <GBInterval_accession>X75699.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Gentiana angustifolia</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:38849</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..363</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>363</GBInterval_to>
+            <GBInterval_accession>X75699.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>intron</GBFeature_key>
+        <GBFeature_location>1..363</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>363</GBInterval_to>
+            <GBInterval_accession>X75699.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>aattggattgagccttggtatggaaacctactaagtgataattttcaaattcagagaaaccctggaattaataaaaagggcaatcctgagccaaatcctatttttcgaaaaagcaaaaagaaaggcttagaaagaaataaagagataggtgcagagactcaacggaagctgttctaacaaatggagttggttgcgttggtaaagaaatctttctaccaaaaattccaaaaggatgaagcagaggggtgacatgtatcaaatgattcgcccacagcctgtagatcaacggttaatcggacgagaataaagagagagtcccttctgcatgtcaatgccgacaacaatgaaattgatagtaagagg</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75697</GBSeq_locus>
+    <GBSeq_length>377</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>B.papyrifera chloroplast trnL intron 1 sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75697</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75697.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75697.1|</GBSeqid>
+      <GBSeqid>gi|663177</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intron</GBKeyword>
+      <GBKeyword>transfer RNA-Leu</GBKeyword>
+      <GBKeyword>trnL gene</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Betula papyrifera (paper birch)</GBSeq_source>
+    <GBSeq_organism>Betula papyrifera</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; rosids; fabids; Fagales; Betulaceae; Betula</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..377</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..377</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..377</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>377</GBInterval_to>
+            <GBInterval_accession>X75697.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Betula papyrifera</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:3507</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..377</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>377</GBInterval_to>
+            <GBInterval_accession>X75697.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>intron</GBFeature_key>
+        <GBFeature_location>1..377</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>377</GBInterval_to>
+            <GBInterval_accession>X75697.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>ccttggattgtagaccttggtatggaaacctaccaagtgataactttcaaattcagagaaaccctggaattaaaaatgggcaatcctgagccaaatcctgttttccgaaaacaaataaaacaaatttaagggttcataaagtgagaataaaaaaggataggtgcagagactcaatggaagcgtgttctaacaattggggttgacttcgttccgttattaaagtaatccttctatcaaaactacagaaaggatgaaggataaccgtaatcatagtctgatagatcttttgaagaactaattaatcggacgagaataaagatagagtcccattctacatgtcaataccgacaacaatgaaatttatagtaagaggaaaa</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75711</GBSeq_locus>
+    <GBSeq_length>124</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>B.pubescens intergenic spacer sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75711</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75711.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75711.1|</GBSeqid>
+      <GBSeqid>gi|663176</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intergenic DNA</GBKeyword>
+      <GBKeyword>intergenic spacer</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Betula pubescens (downy birch)</GBSeq_source>
+    <GBSeq_organism>Betula pubescens</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; rosids; fabids; Fagales; Betulaceae; Betula</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..124</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..124</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..124</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>124</GBInterval_to>
+            <GBInterval_accession>X75711.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Betula pubescens</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:38787</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>misc_feature</GBFeature_key>
+        <GBFeature_location>1..124</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>124</GBInterval_to>
+            <GBInterval_accession>X75711.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>note</GBQualifier_name>
+            <GBQualifier_value>intergenic spacer between trnL 3&apos; exon and trnF</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>aaaacaaaaaggcccgtttgactccgtaattatttacccgatctgctcttttcgttagcggtttaaaattcgttatgtttctcacagattctactcttttacaaatggatccgattggaaattg</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75716</GBSeq_locus>
+    <GBSeq_length>339</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>A.triuncialis intergenic spacer sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75716</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75716.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75716.1|</GBSeqid>
+      <GBSeqid>gi|663175</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intergenic DNA</GBKeyword>
+      <GBKeyword>intergenic spacer</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Aegilops triuncialis</GBSeq_source>
+    <GBSeq_organism>Aegilops triuncialis</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; Liliopsida; Poales; Poaceae; BOP clade; Pooideae; Triticodae; Triticeae; Triticinae; Aegilops</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..339</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..339</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..339</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>339</GBInterval_to>
+            <GBInterval_accession>X75716.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Aegilops triuncialis</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:39391</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>misc_feature</GBFeature_key>
+        <GBFeature_location>1..339</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>339</GBInterval_to>
+            <GBInterval_accession>X75716.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>note</GBQualifier_name>
+            <GBQualifier_value>intergenic spacer between trnL 3&apos; exon and trnF</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>cctaactatactatattattattatttatcctctttttttttctttttatcaatgcacttttttttctttttatcaatgcaatgggtttaagattcattagctttctcattctactctttcacaaaggaatgcgaagagaactcaatggatcttatcctattcattgaatagatttcttttttattagagtatcggcgagaaatcttggttattcactttatttttaagttttatttaagtaaaccatgcacaatgcataggactaccccccattttcaaatttaaaatttgaaatactttaattaatttttagtccttttaattgacatagctacaaa</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75695</GBSeq_locus>
+    <GBSeq_length>328</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>A.sativa chloroplast trnL intron 1 sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75695</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75695.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75695.1|</GBSeqid>
+      <GBSeqid>gi|663174</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intron</GBKeyword>
+      <GBKeyword>transfer RNA-Leu</GBKeyword>
+      <GBKeyword>trnL gene</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Avena sativa (oats)</GBSeq_source>
+    <GBSeq_organism>Avena sativa</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; Liliopsida; Poales; Poaceae; BOP clade; Pooideae; Poodae; Poeae; Poeae Chloroplast Group 1 (Aveneae type); Aveninae; Avena</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..328</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..328</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..328</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>328</GBInterval_to>
+            <GBInterval_accession>X75695.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Avena sativa</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:4498</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..328</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>328</GBInterval_to>
+            <GBInterval_accession>X75695.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>intron</GBFeature_key>
+        <GBFeature_location>1..328</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>328</GBInterval_to>
+            <GBInterval_accession>X75695.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>ccttggtatggaaacctgctaagtggtaacttccaaattcagagaaaccctggaattaaaaaagggcaatcctgagccaaatccgtgttttgagaggggggttctcgaactagaatacaaaggaaaaggataggtgcagagactcaatggaagctgttctaacgaatcgagttaattcgttgtgttgttagtggaactccttctaaatttgaaggaagggctttatacatctaataaagtggattaatcggacgaggacaaagagagagtcccattctacatgtcaatactgacaacaatgaaatttctagtaaaaggaaaatccgtc</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75696</GBSeq_locus>
+    <GBSeq_length>533</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>A.incana chloroplast trnL intron 1 sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75696</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75696.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75696.1|</GBSeqid>
+      <GBSeqid>gi|663173</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intron</GBKeyword>
+      <GBKeyword>transfer RNA-Leu</GBKeyword>
+      <GBKeyword>trnL gene</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Alnus incana</GBSeq_source>
+    <GBSeq_organism>Alnus incana</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; rosids; fabids; Fagales; Betulaceae; Alnus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..533</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..533</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..533</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>533</GBInterval_to>
+            <GBInterval_accession>X75696.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Alnus incana</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:3516</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..533</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>533</GBInterval_to>
+            <GBInterval_accession>X75696.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>intron</GBFeature_key>
+        <GBFeature_location>1..533</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>533</GBInterval_to>
+            <GBInterval_accession>X75696.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>trnL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>ccttggtatggaaacctaccaagtgataactttcaaattcagagaaaccctggaattaaaaatgggcaatcctgagccaaatcctgttttccgaaaacaaataaaacaaattgaagggttcataaagcgagactaaaaaaggataggtgcagagactcaatggaagctgttctaacaattggggttgacttcgttccgttattaaagtaatccttctatcaaaactacagaaaggatgaaggataaccgtatatacatacgtatacgtactgaaatactatctcaaaaaattaatgacgacctgaatctttatttatttttttttatatttatataaaaactgaatgaaagagttgttgtgaatcgatccaaattgaagaaagaatcgaatatttattaatcaaattatttactccatcagagtctgatagatcttttgaagaactaattaatcggacgagaataaagatagagtcccattctacatgtcaataccgacaacaatgaaatttatagtaagaggaaaatccgtc</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X75710</GBSeq_locus>
+    <GBSeq_length>202</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>04-FEB-1995</GBSeq_update-date>
+    <GBSeq_create-date>04-FEB-1995</GBSeq_create-date>
+    <GBSeq_definition>A.incana intergenic spacer sequence</GBSeq_definition>
+    <GBSeq_primary-accession>X75710</GBSeq_primary-accession>
+    <GBSeq_accession-version>X75710.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X75710.1|</GBSeqid>
+      <GBSeqid>gi|663172</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>intergenic DNA</GBKeyword>
+      <GBKeyword>intergenic spacer</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Alnus incana</GBSeq_source>
+    <GBSeq_organism>Alnus incana</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; rosids; fabids; Fagales; Betulaceae; Alnus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..202</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+          <GBAuthor>Taberlet,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>The use of chloroplast DNA to resolve plant phylogenies: noncoding versus rbcL sequences</GBReference_title>
+        <GBReference_journal>Mol. Biol. Evol. 11 (5), 769-777 (1994)</GBReference_journal>
+        <GBReference_pubmed>7968490</GBReference_pubmed>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..202</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Gielly,L.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-NOV-1993) L. Gielly, Lab de Biologie des Populations, d&apos;Altitude CNRS EP 55, Universit J. Fourier BP 53,F-38041 Grenoble Cedex 9, FRANCE</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..202</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>202</GBInterval_to>
+            <GBInterval_accession>X75710.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Alnus incana</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:3516</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>misc_feature</GBFeature_key>
+        <GBFeature_location>1..202</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>202</GBInterval_to>
+            <GBInterval_accession>X75710.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>note</GBQualifier_name>
+            <GBQualifier_value>intergenic spacer between trnL 3&apos; and trnF</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>aaaaggcccgtttgactccgtaattatttacccgatctgctcttttcgttagtggtttaaaattcgttatgtttctcacagattctactcttttacaaatggatccgattggaaattgttttttcttattacaatatttgtgatatatatgatacacgtacaattgaacatctttgagtaaggtagccccacttcaaatttt</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>Z46908</GBSeq_locus>
+    <GBSeq_length>992</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>10-JAN-1996</GBSeq_update-date>
+    <GBSeq_create-date>07-DEC-1994</GBSeq_create-date>
+    <GBSeq_definition>D.secundum chloroplast DNA</GBSeq_definition>
+    <GBSeq_primary-accession>Z46908</GBSeq_primary-accession>
+    <GBSeq_accession-version>Z46908.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|Z46908.1|</GBSeqid>
+      <GBSeqid>gi|600425</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_source>chloroplast Dendrobium secundum</GBSeq_source>
+    <GBSeq_organism>Dendrobium secundum</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; Liliopsida; Asparagales; Orchidaceae; Epidendroideae; Malaxideae; Dendrobiinae; Dendrobium</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>28..992</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Johansen,B.</GBAuthor>
+          <GBAuthor>Seberg,O.</GBAuthor>
+          <GBAuthor>Petersen,G.</GBAuthor>
+          <GBAuthor>Arctander,P.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Does DAPI detect cytoplasmic DNA? (rbcL sequence)</GBReference_title>
+        <GBReference_journal>Am. J. Bot. 82, 1215-1219 (1995)</GBReference_journal>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..992</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Seberg,O.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (06-DEC-1994) Ole Seberg, Botanisk Laboratorium, Botanical Institute, Gothersgade 140, Copenhagen K, DK-1123 Cph. K., Denmark</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..992</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>992</GBInterval_to>
+            <GBInterval_accession>Z46908.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Dendrobium secundum</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>isolate</GBQualifier_name>
+            <GBQualifier_value>GT 9373</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:37622</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>tissue_type</GBQualifier_name>
+            <GBQualifier_value>pollen tubes</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>ggtgttggatttcaagctggtgttaaagattataaattgacttactacaccccagagtatgaaactaaggatactgatatcttggcagcattccgagtaagtcctccgcctggggttccgcccgaagaagcaggggctcgagtagctgccgaatcttctactggtacatggacaactgtttggactgatggacttaccagtcttgatcgttacaaaggacgatgctatcacatcgagcctgttcgcngggangaaaatcaatatattgcttatgtagcttatcctttagacctttttgaagaaggttcttttactaacntgttkacttccattgtgggtaatgtatttggtttcaaagccctgcgagctctacgtctggaagatctgcgaattcccacttcttattccaaaactttccaaggtccgcctcatggcatccaagttgaaagagataaattgaacaagtatggtcgtcccctattgggatgtactattaaaccaaaattgggattatccgcaaaaaactacggtagagcggtttatgaatgtctacggggtggacttgattttactaaggatgatgaaaacgtaaattcacaaccatttatgcgttggagagatcgtttcttattttgtgccgaagcaatctttaaagcgcaaaccgaaacgggtgaaattaaaggacattacttgaatgcaactgcgggtacatgtgaagaaatgatcaaaagagcggtatttgccagagaattgggagttcctatcgtaatgcatgactacttaactggggggtcaccgcaaatactagcctggctcattattgcccgcgacaatggtctacttcttcacatccatcgcgcaatgcatgcagttattgatagacagaaaaatcatggtatgcattttcgtgtactagctaaagcattacgtatgtctggcggagatcatattcacgctggtacagtagtgggtaaactggaaggggaacgtga</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>X12844</GBSeq_locus>
+    <GBSeq_length>150</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>03-AUG-1989</GBSeq_update-date>
+    <GBSeq_create-date>06-JUL-1989</GBSeq_create-date>
+    <GBSeq_definition>Rice chloroplast DNA short interspersed repeat (pCt-3) upstream rpl2 gene (also present in mitDNA downstream rbcL gene)</GBSeq_definition>
+    <GBSeq_primary-accession>X12844</GBSeq_primary-accession>
+    <GBSeq_accession-version>X12844.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>emb|X12844.1|</GBSeqid>
+      <GBSeqid>gi|11956</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>interspersed repeat</GBKeyword>
+      <GBKeyword>recombination</GBKeyword>
+      <GBKeyword>repetitive sequence</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Oryza sativa Japonica Group (Japanese rice)</GBSeq_source>
+    <GBSeq_organism>Oryza sativa Japonica Group</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; Liliopsida; Poales; Poaceae; BOP clade; Oryzoideae; Oryzeae; Oryzinae; Oryza; Oryza sativa</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..150</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Moon,E.</GBAuthor>
+          <GBAuthor>Kao,T.H.</GBAuthor>
+          <GBAuthor>Wu,R.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Rice mitochondrial genome contains a rearranged chloroplast gene cluster</GBReference_title>
+        <GBReference_journal>Mol. Gen. Genet. 213 (2-3), 247-253 (1988)</GBReference_journal>
+        <GBReference_xref>
+          <GBXref>
+            <GBXref_dbname>doi</GBXref_dbname>
+            <GBXref_id>10.1007/BF00339588</GBXref_id>
+          </GBXref>
+        </GBReference_xref>
+        <GBReference_pubmed>3185503</GBReference_pubmed>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_comment>The first nucleotide is located 110 bp downstream from the last nucleotide of rice chloroplast rbcL sequence (see X04789). Five copies of the 151 bp repeat are found in total rice DNA. ~~Data kindly reviewed (01-Aug-1989) by Wu R.</GBSeq_comment>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..150</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>150</GBInterval_to>
+            <GBInterval_accession>X12844.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Oryza sativa Japonica Group</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>cultivar</GBQualifier_name>
+            <GBQualifier_value>Labelle</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:39947</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>clone</GBQualifier_name>
+            <GBQualifier_value>pCt-3</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>misc_feature</GBFeature_key>
+        <GBFeature_location>1..150</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>150</GBInterval_to>
+            <GBInterval_accession>X12844.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>note</GBQualifier_name>
+            <GBQualifier_value>repetitive sequence</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>atggaatcaaatacgcagtatttacagaaaaagttttcatttattgggaaagaatcaatgacatacaatgcattacagacgtatgatcattaccctttaaccgggttattctattccacttctagatagagaaaaaaactaaaggagaat</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>NMACPRBCL</GBSeq_locus>
+    <GBSeq_length>1400</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>19-JAN-1996</GBSeq_update-date>
+    <GBSeq_create-date>02-OCT-1993</GBSeq_create-date>
+    <GBSeq_definition>Nemacladus ramosissmus chloroplast ribulose-1,5-bisphosphate carboxylase/oxygenase (rbcL) gene fragment</GBSeq_definition>
+    <GBSeq_primary-accession>L18791</GBSeq_primary-accession>
+    <GBSeq_accession-version>L18791.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|L18791.1|NMACPRBCL</GBSeqid>
+      <GBSeqid>gi|405536</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>ribulose 1,5-bisphosphate carboxylase/oxygenase</GBKeyword>
+      <GBKeyword>rubisco</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Nemacladus ramosissimus</GBSeq_source>
+    <GBSeq_organism>Nemacladus ramosissimus</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; campanulids; Asterales; Campanulaceae; Nemacladus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1400</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Cosner,M.E.</GBAuthor>
+          <GBAuthor>Jansen,R.K.</GBAuthor>
+          <GBAuthor>Lammers,T.G.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Phylogenetic relationships in the Campanulaceae based on rbcL sequences</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_comment>Original source text: Chloroplast Nemacladus ramosissmus DNA.</GBSeq_comment>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1400</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1400</GBInterval_to>
+            <GBInterval_accession>L18791.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Nemacladus ramosissimus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:28493</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>gaaactaaagcaaatgttggatttaaggctggtgttaaagattataaattaacttattatactcctgactacgaaaccaaggatactgatattttggcagcattccgagtaacgcctcaacctggagttccgcctgaagaagcaggggctgcagtagctgccgaatcgtctactggtacgtggacaactgtgtggaccgatggacttacgagccttgatcgttacaaagggcgatgctatcacatcgagcccgttgccggagaagaaaatcaatatattgcttatgtagcttacccattagacctttttgaagaaggttctgttactaacatgtttacttccattgtaggtaatgtatttggatttaaagcactgcgtcgtctacgtctggaagatttgcgaattccgtcttcctatattaaaactttccaaggcccacctcatggtattcaagttgagagagacaaattgaacaagtatggtcgtcccctattgggatgtactattaaaccaaaattggggttgtccgctaaaaactacggcagatatgaatgtcttcgtggtggccttgattttaccaaagatgatgagaatgtgaactcccaaccatttatgcgttggagagatcgtttcttattttgtgccgaagctatttataaagcccaggctgaaacaggtgaaatcaaaggacattacttaatgctactgcgggtacatgcgaagaaatgattaaaagggctgtatttgccagagaattgggagttcctatcgtaatgcatgactacctaacagggggcttcactgcaaatactagcttggcgcattattgccgagataatggcctacttcttcacatccaccgcgcaatgcatgcagttattgatagacaaaagaatcatggtatacattttcgtgtactagctaaagccttacgtatgtcggtggagatcatattcattccggtaccgtagtaggtcttgggggaaagagagatcactttgggctttgttgatttactgcgcgatgattttattgaaaaagatcgaagtcgcggtatttatttcactcaagattgggtctctataccaggcgttctgccggtggcttcaggcggtattcacgtttggcatatgcctgctctgaccgagatctttggggatgattccgtactacagttcggtggaggaactttaggacatccttggggaaatgcacccggtgccgtagctaatcgagtagctctagaagcatgtgtacaagcccgtaatgagggtcgtgatcttgctcgtgagggtaatgaaattatccggaaggagggcaaatggagtcctgagctatcgtctgcttgtgaggtatggaaagagatcaaatttgagtttgccgcaatggatactttataa</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>CYXCPRBCL</GBSeq_locus>
+    <GBSeq_length>1420</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>19-JAN-1996</GBSeq_update-date>
+    <GBSeq_create-date>01-OCT-1993</GBSeq_create-date>
+    <GBSeq_definition>Cyphocarpus rigescens chloroplast ribulose-1,5-bisphosphate carboxylase/oxygenase (rbcL) gene fragment</GBSeq_definition>
+    <GBSeq_primary-accession>L18792</GBSeq_primary-accession>
+    <GBSeq_accession-version>L18792.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|L18792.1|CYXCPRBCL</GBSeqid>
+      <GBSeqid>gi|405152</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>ribulose 1,5-bisphosphate carboxylase/oxygenase</GBKeyword>
+      <GBKeyword>rubisco</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Cyphocarpus rigescens</GBSeq_source>
+    <GBSeq_organism>Cyphocarpus rigescens</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; campanulids; Asterales; Campanulaceae; Cyphocarpus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1420</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Cosner,M.E.</GBAuthor>
+          <GBAuthor>Jansen,R.K.</GBAuthor>
+          <GBAuthor>Lammers,T.G.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Phylogenetic relationships in the Campanulaceae based on rbcL sequences</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_comment>Original source text: Chloroplast Cyphocarpus rigescens DNA.</GBSeq_comment>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1420</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1420</GBInterval_to>
+            <GBInterval_accession>L18792.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Cyphocarpus rigescens</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:28492</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>caccacaaacagaaactaaagcaagtgttggattcaaagctggtgttaaagattataaattaacttattatactcctgactatgaaaccaaggtactgatattttggcagcattccgagtaactcctcaacccggagttccgccggaagaagcaggggctgcagtagctgccgaatcttctactggtacatggacaactgtgtggactgatggccttacgagccttgatcgttacaaagggcgatgctatcacatcgagcccgttgccggagaagaaaatcaatatattgcttatgtagcttacccattagacctttttgaagaagggtctgttactaacatgtttacttccattgtgggtaatgtgtttggatttaaagcactgcgtcgtctacgcctggaagatttgcgaatcccgcctgcgtatgttaaaaccttccaaggcccgcctcatggcatccaagttgagagagataaattgaacaagtatggtcgtcccctgttgggctgtactattaaaccaaaattagggttatctgctaaaaactacggcagagtttatgaatgtcttcgcggtggtcttgattttaccaaagatgatgagaacgtgaactcccaaccatttatgcgttggagagatcgtttcttattttgtgccgaagcaatttataaagcacaggccgaaacaggtgaaatcaaagggcattacttaaatgctacggcgggtacatcggaagaaatgattaaaagggctgtatttgccagagaattgggagttcctatcataatgcatgactacctaacaggcggattcactgcaaatactagcttggctcattattgccgagataatggcctacttcttcacatccaccgcgcaatgcatgcagttattgatagacagaagaatcatggtatacactttcgtgtactagctaaagccttacgtatgtctggtggcgatcatattcactccggtaccgtagtaggtaaacttgaaggggaaagagagatcactttgggctttgttgatttactgcgcgatgattttattgaaaaagatcgaagtcgcggtatttatttcactcaagattgggtctctataccaggtgttctgcccgtggcttcaggcggtattcacgtttggcatatgcctgctctgaccgagatctttggggatgattccgtactacagttcggtggaggaactttaggacatccttggggaaatgcacctggtgccgtagctaatcgagtagctctagaagcatgtgtacaagcccgtaatgagggacgtgatcttgctcgtgagggtaatgaaattatccgtaaggctgctatatggagtcctgagctagctgctgcttgtgaggtatggaaagagatcaaatttgagtttgccgcaatggatactttataa</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>CPXCPRBCL</GBSeq_locus>
+    <GBSeq_length>1421</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>19-JAN-1996</GBSeq_update-date>
+    <GBSeq_create-date>01-OCT-1993</GBSeq_create-date>
+    <GBSeq_definition>Cyphia elata chloroplast ribulose-1,5-bisphosphate carboxylase/oxygenase (rbcL) gene fragment</GBSeq_definition>
+    <GBSeq_primary-accession>L18796</GBSeq_primary-accession>
+    <GBSeq_accession-version>L18796.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|L18796.1|CPXCPRBCL</GBSeqid>
+      <GBSeqid>gi|405151</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>ribulose 1,5-bisphosphate carboxylase/oxygenase</GBKeyword>
+      <GBKeyword>rubisco</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Cyphia elata</GBSeq_source>
+    <GBSeq_organism>Cyphia elata</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; campanulids; Asterales; Campanulaceae; Cyphia</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1421</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Cosner,M.E.</GBAuthor>
+          <GBAuthor>Jansen,R.K.</GBAuthor>
+          <GBAuthor>Lammers,T.G.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Phylogenetic relationships in the Campanulaceae based on rbcL sequences</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_comment>Original source text: Chloroplast Cyphia elata DNA.</GBSeq_comment>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1421</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1421</GBInterval_to>
+            <GBInterval_accession>L18796.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Cyphia elata</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:28491</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>tcaccacaaacagaaactaaagcaaatgttggattcaaagctggtgttaaagattataaattaacttattatactcctgactatgaaaccaaggatactgatatcttggcagcattccgagtaactcctcaacctggagttccgcctgaagaagcaggggccgcagtagctgccgaatcttctactggtacatggacaactgtgtggaccgatggacttaccagtcttgatcgttacaaagggcgatgctatcacatcgagcccgttcctggagaagaaaatcaatatattgcttatgtagcttacccattagacctttttgaagaaggttctgttactaacatgtttacttccattgtgggtaatgtgtttgggtttaaagccctgcgcgctctacgtctggaagatttgcgaatcccgcctgcgtatgttaaaactttccaaggcccgcctcatggcatccaagttgagagagataaattgaacaagtatggtcgtcccctgttgggatgtactattaaaccaaattggggttatctgctaaaaactacggcagagcagtttatgaatgtcttcgcggtggccttgattttaccaaagatgatgagaacgtgaactcccaaccatttatgcgttggagagatcgtttcttattttgtgccgaagcctttataaagcacaggctgaaacaggtgaaatcaaagggcattacttgaatgctactgcgggtacatgcgaagaaatgattaaaagagctgtatttgccagagaattgggagttcctatcgtaatgcatgactacctaacagggggattcactgcaaatactagcttggctcattattgccgagataatggcctacttcttcacatccaccgcgcaatgcatgcagttattgatagacagaagaatcatggtatcacttcgcgtactagctaaagcattacgtatgtctggcggagatcatattcactccggtactgtagtagggaaacttgaaggcgaaagagagatcactttgggctttgttgatttactgcgcgatgattttattgaaaaagatcgaagtcgcggtatttatttcactcaagattgggtctctataccaggtgttctgcccgtggcttcggggggtattcacgtttggcatatgcctgctctgaccgagatctttggggatgattccgtactacagttcggtggaggaactttaggacatccttggggaaatgcacccggtgccgtagctaatcgagtagctctagaagcatgtgtacaagcccggaacgagggacgcgatcttgctcgtgagggtaatgaaattatccgcaaggctgccacatggagtcctgagctagctgctgcttgcgaggtatggaaagagatcacatttgagtttgccgcaatggatactttataa</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>CNQCPRBCL</GBSeq_locus>
+    <GBSeq_length>1422</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>19-JAN-1996</GBSeq_update-date>
+    <GBSeq_create-date>01-OCT-1993</GBSeq_create-date>
+    <GBSeq_definition>Cyananthus lobatus chloroplast ribulose-1,5-bisphosphate carboxylase/oxygenase (rbcL) gene fragment</GBSeq_definition>
+    <GBSeq_primary-accession>L18795</GBSeq_primary-accession>
+    <GBSeq_accession-version>L18795.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|L18795.1|CNQCPRBCL</GBSeqid>
+      <GBSeqid>gi|405148</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>ribulose 1,5-bisphosphate carboxylase/oxygenase</GBKeyword>
+      <GBKeyword>rubisco</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Cyananthus lobatus</GBSeq_source>
+    <GBSeq_organism>Cyananthus lobatus</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; campanulids; Asterales; Campanulaceae; Cyananthus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1422</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Cosner,M.E.</GBAuthor>
+          <GBAuthor>Jansen,R.K.</GBAuthor>
+          <GBAuthor>Lammers,T.G.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Phylogenetic relationships in the Campanulaceae based on rbcL sequences</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_comment>Original source text: Chloroplast Cyananthus lobatus DNA.</GBSeq_comment>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1422</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1422</GBInterval_to>
+            <GBInterval_accession>L18795.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Cyananthus lobatus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:28490</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>accacaaacagaaactaaagctaatgttggattccaggctggttttaaagagtataaattaacttattatactcctgactatgaaaccaaggatactgatattttggcagcattccgcgtaactcctcaacccggagttccacctgaagaagccggggccgcagtagctgcggaatcttctactggtacatggacaactgtgtggaccgatggacttacgagccttgatcgttacaaagggcgatgctatcacatcgagcctgttgccggagaggaaactcaatttattgcttatgtagcttacccattagacctttttaaagaaggttccgttactaacatgtttacttccattgtgggtaatgtgtttggatttaaagcactgcgtcgtctacgtctggaagatttgcgaatcccgcctgcgtatgttaaaactttccaaggcccgcctcatggcatccaagttgaaagagataaattaacaagtatggtcgtcccctgttgggatgtactattaaacccaaattggggttatccgctaaaaactacggcagagcagtttatgaatgtcttcgcggcggccttgattttaccaaagatgatgagaacgtgaactcccaaccatttatgcgttggagagatcgtttcttattttgtgccgaagctatttataaagcacaggctgaaacaggtgaaatcaaagggcattacttgaatgctactgcgggtacatccgaagaaatgattaaaagggctgtatttgctagagaattaggagttcctatcgtaatgcatgactacctaacagggggattcacttcaaatactagcttggctcattattgccgagataatggcctacttcttcacatccaccgcgcaatgcatgcagttattgatagacagaagaatcatggtatacactttcgtgtactagctaaagccttacgtatgtctggtggagatcatattcactccggtaccgtagtaggtaaacttgaaggggaaagagagatcactttgggctttgttgatttactacgcgatgattttgttgaaaaagatcgaagtcgcggtatttatttcactcaagattgggtctctctacctggtgttctgcccgtggcttcgggtggtattcacgtttggcatatgcctgctctgaccgagatctttggggatgattccgtactacagtttggtggaggaactttaggacatccttggggaaatgcacccggtgccgtagctaatcgagtagctctagaagcatgtgtacaagcccgtaatgagggacgtgatcttgctcgtgagggtactgaaattatccgcaaggctgccacatggagtcctgagctattttctgcgtgtgaggtatggaaagagatcaaatttgagtttgccgcaatggatactttataa</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>PAU21709</GBSeq_locus>
+    <GBSeq_length>1321</GBSeq_length>
+    <GBSeq_strandedness>single</GBSeq_strandedness>
+    <GBSeq_moltype>mRNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>01-JAN-1900</GBSeq_update-date>
+    <GBSeq_create-date>02-APR-1995</GBSeq_create-date>
+    <GBSeq_definition>Prionitis angusta ribulose-1,5-bisphosphate carboxylase oxygenase large subunit pseudogene (rbcL) mRNA, chloroplast gene encoding chloroplast protein, partial cds</GBSeq_definition>
+    <GBSeq_primary-accession>U21709</GBSeq_primary-accession>
+    <GBSeq_accession-version>U21709.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|U21709.1|PAU21709</GBSeqid>
+      <GBSeqid>gi|755513</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_source>chloroplast Grateloupia angusta</GBSeq_source>
+    <GBSeq_organism>Grateloupia angusta</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Rhodophyta; Florideophyceae; Rhodymeniophycidae; Halymeniales; Halymeniaceae; Grateloupia</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1321</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Hommersand,M.H.</GBAuthor>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Freshwater,D.W.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>A model of the biogeography of the marine red algae of the southern oceans based on morphological and molecular evidence</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..1321</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Hommersand,M.H.</GBAuthor>
+          <GBAuthor>Freshwater,D.W.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (23-FEB-1995) Suzanne Fredericq, MLS Department, Smithsonian Institution/UNC, 4210 Silver Hill Rd., Suitland, MD 20746, USA</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1321</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1321</GBInterval_to>
+            <GBInterval_accession>U21709.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Grateloupia angusta</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>mRNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:1347085</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..1321</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1321</GBInterval_to>
+            <GBInterval_accession>U21709.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>CDS</GBFeature_key>
+        <GBFeature_location>&lt;1..1321</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1321</GBInterval_to>
+            <GBInterval_accession>U21709.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_partial5 value="true"/>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>note</GBQualifier_name>
+            <GBQualifier_value>147 nucleotides unsequenced encoding the amino terminus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>pseudo</GBQualifier_name>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>codon_start</GBQualifier_name>
+            <GBQualifier_value>2</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>product</GBQualifier_name>
+            <GBQualifier_value>ribulose-1,5-bisphosphate carboxylase oxygenase large subunit</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>gccaggtgttgatccagtagaagcttctgctgctgttgctggtgaatcttctactgcaacttggactgtagtttggactgacttactaacagcttgtgatttatatagagcaaaagcttataaagtagatgctgtaccaaattcatctgaacaatactttgcttatattgcatacgatattgatctatttgaagaaggttctattgctaacctaactgcttcaatcatcggtaatgtatttggtttcaaagcagtaaaagctttaagnnnnnnnnnnntgcgtttacctgttnnnnnnnnnnnnnnnnnnnnnggacctgcaacaggaattgttgtagaacgtgaacgtatggacaaatttggtcgtccatttttgggtgcaacagttaagcctaaactaggtctatcaggtaaaaactatggtagagtagtatatgaaggtcttaaaggtggcttagacttcctgaaggatgatgaaaatattaactctcaacctttcatgcgctggaaagannnnnncctatattctatggaaggtgtaaacgnnnctatcgctggaacaggtgaagttaaaggtcactacatgaatgttacagctgctactatggannncatgtatgagagagctgaatttgctaagcaactgggtactgttattatcatgnnnnnnnnagtaattggttatacagctatccaaactatgggtgtttgggctcgtaaaaatgatatgattcttcatttacaccgtgctggtaactcgacttattctcgtcagaaaagtcatggtatgaacttccgtgtaatttgtaaatggatgcgcatggcaggtgtagaccatatccatgctggtacagttgttggtaagctagaaggtgatcctttaatgattagaggtttctataatactttattactaactcacctagatgttaatcttccacaaggtattttctttgaacaagattgggcatctctacgcaaagtaactccagttgcttcaggtggtatnnnnnnnggacaaatgcaccagttacttgattatttaggtattgatgtagttgttcaatttggtggaggtacaatcggacatccagatggtatttaggcaggtgcaacagcgaaccgtctagctctagaatctatggtaattgctcgtaacgaagaacgtgactatgaagcagacggtccacaaatgttgcttgatgcagctaaaacatgtggtcctttacaaaccgctttagannnnnngaaagatattacatttagttatactgnnnctgacacaggtgaattcgtagatactccaacagctaacgtataa</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>PAU21703</GBSeq_locus>
+    <GBSeq_length>1068</GBSeq_length>
+    <GBSeq_strandedness>single</GBSeq_strandedness>
+    <GBSeq_moltype>mRNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>01-JAN-1900</GBSeq_update-date>
+    <GBSeq_create-date>02-APR-1995</GBSeq_create-date>
+    <GBSeq_definition>Plocamium angustum ribulose-1,5-bisphosphate carboxylase oxygenase large subunit pseudogene (rbcL) mRNA, chloroplast gene encoding chloroplast protein, partial cds</GBSeq_definition>
+    <GBSeq_primary-accession>U21703</GBSeq_primary-accession>
+    <GBSeq_accession-version>U21703.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|U21703.1|PAU21703</GBSeqid>
+      <GBSeqid>gi|755512</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_source>chloroplast Plocamium angustum</GBSeq_source>
+    <GBSeq_organism>Plocamium angustum</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Rhodophyta; Florideophyceae; Rhodymeniophycidae; Plocamiales; Plocamiaceae; Plocamium</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1068</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Hommersand,M.H.</GBAuthor>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Freshwater,D.W.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>A model of the biogeography of the marine red algae of the southern oceans based on morphological and molecular evidence</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..1068</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Hommersand,M.H.</GBAuthor>
+          <GBAuthor>Freshwater,D.W.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (23-FEB-1995) Suzanne Fredericq, MLS Department, Smithsonian Institution/UNC, 4210 Silver Hill Rd., Suitland, MD 20746, USA</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1068</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1068</GBInterval_to>
+            <GBInterval_accession>U21703.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Plocamium angustum</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>mRNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:35204</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..1068</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1068</GBInterval_to>
+            <GBInterval_accession>U21703.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>CDS</GBFeature_key>
+        <GBFeature_location>&lt;1..1068</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1068</GBInterval_to>
+            <GBInterval_accession>U21703.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_partial5 value="true"/>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>note</GBQualifier_name>
+            <GBQualifier_value>400 nucleotides unsequenced encoding the amino terminus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>pseudo</GBQualifier_name>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>codon_start</GBQualifier_name>
+            <GBQualifier_value>1</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>product</GBQualifier_name>
+            <GBQualifier_value>ribulose-1,5-bisphosphate carboxylase oxygenase large subunit</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>gtaaaagctttaagactagaagatatgcgcatacctgttgcttatctaaaaacttttcagggtcctgcaacaggtgttattgtagaacgtgaacgtatggataaatttggtcgtccatttttaggagcaacagttaagcctaaattaggtctttcaggcaaaaactatggaagagtagtttacgaaggtcttaaaggtggtttagatttcctaaaagatgatgaaaatattaattctcagccttttatgcgttggaaagagagatagctttattcaatggaaggtgttaaccgttcaattgcagcatcaggtgaaacaaaaggacattacctaaatgttacttgtgctacaatggaagaaatgtatgaaagagccgaatttgctaaggaaataggtagtatcattattatgattgacctagtaattggttatactgctattcaaacaatggctatttgggcacgtagaaatgatatgattgtgcatttacatcgtgcaggtaactctacgtattctcgccaaaaaatccatggcatgaatttccgtgtaatttgtaaatggatgcgtatggctggtgtagatcacattcacgcaggtactgttgtaggtaaattagaaggggatcctttaatgattagaggtttctataanactttactannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnngaaggaccacaaattttacaagatgcagctaaaacttgtggccctctacaaacagctttagatttatggaaagatatttctttcaattatacttctacagatacagctgattttgtagaaactccaacatcnaatgtttaa</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>CRU21490</GBSeq_locus>
+    <GBSeq_length>1436</GBSeq_length>
+    <GBSeq_strandedness>single</GBSeq_strandedness>
+    <GBSeq_moltype>rRNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>INV</GBSeq_division>
+    <GBSeq_update-date>30-MAR-1995</GBSeq_update-date>
+    <GBSeq_create-date>16-MAR-1995</GBSeq_create-date>
+    <GBSeq_definition>Chlorarachnion reptans chloroplast 16S small subunit rRNA gene</GBSeq_definition>
+    <GBSeq_primary-accession>U21490</GBSeq_primary-accession>
+    <GBSeq_accession-version>U21490.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|U21490.1|CRU21490</GBSeqid>
+      <GBSeqid>gi|710413</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_source>chloroplast Chlorarachnion reptans</GBSeq_source>
+    <GBSeq_organism>Chlorarachnion reptans</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Sar; Rhizaria; Cercozoa; Chlorarachniophyceae; Chlorarachnion</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1436</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>McFadden,G.I.</GBAuthor>
+          <GBAuthor>Gilson,P.R.</GBAuthor>
+          <GBAuthor>Waller,R.F.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Molecular phylogeny of chlorarachniophytes based on plastid rRNA and rbcL sequences</GBReference_title>
+        <GBReference_journal>Arch. Protistenkunde 154 (1995) In press</GBReference_journal>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..1436</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>McFadden,G.I.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (22-FEB-1995) Geoffrey I. McFadden, School of Botany, University of Melbourne, Parkville, VIC 3052, Australia</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1436</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1436</GBInterval_to>
+            <GBInterval_accession>U21490.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Chlorarachnion reptans</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>rRNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>strain</GBQualifier_name>
+            <GBQualifier_value>CCMP 238</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:29199</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>clone</GBQualifier_name>
+            <GBQualifier_value>pF69</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>rRNA</GBFeature_key>
+        <GBFeature_location>1..1436</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1436</GBInterval_to>
+            <GBInterval_accession>U21490.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>product</GBQualifier_name>
+            <GBQualifier_value>16S small subunit ribosomal RNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>transcription</GBQualifier_name>
+            <GBQualifier_value>GGATCCGAGTTTTGATCCTGGCTCAGGATGAACGCTGGCGGTATGCTGACACATGCAAGTCGAACGAAAAGATTTAATCTTTTAGTGGCGCACGGGTGAGTAACGCGTAAGAATCTCCCTCTAGGTAAAGGGTAACAATTGGAAACGGTTGCTAATACTTTATATGCTGAGAAGTGAAATGATGTGTAGCAGTACGCATTGCCTAGTGATGAGCTTGCGTCTGATTAGCCTGTTGGTAAGATAATAGCTTACCAAAGCTATAATCAGTAGCTGGTCTGAGAGGATGAACAGCCACACCGGAACTTAGACACGGTCCGGACTCCTACGGGAGGCAGCAGTGAGGAATTTTCCGCAATGGGCGAAAGCCTGACGGAGCAATACCGCGTGGAGGATGAAAGCCTATGGGTTGTAAACTCCTTTTCTTAGAAAAGAAGTTCTGACGGTATCTAAAGAATAAGCATCGGCTAACTCCGTGCCAGCAGCCGCGGTAATACGGGGGATGCAAGCGTTATCCGGAATTATTGGGTGTAAAGCGTCTGTAGGTTGCTTACTTAAGTCAGTTGTTAAATTTCAGAACTCAATTTTGATAAAGGCAACTGAAACTAATAAGCTAGAGTCGAGGAGAGGCAGAAGGAACTCCGAGTGTAGCGNTGAAATGCGTAGATATTCGGAAGAACACCGACGGCGAAAGCATTCTGCTGGGCTTGTACTGACACTGAGAGACGAAAGCGAGGGGAGAGAATGGGATTAGATACCCCAGTATTCCTCGCCGTAAACGATGGATATTAGGTATTAGATCTTTATAATTTAGTACTGAAGCTAACGCATTAAATATCCCACCTNGGGAGTATGCTCGCAAGAGTGAAACTTAAAGGAATTGACGGGGGCCCGCACAAGCGGTGGAGCATGTGGTTTAATTCGATGCAACGCGAAGAACCTTACCAGGACATGACTACATCTATACCTCTTTGAAAGAAGAGATTCTAAGGATGCCAGGTGGTGCATGGCTGTCGTCAGCTCGTGCCGTGAGGTGTTGGGTTAAGTCCCGCAACGAGCGCAACCCTTGTTTTTAGTTATTTTTCTAGAAATACTGCCGGTGATAAACCGGAGGAAGGTGAGGATGACGTCAAGTCATCATGCCCCTTAAGTTCTGGGCTACACACGTGCTACAACGGTTAAGACAATGAGATGCAAAACTGCAAAGATGAGCCAACCTCAGAAACTTAATCTCAGTTCGAATTGTAGGCTGAAACTCGCCTACATGAAGTTGGAATCGCTAGTAATCGCTGGTCAGCTACACAGCGGTGAATACGTTCCCGGGCCTTGTACACACCGCCCGTCACACCACGGAAATTGGCTACACCCAAAGCTATTACCTTAACCAAATACAGGAGAGGGGTATCTAAGGTGGAGTTAATAACTGGGGTGAAGTCGAC</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>ggatccgagttttgatcctggctcaggatgaacgctggcggtatgctgacacatgcaagtcgaacgaaaagatttaatcttttagtggcgcacgggtgagtaacgcgtaagaatctccctctaggtaaagggtaacaattggaaacggttgctaatactttatatgctgagaagtgaaatgatgtgtagcagtacgcattgcctagtgatgagcttgcgtctgattagcctgttggtaagataatagcttaccaaagctataatcagtagctggtctgagaggatgaacagccacaccggaacttagacacggtccggactcctacgggaggcagcagtgaggaattttccgcaatgggcgaaagcctgacggagcaataccgcgtggaggatgaaagcctatgggttgtaaactccttttcttagaaaagaagttctgacggtatctaaagaataagcatcggctaactccgtgccagcagccgcggtaatacgggggatgcaagcgttatccggaattattgggtgtaaagcgtctgtaggttgcttacttaagtcagttgttaaatttcagaactcaattttgataaaggcaactgaaactaataagctagagtcgaggagaggcagaaggaactccgagtgtagcgntgaaatgcgtagatattcggaagaacaccgacggcgaaagcattctgctgggcttgtactgacactgagagacgaaagcgaggggagagaatgggattagataccccagtattcctcgccgtaaacgatggatattaggtattagatctttataatttagtactgaagctaacgcattaaatatcccacctngggagtatgctcgcaagagtgaaacttaaaggaattgacgggggcccgcacaagcggtggagcatgtggtttaattcgatgcaacgcgaagaaccttaccaggacatgactacatctatacctctttgaaagaagagattctaaggatgccaggtggtgcatggctgtcgtcagctcgtgccgtgaggtgttgggttaagtcccgcaacgagcgcaacccttgtttttagttatttttctagaaatactgccggtgataaaccggaggaaggtgaggatgacgtcaagtcatcatgccccttaagttctgggctacacacgtgctacaacggttaagacaatgagatgcaaaactgcaaagatgagccaacctcagaaacttaatctcagttcgaattgtaggctgaaactcgcctacatgaagttggaatcgctagtaatcgctggtcagctacacagcggtgaatacgttcccgggccttgtacacaccgcccgtcacaccacggaaattggctacacccaaagctattaccttaaccaaatacaggagaggggtatctaaggtggagttaataactggggtgaagtcgac</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>GGU22305</GBSeq_locus>
+    <GBSeq_length>1236</GBSeq_length>
+    <GBSeq_strandedness>single</GBSeq_strandedness>
+    <GBSeq_moltype>mRNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>01-JAN-1900</GBSeq_update-date>
+    <GBSeq_create-date>28-MAR-1995</GBSeq_create-date>
+    <GBSeq_definition>Gymnogongrus griffithsiae ribulose-1,5-bisphosphate carboxylase oxygenase large subunit pseudogene (rbcL) mRNA, chloroplast gene encoding chloroplast protein, partial cds</GBSeq_definition>
+    <GBSeq_primary-accession>U22305</GBSeq_primary-accession>
+    <GBSeq_accession-version>U22305.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|U22305.1|GGU22305</GBSeqid>
+      <GBSeqid>gi|733102</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_source>chloroplast Gymnogongrus griffithsiae</GBSeq_source>
+    <GBSeq_organism>Gymnogongrus griffithsiae</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Rhodophyta; Florideophyceae; Rhodymeniophycidae; Gigartinales; Phyllophoraceae; Gymnogongrus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1236</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Ramirez,M.E.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Systematic studies of the antarctic species of the Phyllophoraceae (Gigartinales, Rhodophyta) based on rbcL sequence analysis</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..1236</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Hommersand,M.H.</GBAuthor>
+          <GBAuthor>Freshwater,D.W.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-MAR-1995) Suzanne Fredericq, MLS Department, Smithsonian Institution/UNC, 4210 Silver Hill Rd., Suitland, MD 20746, USA</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1236</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1236</GBInterval_to>
+            <GBInterval_accession>U22305.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Gymnogongrus griffithsiae</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>mRNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:38546</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..1236</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1236</GBInterval_to>
+            <GBInterval_accession>U22305.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>CDS</GBFeature_key>
+        <GBFeature_location>&lt;1..1236</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1236</GBInterval_to>
+            <GBInterval_accession>U22305.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_partial5 value="true"/>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>note</GBQualifier_name>
+            <GBQualifier_value>231 nucleotides unsequenced encoding the amino terminus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>pseudo</GBQualifier_name>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>codon_start</GBQualifier_name>
+            <GBQualifier_value>3</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>product</GBQualifier_name>
+            <GBQualifier_value>ribulose-1,5-bisphosphate carboxylase oxygenase large subunit</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>ttaactgcatgtgatttatatcgtgctaaagcntacaaagtagatgctgttcctaatacatctgatcaatactttgcttatattgcatangannnnnnnnnatttgangaaggttctattgctaacctaacagcttcaattattggtaatgtttttggtttcaaagctgttaaagctttaagactagaagatatgcgtttacctgttgcgtatttaaaaactttccaaggtcctgcgactggtattatttgtgaacgtgaacgtatggataaatttggtcgtccattcttaggtgcgactgttaaacctaaattaggcctatcaggcaaaaactatggtagggtagtttatgaaggtcttaaaggtggtttagacttcttaaaagatgacgagaacattaactctcaaccttccatgcgctggaaagaaagatacctatattcaatggaaggtgtaaaccgtgctattgctgcttctggtgaaacaaaaggacactatctaaacgtaacagcagctacaatggaagagatgtatgagagagcagagtttgctaaacaacttggcagtattattgtaatgattgaccttgtaattggttatacagcaatccaaaccatggctgtttgggctcgtaagaacgacatgattcttcatctacatcgtgctggtaattctacttattctcgtcaaaaaattcatggtatgaactttcgtgttatatgcaaatggatgcgtatggcaggagtagatcatattcatgcaggtactgttgtaggtaaactggaaggtgatcctttaatgattagaggtttttataacactttattattaccttatttagaagtaaacttacctcaaggtatattctttgagcaagattgggcatctctacgtaaagttactcctgttgcttcaggtggtattcattgcggacaaatgcatcaattactagattacttaggtattgatgttgttcttcaatttggtggaggtactattggacaccctgatggtattcaagcaggagcaacagctaatcgtgtagctttagaatcaatggttatagctcgtaatgaaggtcgtgactatgttgcggaaggaccacaaattttgcaagatgctgcaaaaacttgcggtcctttacaaacagctctagatttatggtaggatattacttttaactatacttctacagatacagctgattttgtagaaactccaacagctaacgtttag</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>GFU22335</GBSeq_locus>
+    <GBSeq_length>1071</GBSeq_length>
+    <GBSeq_strandedness>single</GBSeq_strandedness>
+    <GBSeq_moltype>mRNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>01-JAN-1900</GBSeq_update-date>
+    <GBSeq_create-date>28-MAR-1995</GBSeq_create-date>
+    <GBSeq_definition>Gymnogongrus furcatus ribulose-1,5-bisphosphate carboxylase oxygenase large subunit pseudogene (rbcL) mRNA, chloroplast gene encoding chloroplast protein, partial cds</GBSeq_definition>
+    <GBSeq_primary-accession>U22335</GBSeq_primary-accession>
+    <GBSeq_accession-version>U22335.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|U22335.1|GFU22335</GBSeqid>
+      <GBSeqid>gi|733101</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_source>chloroplast Gymnogongrus furcatus</GBSeq_source>
+    <GBSeq_organism>Gymnogongrus furcatus</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Rhodophyta; Florideophyceae; Rhodymeniophycidae; Gigartinales; Phyllophoraceae; Gymnogongrus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1071</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Ramirez,M.E.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Systematic studies of the antarctic species of the Phyllophoraceae (Gigartinales, Rhodophyta) based on rbcL sequence analysis</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..1071</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Hommersand,M.H.</GBAuthor>
+          <GBAuthor>Freshwater,D.W.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-MAR-1995) Suzanne Fredericq, MLS Department, Smithsonian Institution/UNC, 4210 Silver Hill Rd., Suitland, MD 20746, USA</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1071</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1071</GBInterval_to>
+            <GBInterval_accession>U22335.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Gymnogongrus furcatus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>mRNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:38548</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..1071</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1071</GBInterval_to>
+            <GBInterval_accession>U22335.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>CDS</GBFeature_key>
+        <GBFeature_location>&lt;1..&gt;1071</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1071</GBInterval_to>
+            <GBInterval_accession>U22335.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_partial5 value="true"/>
+        <GBFeature_partial3 value="true"/>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>note</GBQualifier_name>
+            <GBQualifier_value>144 nucleotides unsequenced encoding the amino terminus; 251 nucleotides unsequenced encoding the carboxy terminus for a complete cds</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>pseudo</GBQualifier_name>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>codon_start</GBQualifier_name>
+            <GBQualifier_value>3</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>product</GBQualifier_name>
+            <GBQualifier_value>ribulose-1,5-bisphosphate carboxylase oxygenase large subunit</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>caaccaggagtngatccnntngaagcttctgctgcagttgctggtgaatcgtctactgcaacttggacagtagtttggacagatnttttaactgcatgtgatttatatcgtgctaaagcatacaaagtagatgctgtacctaatacatcggatcaatactttgcttatattgcatatgatattgacctatttgaagaaggttctattgctaacttaacagcttcaatcattggcaacgttttcggtttcaaagctgttaaagctctaaggctagaagatatgcgtttacctgttgcatatctaaaaactttccaaggtcctgcaactggtattatttgtgaacgtgaacgtatggatagattcggtcgtccattcttgggtgcaactgttaaacctaagttaggtctatcaggtaaaaactatggtagagtagtttatgaaggtcttaaaggtggtttagacttcttaaaagatgacgaaaatattaactcttaacctttcatgcgntggaaagaaagatacctatactcaatggaaggtgtaaatcgttcnattgctgcttatggtgaagtaaaaggacactatctaaatgtaacagcagctacaatggaagatatgtatgaaagagcagagtttgctaaagagcttggaagtattatcataatgattgaccttgtaattggttatacagcaatccaaactatgggtatntggncncgtaagaatgatatgattcttcatttacatcgtgctggtaactctacttattctcgtcaaaagattcatggcatgaacttccgtgttatatgcaaatggatgcgcatggcgggagtagatcatattcatgcaggtactgttgtaggtaaattagaaggtgaccctttaatgattaaaggtttctataatactttattattaccttatctagaagtaaacttacctcaaggtatattctttgancaagattgggcatctnnncctaaggttacaccngttgcttcaggtggtatccattgcggacaaatgcatcaactactagattatctaggtattgatgttgttcttcanttt</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>CYU22101</GBSeq_locus>
+    <GBSeq_length>1243</GBSeq_length>
+    <GBSeq_strandedness>single</GBSeq_strandedness>
+    <GBSeq_moltype>mRNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>01-JAN-1900</GBSeq_update-date>
+    <GBSeq_create-date>28-MAR-1995</GBSeq_create-date>
+    <GBSeq_definition>Chondrus yendoi ribulose-1,5-bisphosphate carboxylase oxygenase large subunit pseudogene (rbcL) mRNA, chloroplast gene encoding chloroplast protein, partial cds</GBSeq_definition>
+    <GBSeq_primary-accession>U22101</GBSeq_primary-accession>
+    <GBSeq_accession-version>U22101.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|U22101.1|CYU22101</GBSeqid>
+      <GBSeqid>gi|733096</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_source>chloroplast Chondrus yendoi</GBSeq_source>
+    <GBSeq_organism>Chondrus yendoi</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Rhodophyta; Florideophyceae; Rhodymeniophycidae; Gigartinales; Gigartinaceae; Chondrus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1243</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Brodie,J.</GBAuthor>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Guiry,M.D.</GBAuthor>
+          <GBAuthor>Masuda,M.</GBAuthor>
+          <GBAuthor>Hommersand,M.H.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Systematic studies of the genus Chondrus (Gigartinaceae, Rhodophyta)</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..1243</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Hommersand,M.H.</GBAuthor>
+          <GBAuthor>Freshwater,D.W.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-MAR-1995) Suzanne Fredericq, MLS Department, Smithsonian Institution/UNC, 4210 Silver Hill Rd., Suitland, MD 20746, USA</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1243</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1243</GBInterval_to>
+            <GBInterval_accession>U22101.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Chondrus yendoi</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>mRNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:38505</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..1243</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1243</GBInterval_to>
+            <GBInterval_accession>U22101.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>CDS</GBFeature_key>
+        <GBFeature_location>&lt;1..1243</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1243</GBInterval_to>
+            <GBInterval_accession>U22101.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_partial5 value="true"/>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>note</GBQualifier_name>
+            <GBQualifier_value>56 nucleotides unsequenced encoding the amino terminus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>pseudo</GBQualifier_name>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>codon_start</GBQualifier_name>
+            <GBQualifier_value>2</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>product</GBQualifier_name>
+            <GBQualifier_value>ribulose-1,5-bisphosphate carboxylase oxygenase large subunit</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>gatccagtagaagcctctgctgcagttgctggtgaatcatctactgcaacttggacagtagtttggacagatcttttaacctgcgtatattgcgtatgatattcatttatttgaagaaggttcaattgctaacttaacagcttcaattattggtaatgtatttggttttaaagctctcaaagctttaagattagaagacatgcgtttacctgttgcttatttaaaaacttttcaaggtcctgcaacaggcgtaatctgtgagcgtgaacgtatggataagtttgggcgtccatttttaggtgcaactgttaaaccaaaattaggtctatcaggtaaaaactatggccgtgtagtatatgaaggtcttaaaggtggcttagactttttaaaagatgatgagaatattaattctcaacctttcatgcgttggaaggaaagatatctgtattcaatggaaggtgtaaatcgtgctattgctgctgctggtgaaacaaaaggacattatttaaatgtaacagcagctacaatggaacagatctatgaaagagctgaatttgctaaagagcttggccgtatcattgtcatgattgaccttgtaattggttacacagctattcaatcaatggctatctgggctcgtaaaaatgatatgattcttcatttgcatcgtgcaggtaactctacttattctcgtcaaaaaattcatggtatgaattttcgagtaatatgtaaatggatgcgtatggcaggtgttgaccatattcatgcaggtactgttgtaggtaaattagaaggcgatcctctaatgatccaaggtttctataatacactactactgccatatttagaagtaaatttgccacaaggtatattctttgaacaagattgggcatctcttagaaaagttacacctgttgcttctggcggtattcattgcggacaaatgcatcaattattagattaccttggagttgatgttgttcttcaattcggtggtggtactattggtcaccctgatggtattcaagcaggagcaacagctaacngtgtagctnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnntgtagcagaaggaccacaaattttacaagatgcagcaaaaacttgtggacctttacaaacagctctagattaatggaaagatattagctttaattacacttctacagatacagctgattttgtagaaactccaacagctaacgtttag</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>COU22100</GBSeq_locus>
+    <GBSeq_length>1382</GBSeq_length>
+    <GBSeq_strandedness>single</GBSeq_strandedness>
+    <GBSeq_moltype>mRNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>01-JAN-1900</GBSeq_update-date>
+    <GBSeq_create-date>28-MAR-1995</GBSeq_create-date>
+    <GBSeq_definition>Chondrus ocellatus ribulose-1,5-bisphosphate carboxylase oxygenase large subunit pseudogene (rbcL) mRNA, chloroplast gene encoding chloroplast protein, partial cds</GBSeq_definition>
+    <GBSeq_primary-accession>U22100</GBSeq_primary-accession>
+    <GBSeq_accession-version>U22100.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|U22100.1|COU22100</GBSeqid>
+      <GBSeqid>gi|733093</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_source>chloroplast Chondrus ocellatus</GBSeq_source>
+    <GBSeq_organism>Chondrus ocellatus</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Rhodophyta; Florideophyceae; Rhodymeniophycidae; Gigartinales; Gigartinaceae; Chondrus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1382</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Brodie,J.</GBAuthor>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Guiry,M.D.</GBAuthor>
+          <GBAuthor>Masuda,M.</GBAuthor>
+          <GBAuthor>Hommersand,M.H.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Systematic studies of the genus Chondrus (Gigartinaceae, Rhodophyta)</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+      <GBReference>
+        <GBReference_reference>2</GBReference_reference>
+        <GBReference_position>1..1382</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Fredericq,S.</GBAuthor>
+          <GBAuthor>Hommersand,M.H.</GBAuthor>
+          <GBAuthor>Freshwater,D.W.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Direct Submission</GBReference_title>
+        <GBReference_journal>Submitted (02-MAR-1995) Suzanne Fredericq, MLS Department, Smithsonian Institution/UNC, 4210 Silver Hill Rd., Suitland, MD 20746, USA</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1382</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1382</GBInterval_to>
+            <GBInterval_accession>U22100.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Chondrus ocellatus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>mRNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:29222</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..1382</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1382</GBInterval_to>
+            <GBInterval_accession>U22100.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>CDS</GBFeature_key>
+        <GBFeature_location>&lt;1..1382</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1382</GBInterval_to>
+            <GBInterval_accession>U22100.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_partial5 value="true"/>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>note</GBQualifier_name>
+            <GBQualifier_value>153 nucleotides unsequenced encoding the amino terminus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>pseudo</GBQualifier_name>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>codon_start</GBQualifier_name>
+            <GBQualifier_value>3</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>product</GBQualifier_name>
+            <GBQualifier_value>ribulose-1,5-bisphosphate carboxylase oxygenase large subunit</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>gcttgcgacttatatagagcaaaagcgtacaaagtagatgctgtaccaaatacaactgatcaatatttgtagatccagtagaagcttctgctgcagttgctggtgaatcatctactgcaacttggacagtagtttggacagatcttttaaccgcttgtgacttatatagagcaaaagcgtacaaagtagatgctgtaccgaatacaactgatcaatattttgcgtatattgcatatgatattgatttatttgaagaaggttcaattgctaacttaacagcttcaattattggtaatgtatttggcttcaaagctcttaaagctttaagattagaagcaatgcgtttacctgttgcttatttaaaaacttttcaaggtcctgcaacaggcgtaatctgtgaacgtgaacgcatggacaagttcgggcgtccctttttaggtgcaactgttaaaccaaaattaggtctatcaggtaaaaactatggtcgtgtagtatatgaaggtcttaaaggtggcttagacttcttaaaagatgatgagaatattaattctcannnnttcatgcgttggaaagaaagatatctatattcaatggaaggtgtaaatcgtgctattgctgctgctggcgaaacaaaagggcattatttaaatgtaacagcaggtacaatggaannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnattcaatcaatggctatctgggctcgtaaaaatgatatgattcttcatttacatcgtgcaggtaactctacttactctcgtcaaaaaattcatggtatgaattttcgagtaatatgcaaatggatgcgtatggcaggcgttgaccatattcatgcaggtactgttgtaggcaaattagaaggcgatcctctaatgatccaaggtttctataatacactacttctgccatatttagaagtaaatttaccacaaggtatattctttgaacaagattgggcatctcttcgaaaagttacncctgttgcttctggcggtattcattgcggacaaatgcatcaattattagattaccttggagttgatgttgttcttcaattcggcggtggtactattggtcaccctgatggtattcaagcaggagcaacagctaaccgtgtagctctagaatcaatggttatagctcgtaatgaagggcgtgattttgtagcagaagggccacaaattttacaagatgcagcaaaaacttgtggacctttacaaacagctctagatttatggaaagatattagctttaattatacttctacagatacagctgattttgtagaaactccaacagctaacgtttaa</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>NFGCPRBCLF</GBSeq_locus>
+    <GBSeq_length>1375</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>10-FEB-1994</GBSeq_update-date>
+    <GBSeq_create-date>02-NOV-1993</GBSeq_create-date>
+    <GBSeq_definition>Nothofagus codonandra chloroplast ribulosebisphosphate carboxylase large subunit (rbcL) gene, 3&apos; end</GBSeq_definition>
+    <GBSeq_primary-accession>L13347</GBSeq_primary-accession>
+    <GBSeq_accession-version>L13347.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|L13347.1|NFGCPRBCLF</GBSeqid>
+      <GBSeqid>gi|410252</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>rbcL gene</GBKeyword>
+      <GBKeyword>ribulosebisphosphate carboxylase large subunit</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Nothofagus codonandra</GBSeq_source>
+    <GBSeq_organism>Nothofagus codonandra</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; rosids; fabids; Fagales; Nothofagaceae; Nothofagus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1375</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Martin,P.G.</GBAuthor>
+          <GBAuthor>Dowd,J.M.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Using sequences of rbcL to study phylogeny and biogeography of Nothofagus species</GBReference_title>
+        <GBReference_journal>Aust. Syst. Bot. 6, 441-447 (1993)</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_comment>Original source text: Chloroplast Nothofagus codonandra (organelle Chloroplast Nothofagus codonandra) leaf DNA.</GBSeq_comment>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1375</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1375</GBInterval_to>
+            <GBInterval_accession>L13347.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Nothofagus codonandra</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:28937</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>tissue_type</GBQualifier_name>
+            <GBQualifier_value>leaf</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..1375</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1375</GBInterval_to>
+            <GBInterval_accession>L13347.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>regulatory</GBFeature_key>
+        <GBFeature_location>1..&gt;1375</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1375</GBInterval_to>
+            <GBInterval_accession>L13347.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_partial3 value="true"/>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>regulatory_class</GBQualifier_name>
+            <GBQualifier_value>CAAT_signal</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>nnnnnnnnnnnnnnnnnnnnnnnnnnnnnngttggattcaaagctggtgttaaagattataaattgacttattatactcctgactacgaaaccaaagatactgatatattggcagcattccgagtaactcctcaacccggagttccgcctgaggaagcgggggctgcggtagctgcggaatcctctaccggtacatggacaacggtgtggaccgatggacttaccagtcttgatcgttacaaaggacgatgctaccacatcgagccagttgctggagaagaaaatcaatatattgcttatgtagcttaccccttagacctttttgaagaaggttctgttactaacatgtttacttccattgtgggtaatgtatttggattcaaggccctgcgcgctctacgtctggaggatttgcgaatccctcctgcttattctaaaactttccaaggtccgcctcatggcatccaagttgagagggataaattaaacaagtatggccgccccctattgggatgtactattaaaccgaaattgggattatccgctaagaattacggtagagcagtttatgaatgtctccgcggtggacttgattttaccaaagatgatgagaacgtaaattcccaaccatttatgcgttggagagaccgtttcgtattttgtgccgaagcaatttataaagcacaggctgaaacaggtgaaatcaaagggcattacttgaatgctactgcgggtacatgcgaagaaatgatcaaaagggctgtatttgccagagaattgggagttcctatcgtaatgcacgactacataacagggggattcactgcaaatactagcttggctcattattgccgagataatggtctacttcttcacattcatcgtgcaatgcatgcagttattgatagacagaagaatcatggtatacactttcgtgtactagctaaagcgttacgtatgtctggtggagatcatattcacgccggtaccgtagtaggtaaacttgaaggggaaagagacatcactttaggctttgttgatttactacgcgatgattttattgaaaaagatcgaagccgtggtatttatttcactcaagattgggtttctctaccaggtgttctgcccgtggcttcagggggtattcacgtttggcatatgcctgctctgaccgaaatctttggggatgattccgtattacaatttggcggaggaactttagggcacccttggggaaatgcacctggcgccgtagctaatcgagtagctctagaagcatgtgtacaagcccgtaatgagggacgcgaccttgctcgtgagggtaatgaaattatacgtgaggctagtaaatggagtcctgagctagctgctgctt</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>RDDCPSPACB</GBSeq_locus>
+    <GBSeq_length>573</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>19-AUG-1993</GBSeq_update-date>
+    <GBSeq_create-date>19-AUG-1993</GBSeq_create-date>
+    <GBSeq_definition>Rhytidiadelphus triquetrus chloroplast rbcL-atpB spacer DNA</GBSeq_definition>
+    <GBSeq_primary-accession>L23410</GBSeq_primary-accession>
+    <GBSeq_accession-version>L23410.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|L23410.1|RDDCPSPACB</GBSeqid>
+      <GBSeqid>gi|349798</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>atpB gene</GBKeyword>
+      <GBKeyword>rbcL gene</GBKeyword>
+      <GBKeyword>ribulosebisphosphate carboxylase large subunit</GBKeyword>
+      <GBKeyword>spacer</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Hylocomiadelphus triquetrus</GBSeq_source>
+    <GBSeq_organism>Hylocomiadelphus triquetrus</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Bryophyta; Bryophytina; Bryopsida; Bryidae; Hypnanae; Hypnales; Hylocomiaceae; Hylocomiadelphus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..573</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Chiang,T.-Y.</GBAuthor>
+          <GBAuthor>Schaal,B.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>rbcL-atpB spacer (cpDNA), a marker for molecular systematics of bryophytes at the species level</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_comment>Original source text: Chloroplast Rhytidiadelphus triquetrus (organelle Chloroplast Rhytidiadelphus triquetrus) DNA.</GBSeq_comment>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..573</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>573</GBInterval_to>
+            <GBInterval_accession>L23410.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Hylocomiadelphus triquetrus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:28469</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>rttacaactcaattgataactcttgcaaggattaggtctgctcgacaaataartgtttttttaatcttataaaaaaacatctttggtatttaattttgtctattrttttagacaaagttattttactataacaaaacagtatcattgtatagtattrtttttacatttgatgcaactcagattatttttagtaaatgagcttagttttrtattcgtataagcattgacctaataatcttttgaatgttaaactaattaatrtaaaaataaaatttaattaaaaacatagtaagaaataagaaataaaatatrttacctaatttaatttattttttgaaaataaaataaaatttttttatttaartatatatttattatttactaatattttgagattgtaaaaaatatgtatgtcrtttacactttttaattttttttattttatatacttatatctatatataagtrtaattaattgaaagtaattttttttcaataattaaatgatcgagttgarttactaaatatttttttcaatataatcagcaactaatttattacttctaaartttt</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>RDDCPSPACA</GBSeq_locus>
+    <GBSeq_length>535</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>19-AUG-1993</GBSeq_update-date>
+    <GBSeq_create-date>19-AUG-1993</GBSeq_create-date>
+    <GBSeq_definition>Rhytidiadelphus loreus rbcL-atpB spacer DNA</GBSeq_definition>
+    <GBSeq_primary-accession>L21722</GBSeq_primary-accession>
+    <GBSeq_accession-version>L21722.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|L21722.1|RDDCPSPACA</GBSeqid>
+      <GBSeqid>gi|349797</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>atpB gene</GBKeyword>
+      <GBKeyword>rbcL gene</GBKeyword>
+      <GBKeyword>ribulosebisphosphate carboxylase large subunit</GBKeyword>
+      <GBKeyword>spacer</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Rhytidiadelphus loreus</GBSeq_source>
+    <GBSeq_organism>Rhytidiadelphus loreus</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Bryophyta; Bryophytina; Bryopsida; Bryidae; Hypnanae; Hypnales; Hylocomiaceae; Rhytidiadelphus</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..535</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Chiang,T.-Y.</GBAuthor>
+          <GBAuthor>Schaal,B.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>rbcL-atpB spacer (cpDNA), a marker for molecular systematics of bryophytes at the species level</GBReference_title>
+        <GBReference_journal>Unpublished</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_comment>Original source text: Chloroplast Rhytidiadelphus loreus (organelle Chloroplast Rhytidiadelphus loreus) DNA.</GBSeq_comment>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..535</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>535</GBInterval_to>
+            <GBInterval_accession>L21722.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Rhytidiadelphus loreus</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:28468</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>tacaactcaattgataactcttgcaaggattaggtctgctcgacaaataargtttttttaatcttataaaaaaacatctttggtatttaattttgtctattrtgtagacaaagttattttactataacaaaacagtatcattgtatagtattrttttacatttgatgcaactcagattatttttagtaaatgatttttratttgtataagcattgacctaataatcttttgaatgttaaactaattaatraaaaataagatttaattaaaaacatagtaagaaataaaaaaataaactatrtacctaattcaatttattttttgaaaataaaataaaatttttttatttaaratatatttattatttactaatatttttagarcagtttttaattttttttattttagatacttatatctatatataagtraattaattgaaagtaattttttttcttcaataattaaatgatcgagttgartactaaatattttttcgatataatcagcaactaatttattacttctaaarttt</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>CODCPRBCL</GBSeq_locus>
+    <GBSeq_length>3382</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>05-JUN-1992</GBSeq_update-date>
+    <GBSeq_create-date>03-AUG-1993</GBSeq_create-date>
+    <GBSeq_definition>Codium fragile chloroplast ribulose-1,5-bisphosphate carboxylase/oxygenase large subunit (rbcL) gene, exons 1 and 2</GBSeq_definition>
+    <GBSeq_primary-accession>M67453</GBSeq_primary-accession>
+    <GBSeq_accession-version>M67453.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|M67453.1|CODCPRBCL</GBSeqid>
+      <GBSeqid>gi|336614</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>ribulose-1,5-bisphosphate carboxylase/oxygenase large subunit</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Codium fragile</GBSeq_source>
+    <GBSeq_organism>Codium fragile</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Chlorophyta; Ulvophyceae; TCBD clade; Bryopsidales; Bryopsidineae; Codiaceae; Codium</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..3382</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Manhart,J.R.</GBAuthor>
+          <GBAuthor>VonderHaar,R.A.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Intron revealed by nucleotide sequence of large subunit of ribulose-1,5-bisphosphate carboxylase/oxygenase from codium fragile (Chlorophyta): Phylogenetic analysis</GBReference_title>
+        <GBReference_journal>J. Phycol. 27, 613-617 (1991)</GBReference_journal>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_comment>Original source text: Chloroplast Codium fragile (organelle Chloroplast Codium fragile) DNA.</GBSeq_comment>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..3382</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>3382</GBInterval_to>
+            <GBInterval_accession>M67453.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Codium fragile</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:3133</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>29..3269</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>29</GBInterval_from>
+            <GBInterval_to>3269</GBInterval_to>
+            <GBInterval_accession>M67453.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>exon</GBFeature_key>
+        <GBFeature_location>29..832</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>29</GBInterval_from>
+            <GBInterval_to>832</GBInterval_to>
+            <GBInterval_accession>M67453.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>number</GBQualifier_name>
+            <GBQualifier_value>1</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>intron</GBFeature_key>
+        <GBFeature_location>833..2645</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>833</GBInterval_from>
+            <GBInterval_to>2645</GBInterval_to>
+            <GBInterval_accession>M67453.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>exon</GBFeature_key>
+        <GBFeature_location>2646..3269</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>2646</GBInterval_from>
+            <GBInterval_to>3269</GBInterval_to>
+            <GBInterval_accession>M67453.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>number</GBQualifier_name>
+            <GBQualifier_value>2</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>atcgatatatttagatgaaatattaaaaatggttccaaaaactgaaactaaagcaggtgcaggatttaaagcaggggttaaagattatcgactaacctattatacacctgattatcaagttaaagaaactgacattcttgcagcttttcgtatgactccacaacctggagttccgccagaagaatgtggagctgctgttgctgctgaatcttcaactggaacatggacaacagtttggacagatggattaacaagtttagatagttataaaggacgttgttatgatttagaaccggtaaaaggagaagaaaatcaatatattgcatatgttgcttatcctattgatttatttgaagaaggatcggttactaatttatttacatcaattgttggaaacgtttttggatttaaagcattacgagctcttcgattagaagatttacggatttcaccagcttatgcaaaaacatttcaaggaccacctcatgggattgaagtagaacgagataaattaaataaatatggacgtccattattaggttgtactattaaacctaaattaggcttatcagctaaaaattatggacgtgctgtttatgaatgtttaagaggtggattagattttactaaagatgatgagaatgtaaattctcaaccttttatgcgttggagagatagatttttatttgttgcggaagctatttataaatcacaagcagaaactggagaaattaaaggacattatttaaatgcaacagctgggacgtgtgaagaaatgttaaaacgtgcacaatgtgcgaaagaattcggcgtacctattatcatgcacgatgtgtgacacgaagttactggttatagtagaaatttggcattttgacaactttctgacttaagtattagagtcttctcttttaaagggtgcatgatgaatacatgtatcaaacactttaaaagaaattttattttataaagatcaaataacagcttcgttaggatacttttagatctatataagagtagaatttttatcgtgattttctattaatacttctttgatctcggagtgattgatttgatgattataaattatatatataaagcagtaaaacgtgggaaacttaaattaagcctactgggatatttaaatagtaatatttattttttatttaagttgcggaaaactctgttatgtcttgaacattttttgattaaagatattcttctgaaaatcaacggaaaattacaatcattaggttatacgtttaacttaatttgtatataaccgaaaaatgaaaataatttttttatttgacaaatgagagtttggtcttaaaaattttttttatatgcattttaatttttataactctatattttcatgggataatattgattggaattttattgaaaaacgagttcgaaaattaaaatatcgaatttttttgagtaaaaaaaaaaaattcttttatatttcacaaaaatagaaagtttagtttagaaagtcactctattcgattattttctattaaaaccattttttttactaaaaaaaaaattttttttttgttttatgttaaatctacttttaatcttatttttaagaaattatgtaccatttctttggaatattatgaaccttgcaatttaaactttaaatttgaattatttcttgatttttgttgtcaaattattttatttcatatttttgaacccgattggttttgtcgacaaaatatttatttctatcattgtcacagaaatccacaattctttttatataaaactattgcggctttacaatttaagaattatttgaaaaaatggattttagttttcaatattcattttttagattggactttttgcttaccagtcaaaatgccagttttaaatttttttttacagatatggattacacagaaacacattctttttaataaaacaatacagttttttattttagaaattttcgttttttctttttttaagattactcaaattacttttatttctttttttaattctttatttttcttttttaaaaatttgaaaaaagtgcaaggtttgcaaaataaattttattctatcataggtggagcatctacatataaacatcttttttctagtttagaaggatttcaagtattttattggaattttcaacattttttgactaagcaatctcagaaacatcattacaatatgattttaattattcaacctagtcaatttattcgacaacatattaaagatatttttaaatatgaatggagatttttaagaggaaaatctactttatctgttattttacgattaaatcctattattcgaaaatggaatctttttttttttaaagccaaattttctagtatatttttaaatcagttagatcaatggatgtttgtcaaaagttggagatatgcacaacgcgaaaatactaataaatcaaaaaaatggatcaaaaaacattattttgggtcttttaaaattttaaatacttataaatggatttttggagatctcaaaacagggtattttttagttaaatttaattggtttttttttaagcttgagccatatgcattgagaaatgcacgtatggttcttaggggggacttttttggtaacattttgacctacccgactatttaactggaggttggacagctaatacaagtttagctcgttactgtcgagataatggcttattattacatatacatcgagctatgcatgcggttattgatcgacaaaaaaatcatggaatgcattttcgggttttagctaaatctttacgtatgtctggtggagatcatttacattctggaactgttgtaggaaaacttgaaggtgaacgtgaagttactttaggttttgttgatttgatgcgagatgattttattacaaaagatagaagtcgtggaatttattttactcaagattgggtttctttacctggtgttatgcctgttgcttcagggggtattcatgtttggcatatgcccgcattagtagaaattttcggagatgatgcttgtttacaatttggaggaggtactttaggacatccatggggaaatgctcctggtgcagctgctaaccgaattgcttgtgaagcttgtgttcaagctagaaatgaaggaagagatttagctagagaaggcggagatgttattagagctgcttgtacttggagtccagaattagcagcggcttgtgaagtttggaaagaaattaaatttgaatttgatactattgatactctttaaattttttatttgaaaattcatatatatgtctagacatatatatgaatttttagagtaacattatagtttgagaaatatatttatagggaattacaccatccagttgagcgata</GBSeq_sequence>
+  </GBSeq>
+
+  <GBSeq>
+
+    <GBSeq_locus>APDCPRBCL</GBSeq_locus>
+    <GBSeq_length>1428</GBSeq_length>
+    <GBSeq_strandedness>double</GBSeq_strandedness>
+    <GBSeq_moltype>DNA</GBSeq_moltype>
+    <GBSeq_topology>linear</GBSeq_topology>
+    <GBSeq_division>PLN</GBSeq_division>
+    <GBSeq_update-date>20-MAY-1993</GBSeq_update-date>
+    <GBSeq_create-date>11-JUN-1993</GBSeq_create-date>
+    <GBSeq_definition>Aphelandra sinclairana chloroplast ribulosebisphosphate carboxylase large subunit (rbcL) gene, one exon</GBSeq_definition>
+    <GBSeq_primary-accession>L01884</GBSeq_primary-accession>
+    <GBSeq_accession-version>L01884.1</GBSeq_accession-version>
+    <GBSeq_other-seqids>
+      <GBSeqid>gb|L01884.1|APDCPRBCL</GBSeqid>
+      <GBSeqid>gi|289146</GBSeqid>
+    </GBSeq_other-seqids>
+    <GBSeq_keywords>
+      <GBKeyword>ribulosebisphosphate carboxylase</GBKeyword>
+    </GBSeq_keywords>
+    <GBSeq_source>chloroplast Aphelandra sinclairiana</GBSeq_source>
+    <GBSeq_organism>Aphelandra sinclairiana</GBSeq_organism>
+    <GBSeq_taxonomy>Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta; Spermatophyta; Magnoliopsida; eudicotyledons; Gunneridae; Pentapetalae; asterids; lamiids; Lamiales; Acanthaceae; Acanthoideae; Acantheae; Aphelandra</GBSeq_taxonomy>
+    <GBSeq_references>
+      <GBReference>
+        <GBReference_reference>1</GBReference_reference>
+        <GBReference_position>1..1428</GBReference_position>
+        <GBReference_authors>
+          <GBAuthor>Albert,V.A.</GBAuthor>
+          <GBAuthor>Williams,S.E.</GBAuthor>
+          <GBAuthor>Chase,M.W.</GBAuthor>
+        </GBReference_authors>
+        <GBReference_title>Carnivorous plants: phylogeny and structural evolution</GBReference_title>
+        <GBReference_journal>Science 257 (5076), 1491-1495 (1992)</GBReference_journal>
+        <GBReference_pubmed>1523408</GBReference_pubmed>
+      </GBReference>
+    </GBSeq_references>
+    <GBSeq_comment>Original source text: Chloroplast Aphelandra sinclairiana (organelle Chloroplast Aphelandra sinclairiana) leaf DNA.</GBSeq_comment>
+    <GBSeq_feature-table>
+      <GBFeature>
+        <GBFeature_key>source</GBFeature_key>
+        <GBFeature_location>1..1428</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1428</GBInterval_to>
+            <GBInterval_accession>L01884.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>organism</GBQualifier_name>
+            <GBQualifier_value>Aphelandra sinclairiana</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>organelle</GBQualifier_name>
+            <GBQualifier_value>plastid:chloroplast</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>mol_type</GBQualifier_name>
+            <GBQualifier_value>genomic DNA</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>db_xref</GBQualifier_name>
+            <GBQualifier_value>taxon:4187</GBQualifier_value>
+          </GBQualifier>
+          <GBQualifier>
+            <GBQualifier_name>tissue_type</GBQualifier_name>
+            <GBQualifier_value>leaf</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>gene</GBFeature_key>
+        <GBFeature_location>1..1428</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1428</GBInterval_to>
+            <GBInterval_accession>L01884.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+      <GBFeature>
+        <GBFeature_key>exon</GBFeature_key>
+        <GBFeature_location>1..1428</GBFeature_location>
+        <GBFeature_intervals>
+          <GBInterval>
+            <GBInterval_from>1</GBInterval_from>
+            <GBInterval_to>1428</GBInterval_to>
+            <GBInterval_accession>L01884.1</GBInterval_accession>
+          </GBInterval>
+        </GBFeature_intervals>
+        <GBFeature_quals>
+          <GBQualifier>
+            <GBQualifier_name>gene</GBQualifier_name>
+            <GBQualifier_value>rbcL</GBQualifier_value>
+          </GBQualifier>
+        </GBFeature_quals>
+      </GBFeature>
+    </GBSeq_feature-table>
+    <GBSeq_sequence>nnnnnnnnnnnnnnnnnnnnnnnnnnnnttgttggattcaaagcgggtgttaaagagtacaaattgacttattatactcctgaatacgaaaccaaagatactgatatcttggcagcattccgagtaactcctcaacccggagttccacctgaagaagcgggggcagcggtagctgccgaatcttctactggtacatggacaaccgtgtggaccgatggacttaccagccttgatcgttacaaagggcgatgctacaacatcgaacctgttcctggcgaaacggatcaatatatctgttatgtagcttaccctttagacctttttgaagaaggttctgttactaacatgttcacttccattgtaggaaatgtgtttggattcaaagccctgcgcgctctacgtctggaagatctgcgaatccctcctgcttatattaaaactttccaaggtccgcctcatgggatccaagttgagagagataaattgaacaagtatggtcgtcccctgctgggatgtactattaaacctaaattggggttatctgctaaaaactacggtagagcatgttatgaatgtcttcgcggcggacttgattttaccaaagatgatgagaacgtgaactcccagccatttatgcgttggcgagatcgtttcttattttgtgccgaagccatttataaatcacaggctgaaacaggcgaaatcaaagggcattacttgaatgctactgcaggtacatgcgaagaaatgatcaaaagggctgtatttgctagagaattgggagttcctatcgtaatgcatgactacttaacaggaggattcactgcaaatactagcttggctcattattgccgagataatggcctacttcttcacattcaccgtgcaatgcatgcagttattgatagacagaagaatcatggtatgcacttccgtgtactagctaaagcgttacgtctgtctggtggagatcatattcacgctggtaccgtagtaggtaaacttgaaggagaaagagacatcactttgggatttgttgatttactgcgtgatgattttgttgaaaaagatcgaagtcgcggtatttatttcactcaagattgggtctctctaccaggcgttattcccgtggcttcagggggtattcacgtttggcatatgcccgctctgaccgaaatctttggggatgattccgtactacagttcggtggaggaactttaggacacccttggggtaatgcgccaggtgccgtagctaatcgagtagctgtagaagcatgtgtacaagctcgtaatgaaggacgtgatcttgctgctgagggtaatgcaattatccgtgaggctagcaaatggagtccagagctagctgctgcttgtgaggtatggaaagagctcaaatttgagtttcaagcagtggatactttggat</GBSeq_sequence>
+  </GBSeq>
+
+</GBSet>
+

@@ -3,6 +3,8 @@ title: "Creating customised DNA reference databases - downloading from NCBI"
 author: "Jessica Chung /Melissa Carew"
 date: "15/02/2024"
 output: html_document
+---
+
 
 --------------------------------------------------------------------------------
 # SECTION 1: Getting data from NCBI GenBank
