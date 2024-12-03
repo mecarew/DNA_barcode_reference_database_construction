@@ -1,0 +1,430 @@
+---
+title: "Creating customised DNA reference databases - downloading from NCBI"
+author: "Jessica Chung /Melissa Carew"
+date: "15/02/2024"
+output: html_document
+---
+
+
+--------------------------------------------------------------------------------
+# SECTION 1: Getting data from NCBI GenBank
+
+The refdb packages uses the rentrez package (Winter 2017) to interface with NCBI servers. For animal DNA barcodes we will need to download data from the mitochondrial COI gene.
+
+NOTE: This section is not currently working in refdb. These scripts are problematic for the download of data from NCBI GenBank (the link gets interupted). Jess has modified the code to make this step work but it is still problematic. Downloading NCBI COI sequences needs to be done over a few days. Don't expect everything to run smoothly. Expect errors and timeouts.
+
+If a downloading from the NCBI GenBank data is not require please skip to 'Step 7' to import the last version of the cleaned NCBI GenBank data.
+
+# set up
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=TRUE, message=TRUE, error=TRUE, echo=TRUE, results="hold")
+knitr::opts_knit$set(root.dir = "..")
+options(digits=4)
+options(width=120)
+```
+
+#Step 1: Set parameters/instructions for downloading data 
+
+The refdb function `modified_refdb_import_NCBI` was split up into parts so downloading could be done in batches. Also some edits for taxon IDs that cause errors and keeping tmp files. Need to manually delete tmp files afterwards.
+
+```{r}
+modified_refdb_import_NCBI_pt1 <- function (query, max_seq_length = 10000, start = 0L, verbose = TRUE) 
+{
+    # ff <- tempfile("refdb_NCBI_", fileext = ".csv")
+    # fx <- tempfile("refdb_NCBI_", fileext = ".xml")
+    query <- paste0(query, " AND ( \"0\"[SLEN] : \"", max_seq_length, 
+        "\"[SLEN] )")
+    req <- rentrez::entrez_search(db = "nuccore", term = query, 
+        use_history = TRUE)
+    if (req$count == 0) {
+        if (verbose) 
+            cat("No sequence found\n")
+        return(NULL)
+    }
+    if (verbose && start > 0L) 
+        cat("Found", req$count, "sequences. Starting at", start, 
+            ".\n")
+    if (verbose) 
+        # cat("Downloading", req$count - start, "sequences from NCBI...\n")
+        cat("Found", req$count - start, "sequences from NCBI...\n")
+    return(req)
+}
+    
+modified_refdb_import_NCBI_pt2 <- function (request, csv_output, tmp_dir=tempdir(), full = FALSE, seq_bin = 200, 
+    verbose = TRUE, start = 0L, end=NULL) 
+{
+    # Modified to write multiple csv files and keep them. Data frame is written twice for troubleshooting. Manually delete files after.
+    if (! dir.exists(tmp_dir)) {
+      dir.create(tmp_dir, recursive=TRUE)
+    }
+    if (is.null(end) || end > request$count) {
+      end <- request$count
+    }
+    # ff_all <- tempfile("refdb_NCBI_", fileext = ".csv", tmpdir=tmp_dir)
+    ff_all <- csv_output
+    fx <- tempfile("refdb_NCBI_", fileext = ".xml", tmpdir=tmp_dir)
+    for (seq_start in seq(start, end, seq_bin)) {
+        ff <- tempfile(paste0("refdb_NCBI_", seq_start, "_"), fileext = ".csv", tmpdir=tmp_dir)
+        recs <- refdb:::entrez_fetch_retry(db = "nuccore", web_history = request$web_history, 
+            rettype = "gb", retmode = "xml", retmax = seq_bin, 
+            retstart = seq_start, delay_retry = 60, n_retry = 50, 
+            verbose = verbose)
+        if (is.na(recs)) {
+            next
+        }
+        readr::write_lines(recs, file = fx, append = FALSE)
+        NCBI_xml <- xml2::read_xml(fx)
+        NCBI_xml <- xml2::xml_children(NCBI_xml)
+        NCBI_table <- refdb:::make_ncbi_table(NCBI_xml)
+        taxo_id <- lapply(NCBI_xml, function(x) {
+            res <- xml2::xml_find_all(x, ".//GBQualifier_name[text()=\"db_xref\"]/following-sibling::GBQualifier_value")
+            res <- xml2::xml_text(res)
+            res <- res[stringr::str_detect(res, "taxon:[0-9]+")]
+            res <- unique(res)
+            res <- stringr::str_extract(res, "(?<=taxon:)[0-9]+")
+            # Sometimes a record doesn't have a taxon ID which causes an error downstream (e.g. MT491941)
+  if (length(res) == 0) {
+    message("Warning: Empty taxon id observed")
+    res <- NA
+  }
+  return(res)
+  })
+taxo_id <- unlist(taxo_id)
+taxo_id <- tibble::tibble(taxonomy = NCBI_table$taxonomy, 
+                          id = taxo_id)
+
+# Remove NA taxon IDs
+taxo_id <- taxo_id[! is.na(taxo_id$id), ]
+
+taxo_id <- taxo_id[!duplicated(taxo_id$taxonomy), ]
+gtax <- get_ncbi_taxonomy_retry(taxo_id$id, delay_retry = 60, 
+                                n_retry = 50, verbose = verbose)
+taxo_id <- dplyr::left_join(taxo_id, gtax[, -ncol(gtax)], 
+                            by = "id")
+NCBI_table <- dplyr::left_join(NCBI_table, taxo_id, by = "taxonomy", 
+                               suffix = c("", "_taxonomy"))
+NCBI_table <- tibble::tibble(source = "NCBI", NCBI_table)
+NCBI_table <- dplyr::mutate(NCBI_table, species = .data$organism)
+if (full == FALSE) {
+  NCBI_table <- dplyr::select(NCBI_table, .data$source, 
+                              .data$id, .data$gene, .data$sequence, .data$superkingdom, 
+                              .data$kingdom, .data$phylum, .data$subphylum, 
+                              .data$class, .data$subclass, .data$infraclass, 
+                              .data$order, .data$suborder, .data$infraorder, 
+                              .data$superfamily, .data$family, .data$genus, 
+                              .data$species, .data$country_location, .data$lat_lon)
+}
+if (seq_start == 0 | ! file.exists(ff_all)) {
+  readr::write_csv(NCBI_table[0, ], file = ff_all)
+}
+readr::write_csv(NCBI_table, file = ff_all, append = TRUE, col_names = FALSE)
+readr::write_csv(NCBI_table, file = ff, col_names = TRUE)
+if (verbose) {
+  cat("\r > ", seq_start + nrow(NCBI_table), " (", 
+      round((seq_start + nrow(NCBI_table))/request$count * 
+              100, digits = 1), "%) ", "sequences downloaded.", 
+      sep = "")
+}
+}
+}
+
+
+modified_refdb_import_NCBI_pt3 <- function (csv_file) 
+{
+  ff <- csv_file
+  out <- readr::read_csv(ff, col_types = readr::cols())
+  out <- refdb:::process_geo_ncbi(out)
+  out <- refdb_set_fields_NCBI(out)
+  out <- refdb_set_fields(out, latitude = "latitude", longitude = "longitude")
+  # file.remove(ff, fx)
+  return(out)
+}
+
+# This is unedited from refdb:::get_ncbi_taxonomy_retry but needs to be here so I can edit get_ncbi_taxonomy
+get_ncbi_taxonomy_retry <- function (id, delay_retry = 60, n_retry = 20, verbose = TRUE) 
+{
+  res <- "error"
+  while (identical(res, "error") & n_retry > 0) {
+    res <- tryCatch({
+      Sys.sleep(0.1)
+      get_ncbi_taxonomy(id, verbose = verbose)
+    }, error = function(cond) {
+      if (verbose) {
+        message("\nSomething went wrong:")
+        message(cond)
+        message("\n")
+        for (i in delay_retry:0) {
+          cat("\rRetrying in", i, "s.  ")
+          Sys.sleep(1)
+        }
+        cat("\n")
+      }
+      return("error")
+    })
+    n_retry <- n_retry - 1
+  }
+  if (identical(res, "error")) {
+    stop("All attempts failed.")
+  }
+  else {
+    return(res)
+  }
+}
+
+
+xml_extract <- refdb:::xml_extract
+
+get_ncbi_taxonomy <- function (id, verbose = TRUE) 
+{
+  ids <- split(id, ceiling(seq_along(id)/100))
+  taxo_table <- lapply(ids, function(x) {
+    taxo <- refdb:::entrez_fetch_retry("taxonomy", id = x, rettype = "xml", 
+                                       verbose = verbose)
+    taxo_xml <- xml2::read_xml(taxo)
+    taxo_xml <- xml2::xml_children(taxo_xml)
+    
+    # This is super hacky...
+    if (length(taxo_xml) != length(x)) {
+      entrez_taxo_ids <- sapply(taxo_xml, function(y) {
+        str_extract(xml2::xml_text(y), "^\\d+")
+      })
+      missing_ids <- x[! x %in% entrez_taxo_ids]
+      message("Warning: taxon information from entrez has fewer records than the provided IDs. Removing ", missing_ids)
+      x <- x[x %in% entrez_taxo_ids]
+    }
+    
+    taxo_table <- tibble::tibble(id = x, superkingdom = xml_extract(taxo_xml, 
+                                                                    ".//Rank[text()=\"superkingdom\"]/preceding-sibling::ScientificName"), 
+                                 kingdom = xml_extract(taxo_xml, ".//Rank[text()=\"kingdom\"]/preceding-sibling::ScientificName"), 
+                                 phylum = xml_extract(taxo_xml, ".//Rank[text()=\"phylum\"]/preceding-sibling::ScientificName"), 
+                                 subphylum = xml_extract(taxo_xml, ".//Rank[text()=\"subphylum\"]/preceding-sibling::ScientificName"), 
+                                 class = xml_extract(taxo_xml, ".//Rank[text()=\"class\"]/preceding-sibling::ScientificName"), 
+                                 subclass = xml_extract(taxo_xml, ".//Rank[text()=\"subclass\"]/preceding-sibling::ScientificName"), 
+                                 infraclass = xml_extract(taxo_xml, ".//Rank[text()=\"infraclass\"]/preceding-sibling::ScientificName"), 
+                                 order = xml_extract(taxo_xml, ".//Rank[text()=\"order\"]/preceding-sibling::ScientificName"), 
+                                 suborder = xml_extract(taxo_xml, ".//Rank[text()=\"suborder\"]/preceding-sibling::ScientificName"), 
+                                 infraorder = xml_extract(taxo_xml, ".//Rank[text()=\"infraorder\"]/preceding-sibling::ScientificName"), 
+                                 superfamily = xml_extract(taxo_xml, ".//Rank[text()=\"superfamily\"]/preceding-sibling::ScientificName"), 
+                                 family = xml_extract(taxo_xml, ".//Rank[text()=\"family\"]/preceding-sibling::ScientificName"), 
+                                 genus = xml_extract(taxo_xml, ".//Rank[text()=\"genus\"]/preceding-sibling::ScientificName"), 
+                                 species = xml_extract(taxo_xml, ".//Rank[text()=\"species\"]/preceding-sibling::ScientificName"))
+    return(taxo_table)
+  })
+  taxo_table <- dplyr::bind_rows(taxo_table)
+  return(taxo_table)
+}
+```
+
+# Step 2: Download sequence data for COI (the DNA barcode gene)
+```{r}
+ncbi_request <- modified_refdb_import_NCBI_pt1("(18s[Gene Name] OR 18S rRNA[Title] OR SSU rRNA[Title]OR 18S ribosomal RNA[Title]) NOT environmental sample[Filter] NOT environmental samples[Filter] NOT environmental[Title] NOT uncultured[Title] NOT unclassified[Title] NOT unidentified[Title] NOT unverified[Title]")
+```
+
+Note: The number of sequences change over time. e.g.  
+4370766 sequences as of 2023-06-28.  
+4371338 sequences as of 2023-06-29 and 30.  
+4378270 sequences as of 2023-07-01.  
+
+```{r}
+seq(0, ncbi_request$count, by=3e5)
+```
+
+```{r eval=FALSE}
+csv_file <- here::here("18s/ncbi_18s2.csv")
+tmp_dir <- here::here("18s/tmp_ncbi_18s2")
+
+# e.g. Run commands in batches like so:
+#modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=0, end=300000)
+
+#modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=300000, end=600000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=654000, end=900000-1)
+
+# If things break, can manually specify start and end indices. Duplicate sequences will be removed at a later step, so don't worry about downloading sequences twice.
+```
+
+```{r eval=FALSE}
+csv_file <- here("ncbi_2023-06-30.csv")
+tmp_dir <- here("tmp_2023-06-30")
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=900000, end=1200000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=1200000, end=1500000-1)
+```
+
+```{r eval=FALSE}
+csv_file <- here::here("18s/ncbi_18s.csv")
+tmp_dir <- here::here("18s/tmp_ncbi_18s")
+
+# If the database updates overnight, you can offset the start index by some amount (e.g.)
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=1500000-7000, end=1800000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=1800000, end=2100000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=2100000, end=2400000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=2400000, end=3000000-1)
+
+```
+
+```{r eval=FALSE}
+csv_file <- here("ncbi_2023-07-02.csv")
+tmp_dir <- here("tmp_2023-07-02")
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=3000000, end=3300000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=3300000, end=3900000-1)
+
+modified_refdb_import_NCBI_pt2(ncbi_request, csv_output = csv_file, tmp_dir = tmp_dir, start=3900000)
+```
+
+# Load in files
+```{r}
+library(refdb)
+# Overlap between june 28 and 29, and june 30 and july 01
+f1 <- modified_refdb_import_NCBI_pt3(here::here("18s/ncbi_18s.csv"))
+f2 <- modified_refdb_import_NCBI_pt3(here::here("18s/ncbi_18s2.csv"))
+#f3 <- modified_refdb_import_NCBI_pt3(here("ncbi_2023-06-30.csv"))
+#f4 <- modified_refdb_import_NCBI_pt3(here("ncbi_2023-07-01.csv"))
+#f5 <- modified_refdb_import_NCBI_pt3(here("ncbi_2023-07-02.csv"))
+```
+
+```{r}
+# Combine everything
+combined_with_dups <- rbind(f1, f2)
+nrow(combined_with_dups)
+table(duplicated(combined_with_dups$id))
+
+# Remove duplicates
+dups <- rev(duplicated(rev(combined_with_dups$id)))
+combined <- combined_with_dups[! dups,]
+table(duplicated(combined$id))
+
+# I think we should name the file with the database name and date (i.e., all NCBI_Oct23)
+saveRDS(combined, file=here::here("18s/18s_ncbi_may24"))
+rm(combined_with_dups)
+```
+
+# Session Info
+  
+```{r}
+if (nzchar(system.file(package="devtools"))) {
+  devtools::session_info()
+} else {
+  sessionInfo()
+}
+```
+
+^ The section above for downloading sequences from NCBI GenBank has been configured by Jess. Mel has not run through this yet.
+
+# Step 3: Retriving the last saved version of NCBI GenBank raw COI data file (if starting from this point)
+```{r}
+ncbi_data <- readRDS("/mnt/galaxy/home/jess/projects/metabarcoding_pipeline/ref_db/combined_tbl_df.rds")
+```
+
+# Step 4: Preparing NCBI GenBank file
+Some records may have no sequence data, so need to be removed. Also, BOLD data on NCBI is named 'sp. BOLD:' should be converted to 'sp. B-' to be consistent with the naming in the mwbug database and our private DNA barcode library (from our own DNA barcoding). This data needs to be split from other records and the 'extra bits on names' filter used on the dataset without BOLD id's. The fields need to be set for refdb.
+
+```{r}
+#remove files with no sequence data
+ncbi_data <- ncbi_data[!is.na(ncbi_data$sequence),]
+
+tax_blank <- ncbi_data[is.na(ncbi_data$superkingdom),]
+
+tax_blank <- ncbi_data[!is.na(ncbi_data$superkingdom),]
+tax_blank <- ncbi_data[grep("NA", ncbi_data$species),] 
+
+# group records with BOLD BIN's
+ncbi_bold <- ncbi_data[grep("sp. BOLD:", ncbi_data$species),] 
+# adjust names to be inline with mw_bugs
+ncbi_bold$species <- gsub("sp. BOLD:", "sp. B-", ncbi_bold$species)
+
+# group records without BOLD BIN's
+ncbi_nonbold <- ncbi_data[-grep("sp. BOLD:", ncbi_data$species),]
+# remove extra bits on names which are added by NCBI
+ncbi_nonbold <- refdb::refdb_clean_tax_remove_extra(ncbi_nonbold)
+
+#merge back together
+ncbi_data_clean <- refdb::refdb_merge(ncbi_bold, ncbi_nonbold)
+
+# set fields for refdb
+ncbi_data_clean <- refdb::refdb_set_fields(ncbi_data_clean,
+                              taxonomy = c(kingdom = "superkingdom",
+                                phylum = "phylum",
+                                class = "class",
+                                order = "order",
+                                family = "family",
+                                genus = "genus",
+                                species = "species"),
+                              sequence = "sequence",
+                              marker = "gene",
+                              source = "source",
+                              id = "id")
+
+refdb::refdb_get_fields(ncbi_data_clean)
+
+#remove files no longer needed
+rm(ncbi_bold)
+rm(ncbi_nonbold)
+rm(ncbi_data)
+```
+
+## Cleaning DNA sequences and taxonomic data
+
+# Step 4: Remove duplicates
+This will remove records with identical sequence and taxonomic information. Expect the number of sequence records to reduce by 30-50%.
+```{r}
+ncbi_data_clean <- refdb::refdb_filter_seq_duplicates(ncbi_data_clean)
+```
+
+# Step 6: Plot sequence length of NCBI data
+This will give an idea of the sequence length of the data retrieved from NCBI. The full COI gene is ~1500 bp long in animals. DNA barcodes are ~658bp but can vary.
+
+```{r}
+refdb::refdb_plot_seqlen_hist(NCBI_data_clean)
+```
+
+# Visualizing the reference library (Optional)
+Now let’s take a tour of the functions you can use to produce graphical representation of your reference database. Because refdb stores reference database as dataframes it is straightforward to produce plots (e.g. with the tidyverse and ggplot2). For example, we can make a barplot showing the distribution of the phyla like this:
+  
+```{r}
+ncbi_data_clean %>% 
+  group_by(phylum) %>% 
+  count() %>% 
+  ggplot(aes(fct_reorder(phylum, n, .desc = TRUE), n)) +
+  geom_col() +
+  xlab("Phylum") +
+  ylab("Number of records") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=0.5))
+```
+
+Additionally, refdb provides ready-to-use functions to produce more sophisticated plots. For example, to represent the taxonomic coverage of your reference library across multiple levels with a tree map:
+  
+```{r}
+refdb::refdb_plot_tax_treemap(ncbi_data_clean, cols = 2)
+```
+
+Alternatively you can represent this information with a taxonomic tree. These functions have several parameters to control what is represented in the plot (taxonomic ranks, colors, etc.).
+
+# Creating a report (useful)
+A report is a simple and rapid way to get an overview of the current state of your reference library and to identify some possible issues. You can compile a report using the function refdb_report: 
+
+```{r}
+refdb::refdb_report(ncbi_data_clean, view=TRUE)
+```                       
+
+The result (not shown here) is an interactive HTML report that can be opened in any recent web browser. It contains some statistics and plots, and the results of functions refdb_check_tax_typo, refdb_check_tax_conflict and refdb_check_seq_conflict. These functions can be used to identify possible spelling errors in taxonomic names, conflicts in the taxonomic tree and lack of genetic resolution in sequences, respectively.
+
+# Step 7: Export cleaned data (add source database, status and date to file name)
+This data will be used to create the DNA barcode reference library and will be combined with the data  below which includes downloads from BOLD and data from our own DNA sequencing (private DNA barcodes)
+
+```{r}
+# save cleaned data
+saveRDS(ncbi_data_clean, file=here::here("/cleaned_libraries/NCBI_data_clean_Oct23.rds"))
+
+# importing cleaned NCBI GenBank data (if required)
+
+#load cleaned data
+#ncbi_data_clean <- readRDS(here::here("cleaned_libraries/NCBI_data_clean_Oct23.rds"))
+```
+
