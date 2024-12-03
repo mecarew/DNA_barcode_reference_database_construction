@@ -1,0 +1,310 @@
+---
+title: "Creating customised DNA reference databases - Merging databases"
+author: "Jessica Chung /Melissa Carew"
+date: "15/02/2024"
+output: html_document
+---
+
+--------------------------------------------------------------------------------
+# SECTION 4: Creating a complete reference library
+
+# import cleaned libraries (IF NEEDED)
+```{r}
+# import downloads from ncbi and bold (IF NEEDED)
+
+ncbi_data_its2 <- readRDS(here::here("Plants/combined_ncbi_its2_may24.rds"))
+ncbi_data_rbcl <- readRDS(here::here("Plants/combined_ncbi_rbcl_may24.rds"))
+ncbi_data_trnl <- readRDS(here::here("Plants/combined_ncbi_trnl_may24.rds"))
+bold_data_its2 <- readRDS(here::here("Plants/bold_plant_ITS2_clean_Apr24.rds"))
+bold_data_rbcl <- readRDS(here::here("Plants/bold_plant_rbcL_clean_Apr24.rds"))
+bold_data_trnl <- readRDS(here::here("Plants/bold_plant_trnL_clean_Apr24.rds"))
+
+```
+
+```{r}
+# set fields for refdb
+ncbi_data_trnl <- refdb::refdb_set_fields(ncbi_data_trnl,
+                              taxonomy = c(kingdom = "superkingdom",
+                                phylum = "phylum",
+                                class = "class",
+                                order = "order",
+                                family = "family",
+                                genus = "genus",
+                                species = "species"),
+                              sequence = "sequence",
+                              marker = "gene",
+                              source = "source",
+                              id = "id")
+
+refdb::refdb_get_fields(ncbi_data_trnl)
+```
+
+
+# Step 1:  Merging data from different sources
+We can now use refdb_merge to merge all data into a single database.
+
+# mergeing all libraries into a single document per gene
+```{r}
+all_its2 <- refdb::refdb_merge(ncbi_data_its2, bold_data_its2, keep = "fields_shared")
+all_rbcl <- refdb::refdb_merge(ncbi_data_rbcl, bold_data_rbcl, keep = "fields_shared")
+all_trnl <- refdb::refdb_merge(ncbi_data_trnl, bold_data_trnl, keep = "fields_shared")
+
+rm(ncbi_data_its2)
+rm(bold_data_its2)
+rm(ncbi_data_rbcl)
+rm(bold_data_rbcl)
+rm(ncbi_data_trnl)
+rm(bold_data_trnl)
+```
+
+```{r}
+# set fields for refdb its2
+all_its2 <- refdb::refdb_set_fields(all_its2,
+                              taxonomy = c(kingdom = "kingdom",
+                                phylum = "phylum",
+                                class = "class",
+                                order = "order",
+                                family = "family",
+                                genus = "genus",
+                                species = "species"),
+                              sequence = "sequence",
+                              marker = "gene",
+                              source = "source",
+                              id = "id")
+
+refdb::refdb_get_fields(all_its2)
+
+# set fields for refdb rbcl
+all_rbcl <- refdb::refdb_set_fields(all_rbcl,
+                              taxonomy = c(kingdom = "kingdom",
+                                phylum = "phylum",
+                                class = "class",
+                                order = "order",
+                                family = "family",
+                                genus = "genus",
+                                species = "species"),
+                              sequence = "sequence",
+                              marker = "gene",
+                              source = "source",
+                              id = "id")
+
+refdb::refdb_get_fields(all_rbcl)
+
+# set fields for refdb trnl
+all_trnl <- refdb::refdb_set_fields(all_trnl,
+                              taxonomy = c(kingdom = "superkingdom",
+                                phylum = "phylum",
+                                class = "class",
+                                order = "order",
+                                family = "family",
+                                genus = "genus",
+                                species = "species"),
+                              sequence = "sequence",
+                              marker = "gene",
+                              source = "source",
+                              id = "id")
+
+refdb::refdb_get_fields(all_trnl)
+```
+# adjust taxonomy across datasets
+Ensures that the consist taxonomic classification is use in specified columns (Phyla to genus, leave out species as it removes interim names (specify columns). This should be used on the final dataset (with GB data included) for the taxonomic field of phylum, class, order, family, genus. Species need to be left out as this function will remove interim species names from the private database.
+
+# remove duplicates between private, BOLD and NCBI GenBank datasets
+```{r}
+all_its2 <- refdb::refdb_filter_seq_duplicates(all_its2)
+all_rbcl <- refdb::refdb_filter_seq_duplicates(all_rbcl)
+all_trnl <- refdb::refdb_filter_seq_duplicates(all_trnl)
+```
+
+# resolving issues from refdb in the final library
+The final library will still have NA in some empty taxonomic columns as the refdb function removes 'na' within taxonomic names. The final .rds will need the NA's filtered out using code that only removes 'NA from entire cells.
+Also, there are some strange additions to the end for species names from the 'remove extra' that should be removed these include:
+
+# Step 1: remove 'NA' from empty cells, weird additions on species names and trim whitespaces remaining at the end of species names
+```{r}
+#remove "NA" in taxonomic information and replace with blank (this needs to be done so NA do not occur in the final reference library taxonomic assignments)
+
+#all_its2[is.na(all_its2)] <- ""
+#all_rbcl[is.na(all_rbcl)] <- ""
+#all_trnl[is.na(all_trnl)] <- ""
+
+#replacing odd additions to the end of species names from refdb
+
+all_its2$species <- gsub("\\'", "",
+           gsub("\\.\\.", "",
+           gsub("\\+", "",
+           gsub("./Se/", "",
+           gsub("sp. -", "sp. ",
+           gsub("\\:", "",
+           gsub(".cf.", "",
+           gsub("sp.-", "sp. ",
+           gsub("aff.", "",
+           gsub("_", "",
+           gsub("/Amp", "",
+           gsub("<>", "",
+           gsub("\\  ", "", 
+           gsub("-;", "", 
+           gsub(" ;", "", 
+                all_its2$species)))))))))))))))
+
+# remove trailing spaces in species names
+trimws(all_its2$species, "right")
+
+all_rbcl$species <- gsub("\\'", "",
+           gsub("\\.\\.", "",
+           gsub("\\+", "",
+           gsub("./Se/", "",
+           gsub("sp. -", "sp. ",
+           gsub("\\:", "",
+           gsub(".cf.", "",
+           gsub("sp.-", "sp. ",
+           gsub("aff.", "",
+           gsub("_", "",
+           gsub("/Amp", "",
+           gsub("<>", "",
+           gsub("\\  ", "", all_rbcl$species)))))))))))))
+
+# remove trailing spaces in species names
+trimws(all_rbcl$species, "right")
+
+all_trnl$species <- gsub("\\'", "",
+           gsub("\\.\\.", "",
+           gsub("\\+", "",
+           gsub("./Se/", "",
+           gsub("sp. -", "sp. ",
+           gsub("\\:", "",
+           gsub(".cf.", "",
+           gsub("sp.-", "sp. ",
+           gsub("aff.", "",
+           gsub("_", "",
+           gsub("/Amp", "",
+           gsub("<>", "",
+           gsub("\\  ", "", 
+           gsub("-;", "",
+                all_trnl$species))))))))))))))
+
+# remove trailing spaces in species names
+trimws(all_trnl$species, "right")
+```
+
+# check all data has an 'id'.
+#its2
+```{r}
+has_blanks <- any(is.na(all_its2$id))
+
+# Print the result
+if(has_blanks) {
+  print("The 'id' column has blank values.")
+} else {
+  print("The 'id' column does not have blank values.")
+}
+## to fix if there are b;ank values
+#rows_with_empty_values <- all_db[all_db$id == "", , drop = FALSE]
+#print(rows_with_empty_values)
+## fix control samples and add name
+#all_d[3425930, "sequenceID"] <- "control"
+```
+#rbcl
+```{r}
+has_blanks <- any(is.na(all_rbcl$id))
+
+# Print the result
+if(has_blanks) {
+  print("The 'id' column has blank values.")
+} else {
+  print("The 'id' column does not have blank values.")
+}
+## to fix if there are b;ank values
+#rows_with_empty_values <- all_db[all_db$id == "", , drop = FALSE]
+#print(rows_with_empty_values)
+## fix control samples and add name
+#all_d[3425930, "sequenceID"] <- "control"
+```
+#trnL
+```{r}
+has_blanks <- any(is.na(all_trnl$id))
+
+# Print the result
+if(has_blanks) {
+  print("The 'id' column has blank values.")
+} else {
+  print("The 'id' column does not have blank values.")
+}
+## to fix if there are b;ank values
+#rows_with_empty_values <- all_db[all_db$id == "", , drop = FALSE]
+#print(rows_with_empty_values)
+## fix control samples and add name
+#all_d[3425930, "sequenceID"] <- "control"
+```
+
+#Step 2: 
+
+# export final libraries as a dataframe
+```{r}
+saveRDS(all_its2, here::here("Plant/final_library/all_bold_ncbi_its2_may24.rds"))
+saveRDS(all_rbcl, here::here("Plant/final_library/all_bold_ncbi_rbcl_may24.rds"))
+saveRDS(all_trnl, here::here("Plant/final_library/all_bold_ncbi_trnl_may24.rds"))
+```
+
+# OPTIONAL convert to fasta file for import to Geneious
+```{r}
+# files are too large to export in one go so need to be broken in to smaller parts.
+
+# create a duplicate document to format for Geneious 
+all_db2 <- all_db
+
+# get fields for refdb
+all_db2 <- refdb::refdb_set_fields(all_db2,
+                             taxonomy = c(kingdom = "superkingdom",
+                               phylum = "phylum",
+                               class = "class",
+                               order = "order",
+                               family = "family",
+                               genus = "genus",
+                               species = "species"),
+                             sequence = "sequence",
+                             marker = "marker",
+                             source = "source",
+                             id = "id")
+
+refdb::refdb_get_fields(all_db2)
+
+
+# add a an underscore to species to replace space in species names (fasta files cannot have gaps)
+all_db2$species <- gsub(" ",
+           "_", all_db$species)
+
+head(all_db2)
+```
+
+# export files
+```{r}
+# export group 1
+export <- all_db2[1:2000000, ] 
+
+# save fasta          
+refdb::refdb_export_dada2(export, here::here("final_library/geneious_library/final_lib_export_Mar23_1of3.fasta"), mode = "taxonomy")
+
+# remove files no longer needed
+rm(export)
+
+# export group 2
+export2 <- all_db2[2000001:4000000, ] 
+
+# save fasta 
+refdb::refdb_export_dada2(export2, here::here("final_library/geneious_library/final_lib_export_Mar23_2of3.fasta"), mode = "taxonomy")
+
+# remove files no longer needed
+rm(export2)
+
+# export group 3 (adjust final row number to match the final record number)
+export3 <- all_db2[4000000:4589877, ] 
+
+# save fasta 
+refdb::refdb_export_dada2(export3, here::here("final_library/geneious_library/final_lib_export_Mar23_3of3.fasta"), mode = "taxonomy")
+
+# remove files no longer needed
+rm(export3)
+rm(all_db2)
+```
+

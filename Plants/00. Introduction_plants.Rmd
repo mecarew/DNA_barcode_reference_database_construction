@@ -1,0 +1,85 @@
+---
+title: "Creating customised DNA reference databases - Introduction"
+author: "Jessica Chung / Melissa Carew"
+date: "15/02/2024"
+output: html_document
+
+
+---
+## INTRODUCTION
+# Creating reference DNA barcode databases
+
+Developing and maintaining a DNA reference database can be difficult. The refdb package has been developed to assist with the different steps of the process of developing, maintaining and using DNA reference databases efficiently and reproducible. 
+
+This document contains the scripts for downloading and combining of DNA barcode data from the NCBI GenBank and BOLD databases and the enables this data to be combined with private unpublished data (i.e., your own sequence data). It primarily relies on the refdb package except for downloading data from NCBI GenBank and for primer trimming to create amplicon specific libraries which can be paired to metabarcoding amplicons which is completed using cutadapt (in python)). There are also a few bugs in the refdb package that required custom scripts. These can be found below. This document is intended for downloading data for the COI gene widely used for animal DNA barcoding and metabarcoding.
+
+#Installing and loading the refDB package (https://cran.r-project.org/web/packages/refdb/index.html)
+
+The refdb package is available on CRAN, which means that you can easily install the latest stable version using the RStudio IDE or with the function install.packages. The other packages below will also be required to run refdb. If you are using a server to complete this step please check if the required softwore is already loaded. 
+
+```{r}
+#remotes::install_github("fkeck/refdb")
+```
+
+# load reqiured libraries
+```{r message=FALSE, warning=FALSE}
+suppressPackageStartupMessages({
+library(refdb)
+library(rentrez)
+library(taxize)
+library(bold)
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(here)})
+```
+
+# create folders for storing results
+```{r}
+# You can use the here::here function to define a path relative to the project 
+#  directory or use an absolute path
+
+raw_libraries_dir <- here::here("raw_libraries")
+dir.create(raw_libraries_dir)
+
+cleaned_libraries_dir <- here::here("cleaned_libraries")
+dir.create(cleaned_libraries_dir)
+
+final_library_dir <- here::here("final_library")
+dir.create(final_library_dir)
+
+geneious_library_dir <- here::here("final_library/geneious_library")
+dir.create(geneious_library_dir)
+
+trimming_dir <- here::here("final_library/trimming")
+dir.create(trimming_dir)
+```
+
+--------------------------------------------------------------------------------
+##CONTENTS
+
+#SECTION 1*: Getting data from NCBI GenBank
+Scripts for downloading data from the GenBank database and preparation of data for the reference database
+  
+#SECTION 2*: Getting data from BOLD
+Scripts for downloading data from the BOLD database and preparation of data for the reference database
+  
+#SECTION 3: Preparing a private library as a DNA reference database
+Private libraries are managed using sequencing editing software such as Geneious. Private libraries can be imported as .csv files and need to contain at a minimum : The lowest possible taxonomic classification (superkingdom;phylum;class;order;family;genus;species), an individual sequence identifier and a COI DNA sequence. Other metadata can be included but will not be used for reference library construction. As separate workflow document has been prepared for using BOLD to validate the identification in private libraries.
+
+# SECTION 4: Creating a complete reference library 
+Scripts for merging data from NCBI GenBank, BOLD and private libraries including final preparation and clean up. There are scripts available for exporting the complete final library as a .fasta flie which can be used aa a custom search database in Geneious.
+
+#SECTION 5: Creating amplicon specific libraries for bioinformatic pipelines
+These scripts produce a set of amplicon specific libraries that are in the correct format for use in bioinformatic pipelines. The scripts rely on the python package 'cutadapt' to trim the downloaded sequences to match amplicon sizes and positions. 
+There are four amplicon libraries that can be produced for COI:
+  - short amplicon (~220 bp using the BF1 /BR1 primer region from Elbrecht & Leese (2017))
+  - right amplicon (~313 bp using the mICOIintF/dgHCO2198 primer region from Leray et al. (2013))
+  - long amplicon (~422 bp using the BF2/BR2 primer region from Elbrecht & Leese (2017))
+  - left amplicon (~316 bp using the B/R5 primer region from Hajibabaei et al. (2012))
+  
+Note: the short and right libraries are using for processing bulk samples (from the ARC linkage project)
+
+* The download steps can take a few days to complete. If a download is not required (i.e., it was only completed in the last 6-12 months) previous data can be accessed as either the raw download or as a cleaned download (see below).
+
+

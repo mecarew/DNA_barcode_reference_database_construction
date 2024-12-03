@@ -1,0 +1,229 @@
+---
+title: "Creating customised DNA reference databases - downloading from BOLD"
+author: "Jessica Chung /Melissa Carew"
+date: "15/02/2024"
+output: html_document
+---
+
+--------------------------------------------------------------------------------
+# SECTION 2: Downloading from BOLD
+
+You may have notice that the search interface is a bit different. This is because here we rely on another package (bold, Chamberlain 2020) to download the data. You can check the manual of refdb_import_BOLD to see the different arguments available.
+
+Data needs downloaded for animals groups at different taxonomic levels depending on the number of sequences in that group. For small sequence groups, it can be downloaded at phlyum level for larger sequence groups with more sequence records, we'll need to follow the BOLD "large data" instructions which limits the size of data download requests (see ?refdb_import_BOLD). I have configured this below using trial and error to enable data from all animal groups to be download. I have also included scripts for proteobactera, plant and fungi so these group can be identified and excluded.
+
+NOTE: if a download of the data is not require please skip to 'Step 9' import the last version of BOLD data downloaded and cleaned.
+
+# Step 1: Download data from the BOLD database
+```{r}
+# Invertebrate that can be downloaded at phylum level
+Bryophyta_bold <- refdb::refdb_import_BOLD(taxon = "Bryophyta", ncbi_taxo = FALSE)
+Chlorophyta_bold <- refdb::refdb_import_BOLD(taxon = "Chlorophyta", ncbi_taxo = FALSE)
+Lycopodiophyta_bold <- refdb::refdb_import_BOLD(taxon = "Lycopodiophyta", ncbi_taxo = FALSE)
+Magnoliophyta_bold <- refdb::refdb_import_BOLD(taxon = "Magnoliophyta", ncbi_taxo = FALSE)
+Pinophyta_bold <- refdb::refdb_import_BOLD(taxon = "Pinophyta", ncbi_taxo = FALSE)
+Pteridophyta_bold <- refdb::refdb_import_BOLD(taxon = "Pteridophyta", ncbi_taxo = FALSE)
+```
+
+#All remaining groups are considered 'large datasets' and will not download from BOLD unless they are broken down into smaller data sets. This can be done by using low taxonomic levels i.e. class, order or family.
+
+
+
+# get fields for download BOLD files
+```{r}
+refdb::refdb_get_fields(Bryophyta_bold)
+refdb::refdb_get_fields(Chlorophyta_bold)
+refdb::refdb_get_fields(Lycopodiophyta_bold)
+refdb::refdb_get_fields(Magnoliophyta_bold)
+refdb::refdb_get_fields(Pinophyta_bold)
+refdb::refdb_get_fields(Pteridophyta_bold)
+```
+
+There is an issue here. I can not merge the BOLD dataset together as the lat and lon variables in some files are character and some numeric. This still needs work.
+##Chris's suggestions to fix lat long inconsistency in vector type (for next download)
+# inspect what might be going wrong with unique
+unique(x$lat)
+unique(x$lonh)
+# maybe this will work if R thinks x$latitude is a character rather than a number
+x$lat <- as.numeric(x$lat)
+
+To work around this I have used the control spike sample of Scaptodrosophila that does not contain lat and long data to merge data and 'keep field shared'. The lat and long data is not needed for database construction.
+
+```{r}
+# merge plant sequences
+# fix and lat or long values that are not numeric
+Lycopodiophyta_bold$lat <- as.numeric(Lycopodiophyta_bold$lat)
+Pteridophyta_bold$lat <- as.numeric(Pteridophyta_bold$lat)
+Pteridophyta_bold$lon <- as.numeric(Pteridophyta_bold$lon)
+Magnoliophyta_bold$lat <- as.numeric(Magnoliophyta_bold$lat)
+Magnoliophyta_bold$lon <- as.numeric(Magnoliophyta_bold$lon)
+
+bold_plant_data <- refdb::refdb_merge(Bryophyta_bold, Chlorophyta_bold, Lycopodiophyta_bold, Magnoliophyta_bold, Pinophyta_bold, Pteridophyta_bold)
+```
+
+
+# final formating of dataframe - plants
+
+```{r}
+# add superkingdom column to bring in line with NCBI GenBank data
+library(magrittr)
+bold_plant_data <- bold_plant_data %>%
+dplyr::mutate(superkingdom_name = "Eukaryota",
+  .before = "phylum_name")
+
+# set fields for refdb
+bold_plant_data <- refdb::refdb_set_fields(bold_plant_data,
+                             source = "source",
+                             id = "sequenceID",
+                             taxonomy = c(kingdom = "superkingdom_name",
+                                          phylum = "phylum_name",
+                                          class = "class_name",
+                                          order = "order_name",
+                                          family = "family_name",
+                                          genus = "genus_name",
+                                          species = "species_name"),
+                             sequence = "nucleotides",
+                             marker = "markercode")
+
+```
+
+
+# Step 5: save merged raw data from BOLD library (note change date for new downloads when saving)
+```{r}
+write_rds(bold_plant_data, here::here("raw_libraries/bold_plant_data_apr24.rds"))
+
+# reload all BOLD document for cleaning (if needed)
+#bold_plant_data <- readRDS(here::here("raw_libraries/bold_plant_data_apr24.rds"))
+
+```
+
+
+```{r}
+# setting fields for all BOLD data
+bold_plant_data <- refdb::refdb_set_fields(bold_plant_data,
+                             source = "source",
+                             id = "sequenceID",
+                             taxonomy = c(kingdom = "superkingdom_name",
+                                          phylum = "phylum_name",
+                                          class = "class_name",
+                                          order = "order_name",
+                                          family = "family_name",
+                                          genus = "genus_name",
+                                          species = "species_name"),
+                             sequence = "nucleotides",
+                             marker = "markercode")
+```
+
+## Preparing and cleaning DNA sequences and taxonomic data from BOLD
+
+#Step 6: cleaning of data
+```{r}
+
+# Remove sequence alignment gaps from BOLD library:
+bold_plant_data_clean1 <- refdb::refdb_clean_seq_remove_gaps(bold_plant_data)
+
+# Remove side N's (removes N's at start or end of sequence)
+bold_plant_data_clean2 <- refdb::refdb_clean_seq_remove_sideN(bold_plant_data_clean1)
+
+# Remove extra bits on the end of species names
+bold_plant_data_clean <- refdb::refdb_clean_tax_remove_extra(bold_plant_data_clean2)
+
+# Remove duplicates. It is good to write this file prior to preforming other clean_up steps
+bold_plant_data_clean <- refdb::refdb_filter_seq_duplicates(bold_plant_data_clean)
+
+#remove files no longer needed
+rm(bold_plant_data)
+rm(bold_plant_data_clean1)
+rm(bold_plant_data_clean2)
+```
+
+Note: DO NOT use remove refdb_clean_tax_NA. There is a bug as it removes interim names and the letters 'na'  within an taxonomic names. Another script is provided to remove 'NA' from the library so that 'NA's don't appear in taxonomic information of the final library files.
+
+
+```{r}
+# subset data into different genes
+bold_data_trnL <- subset(bold_plant_data_clean, markercode=="trnL-F")
+bold_data_ITS2 <- subset(bold_plant_data_clean, markercode=="ITS2")
+bold_data_rbcL <- subset(bold_plant_data_clean, markercode %in% c("rbcLa", "rbcL"))
+```
+
+# Step 9: Export cleaned data (add database, datatype and date)
+This data will be used to create the DNA barcode reference library and will be combined with the data  below which includes downloads from NCBI GenBank and data from our own DNA sequencing (private DNA barcodes)
+
+```{r}
+# save cleaned data
+saveRDS(bold_data_trnL, here::here("cleaned_libraries/bold_plant_trnL_clean_Apr24.rds"))
+saveRDS(bold_data_ITS2, here::here("cleaned_libraries/bold_plant_ITS2_clean_Apr24.rds"))
+saveRDS(bold_data_rbcL, here::here("cleaned_libraries/bold_plant_rbcL_clean_Apr24.rds"))
+
+# import cleaned BOLD data (if required)
+#bold_data_clean <- readRDS(here::here("cleaned_libraries/bold_data_clean_Oct23.rds"))
+```
+#Step 8:Plot sequence length
+Gives an idea of the distribution of the data
+```{r}
+refdb::refdb_plot_seqlen_hist(bold_plant_data_clean)
+```
+
+#Visualizing the reference library (Optional)
+Some of the functions you can use to produce graphical representation of your reference database. Because refdb stores reference database as dataframes it is straightforward to produce plots (e.g. with the tidyverse and ggplot2). For example, we can make a barplot showing the distribution of the families like this:
+
+```{r}
+bold_plant_data_clean %>% 
+  group_by(phylum_name) %>% 
+  count() %>% 
+  ggplot2::ggplot(aes(fct_reorder(phylum_name, n, .desc = TRUE), n)) +
+  geom_col() +
+  xlab("Phylum") +
+  ylab("Number of records") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1))
+```
+
+```{r}
+bold_plant_data_clean %>% 
+  group_by(class_name) %>% 
+  count() %>% 
+  ggplot2::ggplot(aes(fct_reorder(class_name, n, .desc = TRUE), n)) +
+  geom_col() +
+  xlab("Class") +
+  ylab("Number of records") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1))
+```
+
+
+```{r}
+refdb::refdb_plot_tax_treemap(bold_plant_data_clean, cols = 2)
+```
+
+Alternatively you can represent this information with a taxonomic tree. These functions have several parameters to control what is represented in the plot (taxonomic ranks, colors, etc.).
+
+```{r}
+refdb::refdb_plot_tax_tree(bold_plant_data_clean)
+```
+
+#creating a report (worth doing)
+A report is a simple and rapid way to get an overview of the current state of your reference library and to identify some possible issues. You can compile a report using the function refdb_report: 
+  
+```{r}
+refdb::refdb_report(bold_data_clean, view=TRUE)
+```                       
+
+# export files
+```{r}
+# add a an underscore to species to replace space in species names (fasta files cannot have gaps)
+bold_data_ITS2$species_name <- gsub(" ",
+           "_", bold_data_ITS2$species_name)
+bold_data_rbcL$species_name <- gsub(" ",
+           "_", bold_data_rbcL$species_name)
+bold_data_trnL$species_name <- gsub(" ",
+           "_", bold_data_trnL$species_name)
+
+# save fasta ITS2         
+refdb::refdb_export_dada2(bold_data_ITS2, here::here("final_library/geneious_library/bold_plant_ITS2_Apr23.fasta"), mode = "taxonomy")
+
+# save fasta rbcL
+refdb::refdb_export_dada2(bold_data_rbcL, here::here("final_library/geneious_library/bold_plant_rbcL_Apr23.fasta"), mode = "taxonomy")
+
+# save fasta 
+refdb::refdb_export_dada2(bold_data_trnL, here::here("final_library/geneious_library/bold_plant_trnL_Apr23.fasta"), mode = "taxonomy")
+```
